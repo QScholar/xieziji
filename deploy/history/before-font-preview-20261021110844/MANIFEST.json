@@ -1,0 +1,14 @@
+{
+  "files": {
+    "frontend/font-library.js": {
+      "bytes": 17444,
+      "sha256": "ebf379e5a14b9ebf5d49dc88345105fbec502d055dd70f0d3533c5e93d0b0d4a"
+    },
+    "frontend/style.css": {
+      "bytes": 26782,
+      "sha256": "d539a57d2346e4fbe989da6923557d2a6171acafa187ca53ad015ed6598232b5"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before.tar"
+}

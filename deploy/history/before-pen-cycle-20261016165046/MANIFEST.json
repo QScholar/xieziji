@@ -1,0 +1,26 @@
+{
+  "files": {
+    "plotter/machine.py": {
+      "bytes": 19837,
+      "sha256": "86b29e902ba3057f9951548bee90bcf227157d0c905fa21f8da8a745faa7a658"
+    },
+    "plotter/server.py": {
+      "bytes": 11632,
+      "sha256": "fb54b0f144e0f7d0e4f375fcac2d9168fba1b8357648f5a45fd5ecc4a9889dd0"
+    },
+    "plotter/static/app.js": {
+      "bytes": 18420,
+      "sha256": "8901cce994c1d49035abc8413442be67c2637ca98d36b768f5cdccf6b88052ce"
+    },
+    "plotter/static/index.html": {
+      "bytes": 8028,
+      "sha256": "596f304f07cd7f894b9536eb7ad3f4876eedb8471514548db41fa762d3c63b3a"
+    },
+    "plotter/static/style.css": {
+      "bytes": 9084,
+      "sha256": "ac993b4e76b499cdb89edfb52aa22ec5c3a5087caae92319df4d78cdf91da555"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before-pen-cycle-20261016165046.tar"
+}

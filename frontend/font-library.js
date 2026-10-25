@@ -85,7 +85,7 @@ window.FontBrowser=(()=>{
   async function paint(){
     const revision=sampleRevision,groups=new Map();
     const valid=sampleText()&&Array.from(sampleText()).length<=24;
-    byId('fontSampleHint').textContent=valid?'直接显示真实笔画；缺字用方框标记。':'请输入 1–24 个预览字。';
+    byId('fontSampleHint').textContent=valid?'':'请输入 1–24 个预览字';byId('fontSampleHint').hidden=valid;
     applyCached();
     for(const node of document.querySelectorAll('[data-font-preview]')){
       const text=node.dataset.previewText??sampleText(),id=node.dataset.fontPreview,key=text+'\n'+id;
@@ -103,7 +103,7 @@ window.FontBrowser=(()=>{
           for(const value of result.previews){cache.set(text+'\n'+value.font_id,value);while(cache.size>384)cache.delete(cache.keys().next().value);}
           applyCached();
         }
-      }catch(error){if(text===sampleText())byId('fontSampleHint').textContent='字形预览加载失败：'+error.message+'；可点击“刷新预览”重试。';}
+      }catch(error){if(text===sampleText()){byId('fontSampleHint').textContent='预览加载失败：'+error.message;byId('fontSampleHint').hidden=false;}}
       finally{batch.forEach(id=>pending.delete(text+'\n'+id));if(revision!==sampleRevision)schedule();}
      }
     }
@@ -122,7 +122,7 @@ window.FontBrowser=(()=>{
   function renderSimilar(){
     const host=byId('fontSimilarList');host.replaceChildren();
     const matches=nearest();
-    byId('fontSimilarHint').textContent=matches.length?'以当前预览字体为参照 · 相似度前六名':'当前字体暂无足够的共同字样本，暂不推荐。';
+    byId('fontSimilarHint').textContent=matches.length?'':'暂无相似字体';byId('fontSimilarHint').hidden=Boolean(matches.length);
     for(const match of matches){
       const font=fonts.find(item=>item.id===match.font_id);
       const button=document.createElement('button');button.type='button';button.className='font-similar-choice';button.dataset.fontId=font.id;
@@ -139,7 +139,7 @@ window.FontBrowser=(()=>{
     const count=document.createElement('p');count.className='font-glyph-count';count.textContent=glyphCount(font.id)==null?'字数待分析':`包含 ${glyphCount(font.id).toLocaleString()} 个字`;
     host.append(name,count,sampleNode(font.id));
     const info=catalog?.fonts?.[font.id];
-    if(info?.duplicate_of){const note=document.createElement('p');note.className='hint';note.textContent='此文件与字库中另一项高度重复，不作为推荐组合的变化来源。';host.append(note);}
+    if(info?.duplicate_of){const note=document.createElement('p');note.className='hint';note.textContent='与其他字体高度重复。';host.append(note);}
     for(const card of byId('fontGallery').children){
       const current=card.dataset.fontId===font.id;card.classList.toggle('is-current',current);
       const preview=card.querySelector('.font-card-preview');
@@ -157,7 +157,6 @@ window.FontBrowser=(()=>{
     if(sort.value==='speed')filtered.sort((a,b)=>(catalog?.fonts?.[b.id]?.speed?.score??-1)-(catalog?.fonts?.[a.id]?.speed?.score??-1)||a.name.localeCompare(b.name));
     if(sort.value==='similarity')filtered=filtered.filter(font=>scores.has(font.id)).sort((a,b)=>scores.get(b.id)-scores.get(a.id));
     const current=fonts.find(font=>font.id===byId('font').value);
-    byId('fontSortHint').textContent=sort.value==='similarity'?`参照：${current?.name||'未选择'} · 仅显示前六名，排除当前字体。`:'字数和速度排序显示全部字体，可翻页浏览。';
     page=Math.min(page,Math.max(0,Math.ceil(filtered.length/pageSize)-1));
     const host=byId('fontGallery');host.replaceChildren();
     for(const font of filtered.slice(page*pageSize,(page+1)*pageSize)){
@@ -207,11 +206,10 @@ window.FontBrowser=(()=>{
       catalog=result;
       byId('fontRecommendation').replaceChildren();
       for(const group of catalog.recommendations){const option=document.createElement('option');option.value=group.id;option.textContent=group.name+' · '+group.score+' 分';byId('fontRecommendation').append(option);}
-      const s=catalog.summary;
-      speedHint.textContent=catalog.speed_benchmark?`${s.speed_fonts} 个字体已评分 · 100 = 字库中位水平，越高越快。统一 5 mm 字高、绘图/移动 3000 mm/min，计入空移和抬落笔；模型估计，实际任务以 ETA 为准。`:'当前字库尚无速度评分。';
-      byId('fontAnalysisHint').textContent=catalog.recommendations.length?`已核对 ${s.analyzed_fonts} 个字体文件，抽样 ${s.sample_characters} 个常用汉字；以 blood8 真迹系列为参照，排除高度重复项。评分不是同作者概率。`:(catalog.note||'当前字库没有可用的分析组合。');
+      speedHint.textContent=catalog.speed_benchmark?'速度评分：100 为中位，越高越快':'暂无速度评分';
+      byId('fontAnalysisHint').textContent=catalog.recommendations.length?'':(catalog.note||'暂无推荐组合');byId('fontAnalysisHint').hidden=Boolean(catalog.recommendations.length);
       byId('fontRecommendation').disabled=!catalog.recommendations.length;renderRecommendation();gallery();focus();applyCached(sampleText());
-    }catch(error){if(revision===catalogRevision){loaded=false;byId('fontAnalysisHint').textContent='相似组合暂不可用：'+error.message;}}
+    }catch(error){if(revision===catalogRevision){loaded=false;byId('fontAnalysisHint').textContent='相似组合暂不可用：'+error.message;byId('fontAnalysisHint').hidden=false;}}
   }
   byId('fontPrev').onclick=()=>{page--;gallery();};byId('fontNext').onclick=()=>{page++;gallery();};
   function updateSingleChar(event){if(event.isComposing)return;byId('fontSingleChar').value=Array.from(byId('fontSingleChar').value).slice(0,1).join('');gallery();}
@@ -223,7 +221,8 @@ window.FontBrowser=(()=>{
   byId('applyFontRecommendation').onclick=()=>{
     const group=catalog?.recommendations?.find(g=>g.id===byId('fontRecommendation').value);if(!group)return;
     if(group.mix.some(m=>!fonts.some(f=>f.id===m.font_id))){notice('组合字体在当前字库不可用，请刷新后重试',true);return;}
-    selectedFonts=group.mix.map(m=>({font_id:m.font_id,weight:m.weight}));selectedFontPreset='';byId('fontPresetName').value=group.name;
+    // Recommendation groups vary stroke style, not script; they stay 中英通用.
+    selectedFonts=group.mix.map(m=>({font_id:m.font_id,weight:m.weight,scope:'all'}));selectedFontPreset='';byId('fontPresetName').value=group.name;
     invalidate();renderFontMix();renderFontPresets();
     notice('组合已应用；重新生成预览后用于下一任务。可点击“另存字体预设”保存。');
   };

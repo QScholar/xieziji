@@ -1,0 +1,3 @@
+# Background font analysis runs in a separate process from the business API.
+numpy==1.26.4
+Pillow==12.0.0

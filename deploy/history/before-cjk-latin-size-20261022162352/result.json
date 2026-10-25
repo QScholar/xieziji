@@ -1,0 +1,17 @@
+{
+  "Result": "UPDATED",
+  "ControllerPid": 10168,
+  "BackendPid": 20736,
+  "Phase": "complete",
+  "JobId": "c5afb6e7d74f427bb7b53861c918cd41",
+  "ChineseHeight": 5.0,
+  "EnglishHeight": 9.0,
+  "Backup": "C:\\Users\\102\\plotter-web-20261014\\deploy\\backups\\before-cjk-latin-size-20261022162352",
+  "Files": {
+    "backend/document.py": "da540877fa7b5a1e50a9ffdbe3c9e26e6e9b73b72df283c9946ca5a83fe3dd14",
+    "backend/layout.py": "d14c13278f1a8eaef02a51a89310f5ec2408834bcee4c4b84dbae92f95ed6f25",
+    "frontend/app.js": "e5aca442988ceecb83fff68304228198659c8c5fe07ada7c9be12b4e746abe18",
+    "frontend/index.html": "d3d6ef40116a4e172b6a2166ed3b0f0473916224256f7bd5dc3f438e426abb20",
+    "frontend/notebook-sizing.js": "0798bf9b38b13c266c010c8a27b987f75b342639fb37e7ab7e7ad7e225b24809"
+  }
+}

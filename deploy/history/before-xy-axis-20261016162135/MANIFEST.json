@@ -1,0 +1,30 @@
+{
+  "files": {
+    "plotter/layout.py": {
+      "bytes": 5711,
+      "sha256": "907863ea6c16a8bdcb7edaf3b63d15d7132523b6c04533c2fd45756c4fbd5d41"
+    },
+    "plotter/machine.py": {
+      "bytes": 11139,
+      "sha256": "bb44f6260372551ca7af9ae7f98478186bc30db10e05963413ade1137bbb8efc"
+    },
+    "plotter/server.py": {
+      "bytes": 10873,
+      "sha256": "900f47e9ce5a148d9a3a214aa4b0ee05318ee3c25f7c37726be7943a6c8c809b"
+    },
+    "plotter/static/app.js": {
+      "bytes": 11228,
+      "sha256": "5775871b71a8a7cfa9b9266ea43903539c18151a9c819bfcd89d1cd4a5914366"
+    },
+    "plotter/static/index.html": {
+      "bytes": 4618,
+      "sha256": "d70ef2256f9898a5fc5df76f56b3c6ee58ce4bf2e0bb3391b413ec746737a344"
+    },
+    "plotter/static/style.css": {
+      "bytes": 6822,
+      "sha256": "6bf1af7f139cc506990e8e869aa4f9d6c9aa1ad5c90468be1f47527fc94d86db"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before-xy-axis-20261016162135.tar"
+}

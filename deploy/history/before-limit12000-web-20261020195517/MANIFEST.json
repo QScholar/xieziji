@@ -1,0 +1,26 @@
+{
+  "files": {
+    "backend/document.py": {
+      "bytes": 24556,
+      "sha256": "b680b00059fd6313f8c658b2d367a2b95fe11faa6d3cb078efb5b397e670bbb1"
+    },
+    "backend/layout.py": {
+      "bytes": 8014,
+      "sha256": "d8a8e3f55714827cf466f95d0ef6da69239834608c74a4b3c25e74477ac19e05"
+    },
+    "backend/server.py": {
+      "bytes": 15816,
+      "sha256": "d8bf16d1465db2d6a85da0fe26ac52a375248c0e4fa2fbd3f90ed112803b2e12"
+    },
+    "frontend/app.js": {
+      "bytes": 52652,
+      "sha256": "d320d1ef67580f7f758d8317967c27c1b42bdf86d20dcf5d1e61a3ae10db6044"
+    },
+    "frontend/index.html": {
+      "bytes": 19106,
+      "sha256": "894dfb0181268d5fdf83841a86f3c755b84780eed5bacf9716d9a5f9d188e904"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "web-before.tar"
+}

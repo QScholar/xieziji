@@ -34,8 +34,10 @@ def path_work(path, total):
 
 
 class TaskETA:
-    def __init__(self, jobs):
+    def __init__(self, jobs, resolve=None):
         self.jobs = pathlib.Path(jobs)
+        # Execution ids differ from the preview that owns the G-code.
+        self.resolve = resolve or (lambda job: self.jobs / job / 'job.gcode')
         self.lock = threading.Lock()
         self.job = None
         self.last = None
@@ -63,7 +65,7 @@ class TaskETA:
             self.paused_work = None
             self.window_time = self.window_work = 0.
             try:
-                self.prefix = path_work(self.jobs / job / 'job.gcode', total)
+                self.prefix = path_work(self.resolve(job), total)
             except (OSError, ValueError, UnicodeError, OverflowError):
                 self.prefix = None
         if phase == 'complete':

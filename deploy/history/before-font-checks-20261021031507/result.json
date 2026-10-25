@@ -1,0 +1,17 @@
+{
+  "Result": "UPDATED",
+  "ControllerPid": 10168,
+  "BackendPid": 16236,
+  "Phase": "stopped",
+  "JobId": "1ca01795c1ac426f9f10ef99666f2ee6",
+  "FontCheck": {
+    "running": true,
+    "phase": "checking",
+    "checked_at": null,
+    "analyzed_at": null,
+    "next_check_at": null,
+    "error": null,
+    "invalid_fonts": []
+  },
+  "Backup": "C:\\Users\\102\\plotter-web-20261014\\deploy\\backups\\before-font-checks-20261021031507"
+}

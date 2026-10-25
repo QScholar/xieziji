@@ -1,0 +1,14 @@
+{
+  "files": {
+    "backend/document.py": {
+      "bytes": 26477,
+      "sha256": "46aaa042e54ca065f720f76296c2f98c0125f9efe2f3fb03f3c480df67258167"
+    },
+    "backend/gfont.py": {
+      "bytes": 13729,
+      "sha256": "d3d34abf7fb356eaa1439c8e97c35fcf6397bb18d6d89b6a8ed29f48857b35a4"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "files-before.tar"
+}

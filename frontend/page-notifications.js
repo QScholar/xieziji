@@ -30,10 +30,10 @@ window.PageNotifications = class PageNotifications {
     this.toggle.textContent=enabled?'关闭系统提醒':'开启系统提醒';
     this.toggle.disabled=!supported;
     this.test.disabled=!supported||permission!=='granted';
-    this.hint.textContent=message||(!supported?'此浏览器或访问地址不支持系统通知，仍会显示页内完成提示。':
-      permission==='denied'?'通知权限已被拒绝，请在浏览器的网站设置中允许通知；页内提示仍可用。':
-      enabled&&permission==='granted'?'已开启：每页实际完成后提醒一次。请保持网页打开；切到后台可能延迟提醒。':
-      '每写完一页显示完成提示；开启后同时发送系统通知。请保持网页打开。');
+    this.hint.textContent=message||(!supported?'当前浏览器不支持系统通知':
+      permission==='denied'?'通知权限已被拒绝':
+      '');
+    this.hint.hidden=!this.hint.textContent;
   }
   async toggleEnabled(){
     if(this.read().enabled){this.write({...this.read(),enabled:false});this.render();return;}
@@ -64,7 +64,7 @@ window.PageNotifications = class PageNotifications {
   }
   async testNotification(){
     if(!this.supported()||Notification.permission!=='granted')return;
-    try{await this.notify('纸间 · 测试提醒',{body:'通知已就绪。每写完一页会在这里提醒你。',tag:'plotter-notification-test'});this.render('测试通知已提交；若未看到，请检查系统通知设置或勿扰模式。');}
+    try{await this.notify('写字台 · 测试提醒',{body:'通知已就绪。每写完一页会在这里提醒你。',tag:'plotter-notification-test'});this.render('测试通知已提交；若未看到，请检查系统通知设置或勿扰模式。');}
     catch(error){this.registration=null;this.render('系统通知发送失败，页内完成提示仍可用。');}
   }
   jobKey(state){return JSON.stringify([(window.PLOTTER_API_BASE||location.origin).replace(/\/$/,''),state.port||'',state.job_id]);}
@@ -95,7 +95,7 @@ window.PageNotifications = class PageNotifications {
       // Claim before awaiting browser APIs. Web Locks serializes claims across tabs.
       value.jobs[key]={...value.jobs[key],done:true};this.write(value);
       if(!value.enabled||!this.supported()||Notification.permission!=='granted')return;
-      try{await this.notify(job.simulation?'纸间 · 模拟页完成':'纸间 · 本页书写完成',{body:text,tag:'plotter-page-'+key,renotify:false});}
+      try{await this.notify(job.simulation?'写字台 · 模拟页完成':'写字台 · 本页书写完成',{body:text,tag:'plotter-page-'+key,renotify:false});}
       catch(error){this.registration=null;this.render('系统通知发送失败；本页已完成，请查看下方提示。');}
     };
     const work=navigator.locks?.request?navigator.locks.request('plotter-page-'+key,deliver):deliver();

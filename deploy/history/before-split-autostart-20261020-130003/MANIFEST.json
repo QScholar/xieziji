@@ -1,0 +1,18 @@
+{
+  "files": {
+    "Xieziji-Web.xml": {
+      "bytes": 3180,
+      "sha256": "c31c08e185c4fd3d6026d4764abf9bd11540c69e06c878584167ea1d9d9ef82f"
+    },
+    "start-public.ps1": {
+      "bytes": 744,
+      "sha256": "d237b974e7e8c1679689da43c13a79c4cb0202aebf73f0dd2405449f2c94740e"
+    },
+    "state-before.json": {
+      "bytes": 400,
+      "sha256": "1da3e918e193707a4c8bba8ba563b0d3376652517f0e6c1717863df8abb013db"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": null
+}

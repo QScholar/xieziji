@@ -1,0 +1,19 @@
+﻿{
+    "acknowledged":  469,
+    "connected":  false,
+    "controller":  "cpp",
+    "error":  null,
+    "job_id":  "3b0c285fe7a84a01b85279b6686520ad",
+    "last_action":  "Task stopped; reconnect and confirm origin",
+    "mode":  "serial",
+    "motion_revision":  5,
+    "operation_type":  null,
+    "pen":  "unknown",
+    "pen_top":  null,
+    "phase":  "stopped",
+    "port":  "COM5",
+    "position":  null,
+    "protocol_version":  1,
+    "status":  "",
+    "total":  626
+}

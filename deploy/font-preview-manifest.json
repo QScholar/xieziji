@@ -1,0 +1,12 @@
+{
+  "release": "C:\\Users\\102\\plotter-web-20261014\\releases\\89df8a2-20261020-live-speed",
+  "expected": {
+    "frontend/font-library.js": "ebf379e5a14b9ebf5d49dc88345105fbec502d055dd70f0d3533c5e93d0b0d4a",
+    "frontend/style.css": "d539a57d2346e4fbe989da6923557d2a6171acafa187ca53ad015ed6598232b5"
+  },
+  "files": {
+    "frontend/font-library.js": "e296c6473c6ce86508390e6de3952c675a3fe409718d570cf7058ecc3f1f88ab",
+    "frontend/style.css": "60026820b2e61465dbff6190d08f93fdfca135261b70a13556acd31b59e0b6cc"
+  },
+  "package_sha256": "c625746797a4fcb2cec9fb28502cd95629dc5c7ef01f6b93942657137a94628e"
+}

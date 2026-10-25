@@ -1,0 +1,10 @@
+{
+  "files": {
+    "backend/document.py": {
+      "bytes": 27604,
+      "sha256": "b837488007cb495c013cafcbd5c0dbf6a4b7feadbc6762718ebed34cff2a9709"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "files-before.tar"
+}

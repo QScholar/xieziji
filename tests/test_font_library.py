@@ -76,7 +76,7 @@ class FontLibraryTests(unittest.TestCase):
                 self.assertIn(b'FontBrowser', request('/font-library.js'))
                 with self.assertRaises(urllib.error.HTTPError) as error:request('/api/font-previews', dict(font_ids=['invalid']))
                 self.assertEqual(error.exception.code, 409)
-                self.assertEqual(list(pathlib.Path(temp).iterdir()), [])
+                self.assertEqual([p.name for p in pathlib.Path(temp).iterdir() if p.name != '.workspaces'], [])
                 self.assertFalse(app.cache)
             finally:
                 server.shutdown();server.server_close();worker.join(2)

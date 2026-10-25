@@ -53,23 +53,26 @@ def coordinate_preview(data):
     return dict(svg=paper_svg(coordinates, margins, rows=rows, pitch=pitch, size=size), metadata=metadata)
 
 
-def generate(font_path, data, font_choices=None):
+def generate(font_path, data, font_choices=None, fallback_library=None):
     text = data.get('text', '')
     if not isinstance(text, str) or not text.strip() or len(text) > 3000:
         raise ValueError('请输入 1–3000 个字符')
     if any(ord(c) < 32 and c not in '\n\r\t' for c in text):
         raise ValueError('文字包含控制字符')
     width, height, margins, size, rows, pitch, usable = output_settings(data)
+    # Separate Chinese/Latin heights belong to the document layout; refuse to ignore them here.
+    if number(data, 'latin_size', size, 2, 20) != size:
+        raise ValueError('分设中英文字高需要笔记或表格排版，请在前端选择排版模式后重新生成')
     spacing = number(data, 'spacing', size * .18, 0, 10)
-    feed = number(data, 'feed', 1800, 100, MAX_FEED)
-    move_feed = number(data, 'move_feed', 3000, 100, MAX_FEED)
+    feed = number(data, 'feed', 10000, 100, MAX_FEED)
+    move_feed = number(data, 'move_feed', 10000, 100, MAX_FEED)
     coordinates = Coordinates.from_data(data, width, height)
     humanization = humanization_settings(data)
     mix_metadata = {}
     if font_choices is None and humanization_active(humanization):
         font_choices = [dict(font_id='primary', path=pathlib.Path(font_path), weight=100.)]
     if font_choices is not None:
-        paths, lines, mix_metadata = layout_mixed(font_choices, data, text, size, spacing, pitch, usable, GFont)
+        paths, lines, mix_metadata = layout_mixed(font_choices, data, text, size, spacing, pitch, usable, GFont, fallback_library)
         metrics = next(c['metrics'] for c in mix_metadata['font_mix'] if c['metrics'] is not None)
     else:
         lines = []
@@ -111,7 +114,8 @@ def generate(font_path, data, font_choices=None):
     if len(points) > 200000:
         raise ValueError('路径过大，请减少文字')
     xmin = min(x for x, y in points); ymin = min(y for x, y in points)
-    paths = [[(round(x - xmin + margins['left'], 3), round(y - ymin + margins['top'], 3)) for x, y in s] for s in paths]
+    from backend.glyph_fallback import moved
+    paths = [moved(s,((round(x-xmin+margins['left'],3),round(y-ymin+margins['top'],3)) for x,y in s)) for s in paths]
     points = [p for s in paths for p in s]
     bounds = [min(x for x, y in points), min(y for x, y in points), max(x for x, y in points), max(y for x, y in points)]
     if bounds[2] > width - margins['right'] + .001 or bounds[3] > height - margins['bottom'] + .001:

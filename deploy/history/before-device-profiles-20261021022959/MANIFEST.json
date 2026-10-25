@@ -1,0 +1,44 @@
+{
+  "files": {
+    "backend/controller_client.py": {
+      "bytes": 4413,
+      "sha256": "12f5b150572e8a7021a9162dbc831b4f6c51c3e13ba7aece816f278d2ea67c03"
+    },
+    "backend/document.py": {
+      "bytes": 29137,
+      "sha256": "7e6a3340328b8a59331cff7b22f11e0823a4e5134bccefec2832d4549625a284"
+    },
+    "backend/eta.py": {
+      "bytes": 6650,
+      "sha256": "b0b1c39ec918d88b01bea85e1989b86b64b63bc3535ce7264e2549af5e21b034"
+    },
+    "backend/layout.py": {
+      "bytes": 8040,
+      "sha256": "fb2762acceb64b19026ef1c92eca29e302b0cfadb8c6bdfa76ee63ccb891de55"
+    },
+    "backend/server.py": {
+      "bytes": 16902,
+      "sha256": "ba09f1483309c9c706bfcd192bafe8c903ce26a37d018df7d4c266c541f3438b"
+    },
+    "frontend/app.js": {
+      "bytes": 56703,
+      "sha256": "8f385d0fcd7bff1f5b2aa25e9dbedfafa8438b8e9a2ae4ad3b8b57f8ec0d079d"
+    },
+    "frontend/index.html": {
+      "bytes": 23329,
+      "sha256": "28e210aed53b3759c526cf0fe40beb12bdc67b0d96da90e611c7a5e90a9f8319"
+    },
+    "frontend/style.css": {
+      "bytes": 18098,
+      "sha256": "1f995cc0d81bfe1dbe7c03ae10ee7c22df1e9db7b2a3717ed74032ed9b44500b"
+    }
+  },
+  "rebuildable": {
+    "controller-before.exe": {
+      "bytes": 4528358,
+      "rebuild": "controller/build.ps1",
+      "sha256": "54f0844129be7f082c08152620899ea2c16d4c1138a0bc9f2dfd1b7f60a01efc"
+    }
+  },
+  "source_archive": "web-before.tar"
+}

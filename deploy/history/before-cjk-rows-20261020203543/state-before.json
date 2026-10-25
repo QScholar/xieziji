@@ -1,0 +1,40 @@
+﻿{
+    "acknowledged":  15449,
+    "connected":  true,
+    "controller":  "cpp",
+    "error":  null,
+    "feed_override":  100,
+    "feed_override_requested":  100,
+    "job_id":  "686e05b809b144b1aa50fa2b5e678c80",
+    "last_action":  "",
+    "mode":  "serial",
+    "motion_revision":  0,
+    "operation_type":  "writing",
+    "pen":  "down",
+    "pen_top":  false,
+    "phase":  "running",
+    "port":  "COM5",
+    "position":  [
+                     130.7,
+                     123.075,
+                     10.0
+                 ],
+    "protocol_version":  1,
+    "returned_to_origin":  false,
+    "speed_limit":  12000.0,
+    "speed_max_percent":  120,
+    "status":  "\u003cRun|MPos:130.700,123.075,10.000|FS:4488,0|Pn:XY\u003e",
+    "task_origin":  [
+                        16.413,
+                        21.188,
+                        0.0
+                    ],
+    "total":  40760,
+    "speed_limit_update_pending":  false,
+    "eta":  {
+                "remaining_seconds":  960,
+                "estimated_finish_at":  1792500705.5692077,
+                "source":  "observed",
+                "status":  "running"
+            }
+}

@@ -108,7 +108,9 @@ class FontUpdates:
                                   font_count=len(records) - len(invalid))
             # Refresh discovery immediately. Never let a modified font inherit an old score.
             self.publish(self._library(records, self.report_dir, invalid))
-            if records == self.fingerprint:
+            try:current_version=json.loads((self.report_dir/'font_similarity.json').read_text(encoding='utf8')).get('version',0)
+            except (OSError,ValueError):current_version=0
+            if records == self.fingerprint and current_version>=2:
                 return
             with self.lock:
                 self.state['phase'] = 'analyzing'

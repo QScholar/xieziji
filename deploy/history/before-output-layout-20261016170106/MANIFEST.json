@@ -1,0 +1,34 @@
+{
+  "files": {
+    "plotter/coordinates.py": {
+      "bytes": 5157,
+      "sha256": "3a07af6ae39caed911f5f61267983392293ef99452254adf4e5f54cd93d599e5"
+    },
+    "plotter/layout.py": {
+      "bytes": 6202,
+      "sha256": "5c2288a7383a6be5db0f5c9f30232fb9996dbb11b8e14145a3099081e229bebf"
+    },
+    "plotter/machine.py": {
+      "bytes": 22093,
+      "sha256": "4f2dbe8e60392688837f9c982be3fc2b235296e9ba3a13792b14f4d6445fa0f3"
+    },
+    "plotter/server.py": {
+      "bytes": 11638,
+      "sha256": "b1ed630005c0cbcddbfa9722ca92c00049f950c506694ad51bfbac1eb37b9cd1"
+    },
+    "plotter/static/app.js": {
+      "bytes": 18784,
+      "sha256": "277e623d67833b433b37088ff82ada44b2065e57f483bd6b23d88a1b29ef559f"
+    },
+    "plotter/static/index.html": {
+      "bytes": 8193,
+      "sha256": "88c4aea67ce5f13cb68e7e979f208591712921d52b32706f8e1f3750a45c9e9a"
+    },
+    "plotter/static/style.css": {
+      "bytes": 9084,
+      "sha256": "ac993b4e76b499cdb89edfb52aa22ec5c3a5087caae92319df4d78cdf91da555"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before-output-layout-20261016170106.tar"
+}

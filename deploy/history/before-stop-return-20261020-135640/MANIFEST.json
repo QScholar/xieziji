@@ -1,0 +1,22 @@
+{
+  "files": {
+    "Xieziji-Controller.xml": {
+      "bytes": 3616,
+      "sha256": "36a2d63c28f79d4a7c0d08f7255b38b042268325731698c8b1a42b652ad2ff0f"
+    },
+    "app.js": {
+      "bytes": 47098,
+      "sha256": "7357ca322929c8260a2a29b44d751df94935631f4f0506f366f076620af6beac"
+    },
+    "index.html": {
+      "bytes": 17887,
+      "sha256": "6ff1ae845687a837f99081601f40c6bb6a4fc8d11c1415ed5c7913b1e6312566"
+    },
+    "state-before.json": {
+      "bytes": 498,
+      "sha256": "5cf5bc0ba9b56c5b3f85a6daf5f8965853fc90c1f35a6eeadcaf1a2fac95ee9f"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": null
+}

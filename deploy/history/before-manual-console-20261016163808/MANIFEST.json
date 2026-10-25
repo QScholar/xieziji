@@ -1,0 +1,26 @@
+{
+  "files": {
+    "plotter/machine.py": {
+      "bytes": 11244,
+      "sha256": "fac20433c786ea47a8be2fb929f38aff5688855c988dc60a29a3a778b14ec335"
+    },
+    "plotter/server.py": {
+      "bytes": 10998,
+      "sha256": "28504f87ceb09fc697f8c2a9846560b99ebc9ee3780987e5a2eceab53cfc5f38"
+    },
+    "plotter/static/app.js": {
+      "bytes": 14817,
+      "sha256": "8f6251876c70dcec2a6d928a4a86487665a622512313251527238bd45ec931db"
+    },
+    "plotter/static/index.html": {
+      "bytes": 5792,
+      "sha256": "ab7f00191bc42967847a41cf743b730478a8225f9251943c00696e03bb16bb3e"
+    },
+    "plotter/static/style.css": {
+      "bytes": 7792,
+      "sha256": "093d5fb8b32c5034f2712a7dd3034a8023eaf0ee5ed604d127db4b7feaeb8fef"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before-manual-console-20261016163808.tar"
+}

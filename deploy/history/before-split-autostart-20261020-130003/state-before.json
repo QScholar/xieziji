@@ -1,0 +1,18 @@
+﻿{
+    "connected":  false,
+    "mode":  "serial",
+    "phase":  "disconnected",
+    "status":  "",
+    "port":  "",
+    "job_id":  null,
+    "acknowledged":  0,
+    "total":  0,
+    "error":  null,
+    "operation_type":  null,
+    "position":  null,
+    "pen":  "unknown",
+    "pen_top":  null,
+    "status_updated_at":  null,
+    "motion_revision":  0,
+    "last_action":  ""
+}

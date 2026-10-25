@@ -1,0 +1,17 @@
+{
+  "Result": "UPDATED",
+  "Release": "C:\\Users\\102\\plotter-web-20261014\\releases\\89df8a2-20261020-live-speed",
+  "Backup": "C:\\Users\\102\\plotter-web-20261014\\deploy\\backups\\before-workbench-20261021162959",
+  "BackendPid": 13784,
+  "ControllerPid": 10168,
+  "Phase": "stopped",
+  "JobId": "1ca01795c1ac426f9f10ef99666f2ee6",
+  "Connected": true,
+  "Acknowledged": 767,
+  "Files": {
+    "backend/server.py": "d3b911b1bfeec44a169c32bbe06838348597e0c2b7c7672f7b735a39a2415032",
+    "frontend/index.html": "7e04729433bfc1dc671dc3bfce8198c1ef2280bf4dc05faf0ed60c2bca5eb424",
+    "frontend/page-notifications.js": "dc98f6caae31a3f22fce7853b27c7507b6e2dd217724a0f04573b356937f3104",
+    "frontend/workbench.css": "c961118c184dc051ea5d4ef873889b1b84d5d670a2f8ceb8e5993294f8a562b4"
+  }
+}

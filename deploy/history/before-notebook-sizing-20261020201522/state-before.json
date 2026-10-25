@@ -1,0 +1,33 @@
+﻿{
+    "acknowledged":  0,
+    "connected":  true,
+    "controller":  "cpp",
+    "error":  null,
+    "feed_override":  100,
+    "feed_override_requested":  100,
+    "job_id":  null,
+    "last_action":  "",
+    "mode":  "serial",
+    "motion_revision":  0,
+    "operation_type":  null,
+    "pen":  "up",
+    "pen_top":  true,
+    "phase":  "idle",
+    "port":  "COM5",
+    "position":  [
+                     16.413,
+                     21.188,
+                     0.0
+                 ],
+    "protocol_version":  1,
+    "speed_limit":  12000.0,
+    "status":  "\u003cIdle|MPos:16.413,21.188,0.000|FS:0,0|Pn:XY|WCO:16.413,21.188,0.000\u003e",
+    "total":  0,
+    "speed_limit_update_pending":  false,
+    "eta":  {
+                "remaining_seconds":  null,
+                "estimated_finish_at":  null,
+                "source":  null,
+                "status":  "inactive"
+            }
+}

@@ -1,0 +1,22 @@
+{
+  "files": {
+    "frontend/app.js": {
+      "bytes": 61826,
+      "sha256": "1e3eea85728ee194b187b95564e59e4bfc88b7f48cdaf72e4939e1f5b484027e"
+    },
+    "frontend/font-library.js": {
+      "bytes": 13622,
+      "sha256": "40e73f004202dad45426a0817018bab6d09a013e799c15e67b6cbeb58d3d3c17"
+    },
+    "frontend/index.html": {
+      "bytes": 25358,
+      "sha256": "25070aaab09558eab95c0921a924dc1ee2409fe769f8c680ebc847a32be14f77"
+    },
+    "frontend/style.css": {
+      "bytes": 19041,
+      "sha256": "36036d08ad399996142bd3af953bd326a7f2a6a6350aba807f008059495fa56c"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before.tar"
+}

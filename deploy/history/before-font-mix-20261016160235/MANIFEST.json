@@ -1,0 +1,26 @@
+{
+  "files": {
+    "plotter/layout.py": {
+      "bytes": 5116,
+      "sha256": "b8d5654e3ace69e67b20d94c7cc0bf634aac5d8f4bd9ab5ccc89478d87870502"
+    },
+    "plotter/server.py": {
+      "bytes": 10946,
+      "sha256": "34a2654a7caef89598a2194d831dcba69b6e99c105fb20a1b89c12b00596681b"
+    },
+    "plotter/static/app.js": {
+      "bytes": 7592,
+      "sha256": "ac520368321a92aa25cd20a3df6dbebe58c26dc37f1b52dd0a05ec6021e651a1"
+    },
+    "plotter/static/index.html": {
+      "bytes": 4065,
+      "sha256": "a2cd6dab52284fa2f6521d695bc27c6472c7b9ab82d25e71c503d777d7e18c8e"
+    },
+    "plotter/static/style.css": {
+      "bytes": 5601,
+      "sha256": "1544fa9fb4f6033ec440a9302e3a790271ac6dad4a92a018558780ebfd293dd2"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before-font-mix-20261016160235.tar"
+}

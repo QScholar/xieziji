@@ -1,0 +1,18 @@
+{
+  "release": "C:\\Users\\102\\plotter-web-20261014\\releases\\89df8a2-20261020-live-speed",
+  "expected": {
+    "backend/document.py": "3a1bd2c8a33d13f5481081d9c7f99c103e6f20075bc1260e7fc1f2d63057dd5d",
+    "backend/layout.py": "71c9b67c19b307e62e5128ce40b17264ff2e5d0220c9c13eb4981f7714df29d4",
+    "frontend/app.js": "9983d3c2aa382c34d69e1d17e27bc9ff699c2068a9aad5acb2a13a816882a85a",
+    "frontend/index.html": "7e04729433bfc1dc671dc3bfce8198c1ef2280bf4dc05faf0ed60c2bca5eb424",
+    "frontend/notebook-sizing.js": "db79c2891dc4d4bb6fa72eccf440cda29e828b2043b0ab4231690b8718c7b265"
+  },
+  "files": {
+    "backend/document.py": "da540877fa7b5a1e50a9ffdbe3c9e26e6e9b73b72df283c9946ca5a83fe3dd14",
+    "backend/layout.py": "d14c13278f1a8eaef02a51a89310f5ec2408834bcee4c4b84dbae92f95ed6f25",
+    "frontend/app.js": "e5aca442988ceecb83fff68304228198659c8c5fe07ada7c9be12b4e746abe18",
+    "frontend/index.html": "d3d6ef40116a4e172b6a2166ed3b0f0473916224256f7bd5dc3f438e426abb20",
+    "frontend/notebook-sizing.js": "0798bf9b38b13c266c010c8a27b987f75b342639fb37e7ab7e7ad7e225b24809"
+  },
+  "package_sha256": "a1386dce2a7d40b6c4aefd566941301c699690a80e3a26019c3091c5493839b1"
+}

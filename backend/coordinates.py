@@ -75,6 +75,7 @@ class Coordinates:
 
 
 def paper_svg(coordinates, margin, paths=(), rows=None, pitch=None, size=5, row_guides=None):
+    from backend.glyph_fallback import preview_polyline
     width, height = coordinates.width, coordinates.height
     margins = margin if isinstance(margin, dict) else dict.fromkeys(('left', 'right', 'top', 'bottom'), margin)
     left, top = margins['left'], margins['top']
@@ -89,6 +90,6 @@ def paper_svg(coordinates, margin, paths=(), rows=None, pitch=None, size=5, row_
             parts.append(f'<line x1="{left}" y1="{y}" x2="{right}" y2="{y}"/>')
         parts.append('</g>')
     parts.append('<g id="writing-paths">')
-    parts += ['<polyline points="' + ' '.join(f'{x},{y}' for x, y in stroke) + '" fill="none" stroke="#243e42" stroke-width=".22" stroke-linecap="round" stroke-linejoin="round"/>' for stroke in paths]
+    parts += [preview_polyline(stroke) for stroke in paths]
     parts += ['</g>', coordinates.svg_axes(), '</svg>']
     return '\n'.join(parts)

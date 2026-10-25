@@ -1,0 +1,14 @@
+{
+  "files": {
+    "frontend/style.css": {
+      "bytes": 27321,
+      "sha256": "60026820b2e61465dbff6190d08f93fdfca135261b70a13556acd31b59e0b6cc"
+    },
+    "frontend/workbench.css": {
+      "bytes": 11949,
+      "sha256": "c961118c184dc051ea5d4ef873889b1b84d5d670a2f8ceb8e5993294f8a562b4"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before.tar"
+}

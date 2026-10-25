@@ -1,0 +1,16 @@
+{
+  "Result": "UPDATED",
+  "BackendPid": 16236,
+  "ControllerPid": 10168,
+  "Backup": "C:\\Users\\102\\plotter-web-20261014\\deploy\\backups\\before-font-chooser-20261021032108",
+  "FontCheck": {
+    "running": false,
+    "phase": "idle",
+    "checked_at": 1792523709.8927922,
+    "analyzed_at": 1792523800.6550174,
+    "next_check_at": 1792610109.8927922,
+    "error": null,
+    "invalid_fonts": [],
+    "font_count": 304
+  }
+}

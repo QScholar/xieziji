@@ -1,10 +1,20 @@
 'use strict';
 const $ = id => document.getElementById(id);
+const removeBlankLines=document.createElement('button');
+removeBlankLines.id='removeBlankLines';removeBlankLines.type='button';removeBlankLines.className='text-button';
+removeBlankLines.textContent='删除空白行';removeBlankLines.title='只清理当前预设页；保留正文缩进和显式分页符';
+$('count').before(removeBlankLines);
+$('allowOverlap').closest('label').hidden=true;
+document.querySelector('.mix-heading span:last-child').textContent='适用范围 · 选择权重参考';
 $('chooseFonts').addEventListener('click',()=>{$('fontDialog').showModal();$('fontSearch').focus();});
 $('closeFontDialog').addEventListener('click',()=>{$('fontDialog').close();});
 
 const sizingPanel=document.querySelector('.notebook-sizing');
 $('width').closest('.grid').before(sizingPanel);sizingPanel.hidden=true;
+const balancePanel=document.createElement('div');
+balancePanel.className='font-balance';balancePanel.style.cssText='margin:12px 0;padding:12px;border:1px solid var(--border,#d8ded8);border-radius:8px';
+balancePanel.innerHTML='<label class="inline-check"><input id="smartBalance" type="checkbox">智能均衡中英大小</label><div class="grid"><label>字母微调 / %<input id="letterScale" type="number" min="50" max="150" step="1" value="100"><input id="letterScaleSlider" aria-label="字母大小微调" type="range" min="50" max="150" step="1" value="100"></label><label>数字微调 / %<input id="digitScale" type="number" min="50" max="150" step="1" value="100"><input id="digitScaleSlider" aria-label="数字大小微调" type="range" min="50" max="150" step="1" value="100"></label></div>';
+$('latinSize').closest('.grid').after(balancePanel);
 const checkButton = document.createElement('button');
 checkButton.id='check';checkButton.className='text-button';checkButton.textContent='检查原点与配置（只读）';
 checkButton.style.marginTop='16px';document.querySelector('.connect-row').after(checkButton);
@@ -37,7 +47,7 @@ function applyDeviceProfile(port){
   $('penUpZ').value=control.pen_up;$('penDownZ').value=control.pen_down;$('penFeed').value=control.pen_feed;
   const coords=profile?.coordinate_system||{reverse_x:false,reverse_y:false,swap_xy:false,origin:'top-left'};
   $('reverseX').checked=coords.reverse_x;$('reverseY').checked=coords.reverse_y;$('swapXY').checked=coords.swap_xy;$('originCorner').value=coords.origin;
-  $('feed').value=profile?.feed??1800;$('moveFeed').value=profile?.move_feed??3000;
+  $('feed').value=profile?.feed??10000;$('moveFeed').value=profile?.move_feed??10000;
   $('jogDistance').value=profile?.jog_distance??1;$('jogFeed').value=profile?.jog_feed??300;
   // Restoring settings never transmits a movement or reuses a previous task origin.
   coordinateChanged();renderDeviceNames();
@@ -46,7 +56,7 @@ $('port').addEventListener('change',()=>{
   const next=$('port').value, previous=profilePort;
   if(busy||state.connected){$('port').value=previous;return;}
   action(async()=>{
-    try{if(previous)await saveDeviceProfile();applyDeviceProfile(next);notice('已切换设备档案，请核对配置并重新生成预览');}
+    try{await window.sharedWorkspace?.save();if(previous)await saveDeviceProfile();applyDeviceProfile(next);await window.sharedWorkspace?.open(next);notice('已切换设备档案与服务端保存的界面');}
     catch(error){$('port').value=previous;throw error;}
   });
 });
@@ -55,15 +65,14 @@ $('deviceName').addEventListener('keydown',event=>{if(event.key==='Enter'){event
 let axisRevision = 0, axisTimer;
 let observedMotionRevision = null;
 let speedTimer, speedPending=null, speedSending=false, speedJob=null;
-const layoutFields=['width','height','marginTop','marginBottom','marginLeft','marginRight','rows','size','spacing','feed','moveFeed','punctuationWidth','gridColumns','gridRowGap','gridColumnGap','gridSizePercent','gridPadding'];
+const layoutFields=['width','height','marginTop','marginBottom','marginLeft','marginRight','rows','size','latinSize','spacing','feed','moveFeed','punctuationWidth','gridColumns','gridRowGap','gridColumnGap','gridSizePercent','gridPadding'];
 let presetStorage='plotter.layout-presets.v1';
 let layoutMode='', modeDrafts={}, sourcePages=[$('text').value], sourceIndex=0, documentResult=null, outputIndex=0;
-const startedJobs=new Set();
 const humanFields={vertical:'Vertical',scale:'Scale',rotation:'Rotation',spacing:'Spacing',baseline:'Baseline'};
 const humanDefault={enabled:false,vertical:.3,scale:5,rotation:2,spacing:.2,baseline:.4,
   vertical_enabled:true,scale_enabled:true,rotation_enabled:true,spacing_enabled:true,baseline_enabled:true};
 const humanLevels={light:[.15,3,1,.1,.2],medium:[.3,5,2,.2,.4],strong:[.6,10,4,.4,.8]};
-const defaultLayout={width:210,height:297,marginTop:30,marginBottom:30,marginLeft:30,marginRight:30,rows:20,size:5,spacing:.9,feed:1800,moveFeed:3000,punctuationWidth:.8,gridColumns:20,gridRowGap:2.9,gridColumnGap:0,gridSizePercent:80,gridPadding:.3};
+const defaultLayout={width:210,height:297,marginTop:30,marginBottom:30,marginLeft:30,marginRight:30,rows:20,size:5,latinSize:5,spacing:.9,feed:10000,moveFeed:10000,punctuationWidth:.8,gridColumns:20,gridRowGap:2.9,gridColumnGap:0,gridSizePercent:80,gridPadding:.3};
 const notebookPresets=[{id:'a4-portrait',name:'A4 竖向 · 210 × 297',values:{...defaultLayout}},
   {id:'a4-landscape',name:'A4 横向 · 297 × 210',values:{...defaultLayout,width:297,height:210}}];
 const gridPresets=[{id:'a4-grid',name:'A4 方格 · 20 行 × 20 列',values:{...defaultLayout,marginTop:41,marginBottom:41,marginLeft:26.5,marginRight:26.5}}];
@@ -86,6 +95,10 @@ async function request(path, data) {
   return response;
 }
 async function api(path,data) {return (await request(path,data)).json();}
+let presetBrowserStorage;
+try{presetBrowserStorage=window.localStorage;}catch{presetBrowserStorage={getItem:()=>null,setItem:()=>{}};}
+const serverPresets=new window.PresetStore(api,presetBrowserStorage);
+let serverPresetUIReady=false;
 function writing(){return state.operation_type==='writing'||['running','paused','draining','stopping','returning'].includes(state.phase);}
 function active(){return writing()||['manual','manual_stopping'].includes(state.phase);}
 function formatEtaDuration(seconds){
@@ -95,24 +108,23 @@ function formatEtaDuration(seconds){
 }
 function renderEta(){
   const eta=state.eta||{},remaining=eta.remaining_seconds;
-  let title='预计剩余 —',detail='开始任务后显示预计剩余时间。';
-  if(!state.connected&&state.job_id&&state.phase!=='disconnected'){title='ETA 暂不可用';detail='连接恢复后更新估算。';}
-  else if(state.phase==='complete'){title='任务已完成';detail='已收到机器完成确认。';}
-  else if(['stopping','returning','stopped','failed'].includes(state.phase)){detail='任务已终止或正在回位，不再估算书写时间。';}
+  let title='预计剩余 —',detail='';
+  if(!state.connected&&state.job_id&&state.phase!=='disconnected'){title='ETA 暂不可用';detail='等待连接恢复';}
+  else if(state.phase==='complete'){title='任务已完成';detail='';}
+  else if(['stopping','returning','stopped','failed'].includes(state.phase)){detail='';}
   else if(state.phase==='paused'){
     title=`已暂停${Number.isFinite(remaining)?' · 剩余约 '+formatEtaDuration(remaining):''}`;
-    detail='继续后更新预计完成时间，暂停时间不计入书写速度。';
+    detail='';
   }else if(eta.status==='draining'){
-    title='机器收尾中';detail=Number.isFinite(remaining)?`预计还需 ${formatEtaDuration(remaining)}，等待机器确认完成。`:'路径已发送，等待机器确认完成。';
+    title='机器收尾中';detail=Number.isFinite(remaining)?`预计还需 ${formatEtaDuration(remaining)}`:'等待机器确认';
   }else if(['running','draining'].includes(state.phase)){
     if(Number.isFinite(remaining)&&remaining>0){
       title='预计剩余约 '+formatEtaDuration(remaining);
       const finish=Number.isFinite(eta.estimated_finish_at)?new Date(eta.estimated_finish_at*1000):null;
-      detail=(finish?`预计完成 ${finish.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false})} · `:'')+
-        (eta.source==='observed'?'随实际进度和调速自动更新。':'按路径初估，运行后自动校准。');
-    }else{title='正在估算剩余时间…';detail='采集实际进度后显示 ETA。';}
+      detail=finish?`预计完成 ${finish.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',hour12:false})}`:'';
+    }else{title='正在估算剩余时间…';detail='';}
   }
-  $('taskEta').textContent=title;$('etaDetail').textContent=detail;
+  $('taskEta').textContent=title;$('etaDetail').textContent=detail;$('etaDetail').hidden=!detail;
 }
 function canAdjustSpeed(){return state.connected&&['running','paused','draining'].includes(state.phase)&&Number.isInteger(state.feed_override);}
 function renderSpeed(){
@@ -125,8 +137,8 @@ function renderSpeed(){
     $('liveSpeedValue').textContent=$('liveSpeed').value+'%';
   }
   const limit=state.speed_limit??10000;
-  $('liveSpeedStatus').textContent=state.speed_limit_update_pending?'当前任务继续运行；结束后自动启用 12000 mm/min 上限，更新期间暂不启动新任务。':enabled?`控制器已应用 ${state.feed_override}%${state.feed_override!==state.feed_override_requested?' · 正在调整至 '+state.feed_override_requested+'%':''}。最高 ${limit} mm/min，倍率也影响移笔和抬落笔。`:
-    writing()?'当前阶段或固件不支持实时调速。':'书写或暂停时可拖动调速，无需重新生成路径；每个新任务恢复 100%。';
+  $('liveSpeedStatus').textContent=state.speed_limit_update_pending?'速度上限待当前任务结束后更新':enabled?`已应用 ${state.feed_override}%${state.feed_override!==state.feed_override_requested?' · 目标 '+state.feed_override_requested+'%':''} · 上限 ${limit} mm/min`:writing()?'当前不可调速':'';
+  $('liveSpeedStatus').hidden=!$('liveSpeedStatus').textContent;
 }
 async function sendSpeed(){
   if(speedSending||speedPending===null||!canAdjustSpeed())return;
@@ -182,7 +194,7 @@ function renderState(){
   $('manualStop').disabled=!manual||state.phase==='manual_stopping';
   $('consolePosition').textContent=state.position?`Z ${state.position[2].toFixed(3)} mm`:'Z —';
   $('penState').textContent=({up:'已抬笔',down:'已落笔',unknown:'笔位置待确认'})[state.pen||'unknown'];
-  $('consoleLastAction').textContent=state.last_action||'单击移动一次，方向按机器输出轴，见预览箭头。暂停会取消本次微动。';
+  $('consoleLastAction').textContent=state.last_action||'';$('consoleLastAction').hidden=!state.last_action;
   $('phase').textContent=state.phase==='stopped'&&state.returned_to_origin!==true?'回原点已取消 · 请重新连接并确认位置':phases[state.phase]||state.phase;
   $('progressText').textContent=`${state.acknowledged} / ${state.total}`;
   $('progressFill').style.width=(state.total?100*state.acknowledged/state.total:0)+'%';
@@ -192,9 +204,9 @@ function renderState(){
   $('downloadAll').disabled=!documentResult||busy;
   $('rerandomize').disabled=busy;
 }
-function invalidate(){sourcePages[sourceIndex]=$('text').value;revision++;$('origin').checked=false;currentJob=null;downloadJob=null;documentResult=null;renderOutputNavigation();$('fontUsage').hidden=true;$('previewStatus').textContent='参数已修改，请重新生成全部页面后下载或写入。';updateCount();renderState();if($('paperView').querySelector('svg'))$('phase').textContent=active()?(phases[state.phase]+' · 编辑内容未执行'):'内容已修改，请重新生成预览';}
+function invalidate(){sourcePages[sourceIndex]=$('text').value;revision++;scheduleLinePitch();$('origin').checked=false;currentJob=null;downloadJob=null;documentResult=null;renderOutputNavigation();$('fontUsage').hidden=true;$('previewStatus').textContent='参数已修改，请重新生成预览。';updateCount();renderState();if($('paperView').querySelector('svg'))$('phase').textContent=active()?(phases[state.phase]+' · 编辑内容未执行'):'内容已修改，请重新生成预览';}
 function coordinateSettings(){return {reverse_x:$('reverseX').checked,reverse_y:$('reverseY').checked,swap_xy:$('swapXY').checked,origin:$('originCorner').value};}
-function paperSettings(){syncNotebookSizing();return {line_sizing:$('lineSizing').value,line_looseness:Number($('lineLooseness').value),layout_mode:layoutMode||'notebook',pagination:$('pagination').value,width:Number($('width').value),height:Number($('height').value),margin_top:Number($('marginTop').value),margin_bottom:Number($('marginBottom').value),margin_left:Number($('marginLeft').value),margin_right:Number($('marginRight').value),rows:Number($('rows').value),size:Number($('size').value),punctuation_width:Number($('punctuationWidth').value),grid:{columns:Number($('gridColumns').value),row_gap:Number($('gridRowGap').value),column_gap:Number($('gridColumnGap').value),size_percent:Number($('gridSizePercent').value),padding:Number($('gridPadding').value),draw_lines:$('gridDrawLines').checked},coordinate_system:coordinateSettings(),device_port:profilePort,device_control:deviceControl(),humanization:currentHumanization()};}
+function paperSettings(){syncNotebookSizing();return {line_placement:'ink',smart_balance:$('smartBalance').checked,letter_scale:Number($('letterScale').value),digit_scale:Number($('digitScale').value),line_sizing:$('lineSizing').value,line_looseness:Number($('lineLooseness').value),allow_overlap:allowOverlap(),layout_mode:layoutMode||'notebook',pagination:$('pagination').value,width:Number($('width').value),height:Number($('height').value),margin_top:Number($('marginTop').value),margin_bottom:Number($('marginBottom').value),margin_left:Number($('marginLeft').value),margin_right:Number($('marginRight').value),rows:Number($('rows').value),size:Number($('size').value),latin_size:Number($('latinSize').value),punctuation_width:Number($('punctuationWidth').value),grid:{columns:Number($('gridColumns').value),row_gap:Number($('gridRowGap').value),column_gap:Number($('gridColumnGap').value),size_percent:Number($('gridSizePercent').value),padding:Number($('gridPadding').value),draw_lines:$('gridDrawLines').checked},coordinate_system:coordinateSettings(),device_port:profilePort,device_control:deviceControl(),humanization:currentHumanization()};}
 function currentHumanization(){
   const result={enabled:$('humanEnabled').checked};
   for(const [key,suffix] of Object.entries(humanFields)){result[key]=Number($('human'+suffix).value);result[key+'_enabled']=$('human'+suffix+'Enabled').checked;}
@@ -216,7 +228,7 @@ function renderHumanization(){
   const level=Object.entries(humanLevels).find(([name,values])=>Object.keys(humanFields).every((key,i)=>value[key+'_enabled']&&value[key]===values[i]));
   $('humanStrength').value=level?level[0]:'custom';
   const scale=value.scale_enabled?value.scale:0;
-  $('humanSummary').textContent=value.enabled?`仿真已启用 · 字大小 ${100-scale}%–${100+scale}% · 按各项勾选生成随机效果`:'仿真已关闭，保留原始字形排版。';
+  $('humanSummary').textContent=value.enabled?`仿真已启用 · 字高 ${100-scale}%–${100+scale}%`:'仿真已关闭';
   updateProbabilities();
 }
 function humanizationChanged(){renderHumanization();invalidate();updatePresetHint();}
@@ -225,7 +237,7 @@ function renderCoordinateInfo(metadata){
   $('axisSummary').textContent=`本次原点：${metadata.origin_label} · X+ ${xd} · Y+ ${yd}`;
   const b=metadata.machine_bounds||metadata.machine_page_bounds;
   $('axisRange').textContent=`${metadata.machine_bounds?'路径':'纸张'}输出范围 / mm：X [${b[0]}, ${b[2]}] · Y [${b[1]}, ${b[3]}]`;
-  $('originText').textContent=`已将笔移至所测范围${metadata.origin_label}角并抬笔至 Z${deviceControl().pen_up}；当前位置作为本次原点，X+ ${xd}、Y+ ${yd}。`;
+  $('originText').textContent=`已确认${metadata.origin_label}起点 · 抬笔 Z${deviceControl().pen_up}`;
 }
 function displayPaper(svg, metadata, preservePaths=false){
   const parsed=new DOMParser().parseFromString(svg,'image/svg+xml');
@@ -234,10 +246,13 @@ function displayPaper(svg, metadata, preservePaths=false){
     const writing=previous.querySelector('#writing-paths');if(writing)next.querySelector('#writing-paths').replaceWith(writing.cloneNode(true));
   }
   $('paperView').replaceChildren(next);
+  $('paperView').classList.add('has-preview');
+  $('zoomPreview').disabled=false;
+  if($('previewZoom').open)zoomMount(true);
   $('paperView').style.aspectRatio=metadata.preview_size[0]+'/'+metadata.preview_size[1];
   $('paperLabel').textContent=`范围 / ${metadata.paper[0]} × ${metadata.paper[1]} mm`;
   renderCoordinateInfo(metadata);
-  if(metadata.writable)$('layoutSummary').textContent=metadata.layout_mode==='grid'?`可写范围 ${metadata.writable[0].toFixed(1)} × ${metadata.writable[1].toFixed(1)} mm · 格宽 ${metadata.grid.cell_width.toFixed(3)} / 格高 ${metadata.grid.cell_height.toFixed(3)} mm · ${metadata.rows} 行 × ${metadata.grid.columns} 列`:`可写范围 ${metadata.writable[0].toFixed(1)} × ${metadata.writable[1].toFixed(1)} mm · 每页 ${metadata.rows} 行 · 行距 ${metadata.pitch.toFixed(2)} mm`;
+  if(metadata.writable)$('layoutSummary').textContent=metadata.layout_mode==='grid'?`可写范围 ${metadata.writable[0].toFixed(1)} × ${metadata.writable[1].toFixed(1)} mm · 格宽 ${metadata.grid.cell_width.toFixed(3)} / 格高 ${metadata.grid.cell_height.toFixed(3)} mm · ${metadata.rows} 行 × ${metadata.grid.columns} 列`:`可写范围 ${metadata.writable[0].toFixed(1)} × ${metadata.writable[1].toFixed(1)} mm · ${metadata.rows} 基准行${metadata.line_layout?` · 本页 ${metadata.line_layout.length} 行`:''} · 基准行距 ${metadata.pitch.toFixed(2)} mm · 中文字高 ${metadata.size.toFixed(2)} / 英文 ${(metadata.latin_size??metadata.size).toFixed(2)} mm`;
 
 }
 async function refreshCoordinatePreview(){
@@ -249,30 +264,193 @@ async function refreshCoordinatePreview(){
     displayPaper(guide.svg,guide.metadata);
   }catch(error){if(requestRevision===axisRevision&&captured===revision)notice(error.message,true);}
 }
-function notebookSizing(){return {lineSizing:$('lineSizing').value,lineLooseness:Number($('lineLooseness').value)};}
-function validNotebookSizing(value){return (value.lineSizing===undefined||['rows','size'].includes(value.lineSizing))&&(value.lineLooseness===undefined||(typeof value.lineLooseness==='number'&&Number.isFinite(value.lineLooseness)&&value.lineLooseness>=1&&value.lineLooseness<=4));}
+// The zoom viewer reuses the SVG already on screen: no request, no new job, and
+// the strokes shown are exactly the preview that download and writing use.
+const zoomBox={scale:1,x:0,y:0,base:[0,0],drag:null,pointers:new Map(),pinch:null};
+function zoomParts(){return {stage:$('zoomStage'),canvas:$('zoomCanvas')};}
+function zoomSvg(){return $('paperView').querySelector('svg');}
+function zoomRender(){
+  const {canvas}=zoomParts();
+  canvas.style.width=zoomBox.base[0]+'px';canvas.style.height=zoomBox.base[1]+'px';
+  canvas.style.transform=`translate(${zoomBox.x}px, ${zoomBox.y}px) scale(${zoomBox.scale})`;
+  $('zoomLevel').textContent=Math.round(zoomBox.scale*100)+'%';
+  $('zoomFit').disabled=zoomBox.scale<=1.001;
+}
+function zoomLayout(keepView){
+  const {stage,canvas}=zoomParts(), svg=canvas.querySelector('svg');
+  if(!svg||!stage.clientWidth||!stage.clientHeight)return;
+  const viewBox=svg.viewBox?.baseVal;
+  const ratio=viewBox&&viewBox.width&&viewBox.height?viewBox.width/viewBox.height:210/297;
+  const pad=30, room=[Math.max(60,stage.clientWidth-pad*2),Math.max(60,stage.clientHeight-pad*2)];
+  const base=room[0]/room[1]>ratio?[room[1]*ratio,room[1]]:[room[0],room[0]/ratio];
+  const previous=zoomBox.base;
+  if(keepView&&previous[0]){
+    // Keep the middle of the visible area over the same part of the page.
+    const cx=stage.clientWidth/2, cy=stage.clientHeight/2;
+    const fx=(cx-zoomBox.x)/zoomBox.scale/previous[0], fy=(cy-zoomBox.y)/zoomBox.scale/previous[1];
+    zoomBox.x=cx-fx*zoomBox.scale*base[0]; zoomBox.y=cy-fy*zoomBox.scale*base[1];
+  }else{
+    zoomBox.scale=1;
+    zoomBox.x=(stage.clientWidth-base[0])/2; zoomBox.y=(stage.clientHeight-base[1])/2;
+  }
+  zoomBox.base=base;zoomRender();
+}
+function zoomAt(clientX,clientY,factor){
+  const {stage}=zoomParts(),rect=stage.getBoundingClientRect();
+  const scale=Math.min(16,Math.max(.25,zoomBox.scale*factor)),grow=scale/zoomBox.scale;
+  if(grow===1)return;
+  const cx=clientX-rect.left, cy=clientY-rect.top;
+  zoomBox.x=cx-(cx-zoomBox.x)*grow; zoomBox.y=cy-(cy-zoomBox.y)*grow;
+  zoomBox.scale=scale;zoomRender();
+}
+function zoomMount(relayout){
+  // The dialog shows a copy of the on-screen SVG, so a redraw while it is open
+  // (coordinate or page change) updates the magnified view too.
+  const source=zoomSvg(); if(!source)return false;
+  const clone=source.cloneNode(true),canvas=zoomParts().canvas;
+  clone.removeAttribute('style');clone.removeAttribute('width');clone.removeAttribute('height');
+  canvas.replaceChildren(clone);
+  if(relayout)zoomLayout(true);
+  return true;
+}
+function previewZoomOpen(){
+  const dialog=$('previewZoom');
+  if(!zoomMount(false))return;
+  if(!dialog.open)dialog.showModal();
+  requestAnimationFrame(()=>{zoomLayout(false);$('zoomStage').focus({preventScroll:true});});
+}
+$('zoomPreview').onclick=previewZoomOpen;
+$('previewZoom').addEventListener('close',()=>{$('zoomPreview').focus({preventScroll:true});});
+$('closePreviewZoom').onclick=()=>$('previewZoom').close();
+$('zoomFit').onclick=()=>zoomLayout(false);
+$('zoomIn').onclick=()=>{const {stage}=zoomParts(),r=stage.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,1.35);};
+$('zoomOut').onclick=()=>{const {stage}=zoomParts(),r=stage.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,1/1.35);};
+$('zoomStage').addEventListener('wheel',event=>{
+  event.preventDefault();
+  zoomAt(event.clientX,event.clientY,Math.exp(-event.deltaY*0.0015));
+},{passive:false});
+$('zoomStage').addEventListener('dblclick',event=>{
+  if(zoomBox.scale>1.05)zoomLayout(false); else zoomAt(event.clientX,event.clientY,2.4);
+});
+function zoomPinchPoints(){
+  const points=[...zoomBox.pointers.values()];
+  if(points.length<2)return null;
+  const [a,b]=points;
+  return {distance:Math.hypot(a.x-b.x,a.y-b.y),cx:(a.x+b.x)/2,cy:(a.y+b.y)/2};
+}
+$('zoomStage').addEventListener('pointerdown',event=>{
+  if(event.pointerType==='mouse'&&event.button!==0)return;
+  const {stage}=zoomParts();
+  zoomBox.pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+  // Capture can be refused for a pointer that already ended; panning still works.
+  try{stage.setPointerCapture(event.pointerId);}catch(error){}
+  if(zoomBox.pointers.size===1){
+    zoomBox.drag={id:event.pointerId,x:event.clientX,y:event.clientY,left:zoomBox.x,top:zoomBox.y};
+    stage.classList.add('is-dragging');
+  }else if(zoomBox.pointers.size===2){
+    // A second finger switches from panning to pinch zooming.
+    zoomBox.drag=null;zoomBox.pinch=zoomPinchPoints();
+  }
+});
+$('zoomStage').addEventListener('pointermove',event=>{
+  if(!zoomBox.pointers.has(event.pointerId))return;
+  zoomBox.pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+  if(zoomBox.pointers.size>=2){
+    const next=zoomPinchPoints();
+    if(!next)return;
+    if(zoomBox.pinch&&zoomBox.pinch.distance>0)zoomAt(next.cx,next.cy,next.distance/zoomBox.pinch.distance);
+    zoomBox.pinch=next;return;
+  }
+  const drag=zoomBox.drag;if(!drag||drag.id!==event.pointerId)return;
+  zoomBox.x=drag.left+event.clientX-drag.x;zoomBox.y=drag.top+event.clientY-drag.y;zoomRender();
+});
+const endZoomDrag=event=>{
+  const {stage}=zoomParts();
+  zoomBox.pointers.delete(event.pointerId);
+  if(zoomBox.pointers.size<2)zoomBox.pinch=null;
+  // A finger left after a pinch becomes the new pan origin.
+  const [id,point]=zoomBox.pointers.entries().next().value||[];
+  zoomBox.drag=point?{id,x:point.x,y:point.y,left:zoomBox.x,top:zoomBox.y}:null;
+  if(!zoomBox.pointers.size)stage.classList.remove('is-dragging');
+};
+$('zoomStage').addEventListener('pointerup',endZoomDrag);
+$('zoomStage').addEventListener('pointercancel',endZoomDrag);
+$('zoomStage').addEventListener('keydown',event=>{
+  const step=event.shiftKey?120:40;
+  const pans={ArrowLeft:[step,0],ArrowRight:[-step,0],ArrowUp:[0,step],ArrowDown:[0,-step]};
+  if(pans[event.key]){zoomBox.x+=pans[event.key][0];zoomBox.y+=pans[event.key][1];zoomRender();event.preventDefault();}
+  else if(event.key==='+'||event.key==='='||event.key==='-'){const {stage}=zoomParts(),r=stage.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,event.key==='-'?1/1.35:1.35);event.preventDefault();}
+  else if(event.key==='0'){zoomLayout(false);event.preventDefault();}
+});
+window.addEventListener('resize',()=>{if($('previewZoom').open)zoomLayout(true);});
+$('paperView').addEventListener('click',()=>{if(zoomSvg())previewZoomOpen();});
+function allowOverlap(){return false;}
+function notebookSizing(){return {lineSizing:$('lineSizing').value,lineLooseness:Number($('lineLooseness').value),allowOverlap:$('allowOverlap').checked,smartBalance:$('smartBalance').checked,letterScale:Number($('letterScale').value),digitScale:Number($('digitScale').value)};}
+function validNotebookSizing(value){return (value.lineSizing===undefined||['rows','size'].includes(value.lineSizing))&&(value.lineLooseness===undefined||(typeof value.lineLooseness==='number'&&Number.isFinite(value.lineLooseness)&&value.lineLooseness>=1&&value.lineLooseness<=4))&&(value.allowOverlap===undefined||typeof value.allowOverlap==='boolean')&&(value.smartBalance===undefined||typeof value.smartBalance==='boolean')&&['letterScale','digitScale'].every(key=>value[key]===undefined||(typeof value[key]==='number'&&Number.isFinite(value[key])&&value[key]>=50&&value[key]<=150));}
+// `ratio` is the measured floor (for the hint); `min` is the slider limit, which
+// overlap mode drops to 1.
+let linePitchFloor={ratio:1,min:1,pitch:null,ink:null,feasible:true,error:''},linePitchTimer,linePitchRevision=0;
 function restoreNotebookSizing(value){
+  // A floor predicted for the previous preset must not rewrite this one; the
+  // refresh below re-derives it for the restored layout.
+  linePitchFloor={ratio:1,min:1,pitch:null,ink:null,feasible:true,error:''};
   $('lineSizing').value=value.lineSizing||'rows';
-  const v=value.values||currentLayout(),ratio=(v.height-v.marginTop-v.marginBottom)/v.rows/v.size;
+  $('allowOverlap').checked=Boolean(value.allowOverlap);
+  $('smartBalance').checked=Boolean(value.smartBalance);
+  for(const key of ['letterScale','digitScale']){$(key).value=value[key]??100;$(key+'Slider').value=$(key).value;}
+  // A range input clamps on assignment, so clear the previous preset's floor
+  // before restoring a value that only this preset's floor allows.
+  $('lineLooseness').min='1';
+  const v=value.values||currentLayout(),ratio=(v.height-v.marginTop-v.marginBottom)/v.rows/Math.max(v.size,v.latinSize||v.size);
   $('lineLooseness').value=value.lineLooseness??Math.max(1,Math.min(4,Math.round(ratio*100)/100));
   syncNotebookSizing();
 }
+function linePitchSettings(){
+  // The floor depends on which glyphs actually appear, so send the same pages a
+  // preview would receive; the editor's current text wins over the cached copy.
+  const pages=sourcePages.map((text,index)=>({text:index===sourceIndex?$('text').value:text}));
+  return {...paperSettings(),input_format:$('inputFormat').value,font_mix:selectedFonts.map(f=>({...f})),pages};
+}
+async function refreshLinePitch(){
+  const request=++linePitchRevision;
+  if(layoutMode!=='notebook'||!selectedFonts.some(f=>f.weight>0)){
+    linePitchFloor={ratio:1,min:1,pitch:null,ink:null,feasible:true,error:''};syncNotebookSizing();return;
+  }
+  try{
+    const result=await api('/api/line-pitch',linePitchSettings());
+    if(request!==linePitchRevision)return;
+    linePitchFloor={ratio:Math.min(4,Math.max(1,result.ratio)),min:Math.min(4,Math.max(1,result.min_ratio)),pitch:result.pitch_mm,ink:result.ink_mm,feasible:result.feasible,error:''};
+  }catch(error){
+    if(request!==linePitchRevision)return;
+    linePitchFloor={ratio:1,min:1,pitch:null,ink:null,feasible:false,error:error.message};
+  }
+  syncNotebookSizing();
+}
+function scheduleLinePitch(){clearTimeout(linePitchTimer);linePitchTimer=setTimeout(refreshLinePitch,200);}
 function syncNotebookSizing(){
-  const notebook=layoutMode!=='grid',mode=$('lineSizing').value;
-  $('rows').readOnly=notebook&&mode==='size';$('size').readOnly=notebook&&mode==='rows';
+  for(const key of ['letterScale','digitScale']){$(key).disabled=!$('smartBalance').checked;$(key+'Slider').disabled=!$('smartBalance').checked;}
+  const notebook=layoutMode!=='grid',mode=$('lineSizing').value,overlap=allowOverlap();
+  // The slider selects the nominal pitch; actual ink collisions are resolved locally.
+  const floor=1;
+  $('lineLooseness').min=floor.toFixed(2);
+  if(Number($('lineLooseness').value)<floor)$('lineLooseness').value=floor.toFixed(2);
+  $('rows').readOnly=notebook&&mode==='size';$('size').readOnly=notebook&&mode==='rows';$('latinSize').readOnly=$('size').readOnly;
   $('rows').closest('label').firstChild.textContent=$('rows').readOnly?'每页行数（自动）':'每页行数';
-  $('size').closest('label').firstChild.textContent=$('size').readOnly?'字高 / mm（自动）':'字高 / mm';
-  $('rows').title=$('rows').readOnly?'根据字高和松紧自动计算':'';$('size').title=$('size').readOnly?'根据行数和松紧自动计算':'';
+  $('size').closest('label').firstChild.textContent=$('size').readOnly?'中文字高 / mm（自动）':'中文字高 / mm';
+  $('latinSize').closest('label').firstChild.textContent=$('latinSize').readOnly?'英文字高 / mm（自动）':'英文字高 / mm';
+  $('rows').title=$('rows').readOnly?'根据字高和松紧自动计算':'';
+  $('size').title=$('size').readOnly?'根据行数和松紧自动计算':'';
+  $('latinSize').title=$('size').readOnly?'跟随中文字高按当前比例自动缩放':'';
   if(!notebook)return;
   const ratio=Number($('lineLooseness').value);
   $('lineLoosenessValue').textContent=ratio.toFixed(2)+' 倍行距';
   try{
-    const result=window.NotebookSizing.compute(currentLayout(),mode,ratio);
-    if(mode==='rows')$('size').value=Number(result.size.toFixed(6));else $('rows').value=result.rows;
-    $('lineSizingHint').textContent=`${mode==='rows'?'行数固定，拖动滑块调整自动字高':'字高固定，拖动滑块调整行距和自动行数'}：${result.rows} 行 · 字高 ${result.size.toFixed(2)} mm · 行距 ${result.pitch.toFixed(2)} mm · 行间留白 ${result.gap.toFixed(2)} mm。`;
+    const result=window.NotebookSizing.compute(currentLayout(),mode,ratio,overlap);
+    if(mode==='rows'){$('size').value=Number(result.size.toFixed(6));$('latinSize').value=Number(result.latinSize.toFixed(6));}else $('rows').value=result.rows;
+    $('lineSizingHint').textContent=`${result.rows} 行 · 行距 ${result.pitch.toFixed(2)} mm`;
   }catch(error){$('lineSizingHint').textContent=error.message;}
 }
-function coordinateChanged(){syncNotebookSizing();invalidate();$('origin').checked=false;clearTimeout(axisTimer);axisTimer=setTimeout(refreshCoordinatePreview,150);}
+function coordinateChanged(){syncNotebookSizing();scheduleLinePitch();invalidate();$('origin').checked=false;clearTimeout(axisTimer);axisTimer=setTimeout(refreshCoordinatePreview,150);}
 function findPreset(){return [...builtinPresets,...layoutPresets].find(p=>p.id===selectedPreset);}
 function validPresetValues(values,mode=layoutMode||'notebook'){
   if(!values||typeof values!=='object')return false;
@@ -282,7 +460,7 @@ function validPresetValues(values,mode=layoutMode||'notebook'){
   }
   if(!Number.isInteger(values.rows)||!Number.isInteger(values.gridColumns)||values.width<=values.marginLeft+values.marginRight)return false;
   const height=values.height-values.marginTop-values.marginBottom;
-  return mode==='notebook'?height+.001>=values.rows*values.size:
+  return mode==='notebook'?height+.001>=values.rows*Math.max(values.size,values.latinSize):
     Math.min((values.width-values.marginLeft-values.marginRight-(values.gridColumns-1)*values.gridColumnGap)/values.gridColumns,(height-(values.rows-1)*values.gridRowGap)/values.rows)>2*values.gridPadding+.2;
 }
 function currentLayout(){return Object.fromEntries(layoutFields.map(key=>[key,Number($(key).value)]));}
@@ -299,14 +477,14 @@ function renderPresets(){
 }
 function updatePresetHint(){
   const preset=findPreset(), values=currentLayout();
-  const oldRatio=preset?(preset.values.height-preset.values.marginTop-preset.values.marginBottom)/preset.values.rows/preset.values.size:2.37;
+  const oldRatio=preset?(preset.values.height-preset.values.marginTop-preset.values.marginBottom)/preset.values.rows/Math.max(preset.values.size,preset.values.latinSize):2.37;
   const savedRatio=preset?.lineLooseness??Math.max(1,Math.min(4,Math.round(oldRatio*100)/100));
-  const dirty=preset&&(layoutFields.some(key=>values[key]!==preset.values[key])||(layoutMode!=='grid'&&((preset.lineSizing||'rows')!==$('lineSizing').value||savedRatio!==Number($('lineLooseness').value)))||$('gridDrawLines').checked!==Boolean(preset.drawLines)||!sameHumanization(currentHumanization(),preset.humanization||humanDefault));
-  $('presetHint').textContent=(dirty?'参数已修改，尚未保存。':'当前参数已载入预设。')+
-    `保存${layoutMode==='grid'?'表格':'笔记'}模式的排版、标点、速度与仿真参数；仅保存在当前浏览器。`;
+  const dirty=preset&&(Boolean(preset.smartBalance)!==$('smartBalance').checked||(preset.letterScale??100)!==Number($('letterScale').value)||(preset.digitScale??100)!==Number($('digitScale').value)||layoutFields.some(key=>values[key]!==preset.values[key])||(layoutMode!=='grid'&&((preset.lineSizing||'rows')!==$('lineSizing').value||savedRatio!==Number($('lineLooseness').value)||Boolean(preset.allowOverlap)!==$('allowOverlap').checked))||$('gridDrawLines').checked!==Boolean(preset.drawLines)||!sameHumanization(currentHumanization(),preset.humanization||humanDefault));
+  $('presetHint').textContent=dirty?'有未保存的修改':'';
+  $('presetHint').hidden=!dirty;
 }
-function storePresets(presets=layoutPresets, selected=selectedPreset){
-  localStorage.setItem(presetStorage,JSON.stringify({presets,selected}));
+async function storePresets(presets=layoutPresets, selected=selectedPreset){
+  await serverPresets.save(presetStorage,presets,selected);
 }
 function applyPreset(preset){
   selectedPreset=preset.id;
@@ -319,11 +497,11 @@ function applyPreset(preset){
 }
 function restorePresets(){
   try{
-    const saved=JSON.parse(localStorage.getItem(presetStorage));
+    const saved=serverPresets.read(presetStorage);
     if(saved&&Array.isArray(saved.presets)){
       const ids=new Set(builtinPresets.map(p=>p.id)), names=new Set();
-      layoutPresets=saved.presets.slice(0,50).filter(p=>{
-        if(p&&p.values&&typeof p.values==='object')p.values={...defaultLayout,...p.values};
+      layoutPresets=saved.presets.filter(p=>{
+        if(p&&p.values&&typeof p.values==='object')p.values={...defaultLayout,...p.values,latinSize:p.values.latinSize??p.values.size??defaultLayout.latinSize};
         if(!p||typeof p.id!=='string'||!p.id||p.id.length>100||ids.has(p.id)||typeof p.name!=='string'||!p.name.trim()||p.name.length>40||names.has(p.name)||!validPresetValues(p.values)||!validNotebookSizing(p)||(p.humanization!==undefined&&!validHumanization(p.humanization)))return false;
         ids.add(p.id);names.add(p.name);return true;
       });
@@ -345,15 +523,15 @@ async function saveLayoutPreset(update=false){
   if(!validHumanization(humanization)||Object.values(humanFields).some(suffix=>$('human'+suffix).value===''))throw new Error('仿真参数无效，请检查各项幅度');
   if(layoutPresets.some(p=>p.name===name&&(!update||p.id!==selectedPreset)))throw new Error('已有同名预设，请选择它后点击“更新当前预设”');
   if(update&&!layoutPresets.some(p=>p.id===selectedPreset))throw new Error('内置预设请另存为新预设');
-  if(!update&&layoutPresets.length>=50)throw new Error('最多保存 50 个预设，请先删除不用的预设');
+  if(!update&&layoutPresets.length>=500)throw new Error('最多保存 500 个预设，请先删除不用的预设');
   await api('/api/coordinate-preview',paperSettings());
   // Capture values before validation, and refuse to save if an edit raced it.
   if(layoutMode!==capturedMode||$('gridDrawLines').checked!==drawLines||selectedPreset!==capturedPreset||layoutFields.some(key=>Number($(key).value)!==values[key])||!sameHumanization(currentHumanization(),humanization)||$('presetName').value.trim()!==name)throw new Error('保存期间参数已变化，请重新保存');
   if(JSON.stringify(sizing)!==JSON.stringify(notebookSizing()))throw new Error('保存期间松紧或排版方式已变化，请重新保存');
   const preset={id:update?selectedPreset:'preset-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),name,values,humanization,drawLines,...sizing};
   const next=update?layoutPresets.map(p=>p.id===selectedPreset?preset:p):[...layoutPresets,preset];
-  try{storePresets(next,preset.id);}catch(error){throw new Error('浏览器不允许保存预设，请检查浏览器存储设置');}
-  layoutPresets=next;selectedPreset=preset.id;deletedPreset=null;renderPresets();notice(update?'当前预设已更新':'新预设已保存，刷新后仍可使用');
+  await storePresets(next,preset.id);
+  layoutPresets=next;selectedPreset=preset.id;deletedPreset=null;renderPresets();notice(update?'当前预设已更新到服务器':'新预设已保存到服务器');
 }
 function restoreCoordinateSettings(){
   try{
@@ -362,9 +540,28 @@ function restoreCoordinateSettings(){
     $('reverseX').checked=saved.reverse_x;$('reverseY').checked=saved.reverse_y;$('swapXY').checked=saved.swap_xy;$('originCorner').value=saved.origin;
   }catch(error){/* Browser storage may be unavailable. Default coordinates remain usable. */}
 }
+const fontScopes=['all','zh','en'];
+const scopeLabels={all:'中英通用',zh:'仅中文',en:'仅英文'};
+function currentScope(font){return fontScopes.includes(font.scope)?font.scope:'all';}
+// Weights compare only within a script: a Chinese-only font never competes for Latin text.
+function fontScripts(font){
+  const scope=currentScope(font);
+  return scope==='all'?['zh','en']:[scope];
+}
+function scopeProbabilities(){
+  const totals={zh:0,en:0};
+  for(const font of selectedFonts)for(const script of fontScripts(font))
+    totals[script]+=Number.isFinite(font.weight)?font.weight:0;
+  return selectedFonts.map(font=>Object.fromEntries(fontScripts(font)
+    .map(script=>[script,totals[script]>0?font.weight/totals[script]:0])));
+}
+function probabilityText(shares){
+  return fontScopes.filter(scope=>scope!=='all'&&shares[scope]!==undefined)
+    .map(scope=>(scope==='zh'?'中 ':'英 ')+(100*shares[scope]).toFixed(0)+'%').join(' · ');
+}
 function updateProbabilities(){
-  const total=selectedFonts.reduce((sum,f)=>sum+(Number.isFinite(f.weight)?f.weight:0),0);
-  for(const [index,node] of [...$('fontMix').querySelectorAll('.font-probability')].entries())node.textContent=total>0?(100*selectedFonts[index].weight/total).toFixed(1)+'%':'—';
+  const shares=scopeProbabilities();
+  for(const [index,node] of [...$('fontMix').querySelectorAll('.font-probability')].entries())node.textContent=probabilityText(shares[index]||{})||'—';
   $('addFont').disabled=!$('font').value||selectedFonts.length>=16||selectedFonts.some(f=>f.font_id===$('font').value);
   $('preview').textContent=selectedFonts.length>1||$('humanEnabled').checked?'生成全部页 / 重新随机 ↗':'生成全部页面预览 ↗';
   updateFontPresetHint();
@@ -372,14 +569,15 @@ function updateProbabilities(){
 function validFontCombination(mix){
   return Array.isArray(mix)&&mix.length>=1&&mix.length<=16&&new Set(mix.map(f=>f&&f.font_id)).size===mix.length&&
     mix.every(f=>f&&typeof f.font_id==='string'&&f.font_id.length>0&&f.font_id.length<=200&&
-      typeof f.weight==='number'&&Number.isFinite(f.weight)&&f.weight>=0&&f.weight<=1000000)&&mix.some(f=>f.weight>0);
+      typeof f.weight==='number'&&Number.isFinite(f.weight)&&f.weight>=0&&f.weight<=1000000&&
+      (f.scope===undefined||fontScopes.includes(f.scope)))&&mix.some(f=>f.weight>0);
 }
 function missingPresetFonts(preset){return preset.mix.filter(f=>!fonts.some(font=>font.id===f.font_id));}
 function updateFontPresetHint(){
   const preset=fontPresets.find(p=>p.id===selectedFontPreset);
-  const dirty=preset&&(preset.mix.length!==selectedFonts.length||preset.mix.some((f,i)=>f.font_id!==selectedFonts[i]?.font_id||f.weight!==selectedFonts[i]?.weight));
-  $('fontPresetHint').textContent=(preset?(dirty?'组合已修改，尚未保存。':'当前字体组合已载入预设。'):'当前组合未保存。')+
-    '保存所选字体及各自权重；仅保存在当前浏览器。';
+  const dirty=preset&&(preset.mix.length!==selectedFonts.length||preset.mix.some((f,i)=>f.font_id!==selectedFonts[i]?.font_id||f.weight!==selectedFonts[i]?.weight||(f.scope||'all')!==currentScope(selectedFonts[i]||{})));
+  $('fontPresetHint').textContent=dirty?'组合有未保存的修改':'';
+  $('fontPresetHint').hidden=!dirty;
 }
 function renderFontPresets(){
   $('fontPreset').replaceChildren();
@@ -391,8 +589,8 @@ function renderFontPresets(){
   $('updateFontPreset').disabled=!selectedFontPreset;$('deleteFontPreset').disabled=!selectedFontPreset;
   $('undoFontPreset').hidden=!deletedFontPreset;updateFontPresetHint();
 }
-function storeFontPresets(presets=fontPresets,selected=selectedFontPreset){
-  localStorage.setItem(fontPresetStorage,JSON.stringify({presets,selected}));
+async function storeFontPresets(presets=fontPresets,selected=selectedFontPreset){
+  await serverPresets.save(fontPresetStorage,presets,selected);
 }
 function applyFontPreset(preset){
   const missing=missingPresetFonts(preset);
@@ -400,16 +598,16 @@ function applyFontPreset(preset){
     $('fontPreset').value=selectedFontPreset;
     notice('无法载入字体预设，缺少字体：'+missing.map(f=>f.name||f.font_id).join('、')+'。已保留当前组合。',true);return false;
   }
-  selectedFontPreset=preset.id;selectedFonts=preset.mix.map(f=>({font_id:f.font_id,weight:f.weight}));
+  selectedFontPreset=preset.id;selectedFonts=preset.mix.map(f=>({font_id:f.font_id,weight:f.weight,scope:currentScope(f)}));
   $('fontPresetName').value=preset.name;invalidate();renderFontMix();renderFontPresets();return true;
 }
 function restoreFontPresets(){
   let selected='';
   try{
-    const saved=JSON.parse(localStorage.getItem(fontPresetStorage));
+    const saved=serverPresets.read(fontPresetStorage);
     if(saved&&Array.isArray(saved.presets)){
       const ids=new Set(),names=new Set();
-      fontPresets=saved.presets.slice(0,50).filter(p=>{
+      fontPresets=saved.presets.filter(p=>{
         if(!p||typeof p.id!=='string'||!p.id||p.id.length>100||ids.has(p.id)||typeof p.name!=='string'||!p.name.trim()||p.name.length>40||names.has(p.name)||!validFontCombination(p.mix))return false;
         ids.add(p.id);names.add(p.name);return true;
       });
@@ -421,18 +619,18 @@ function restoreFontPresets(){
   if(preset)applyFontPreset(preset);
   renderFontPresets();
 }
-function saveFontPreset(update=false){
+async function saveFontPreset(update=false){
   const name=$('fontPresetName').value.trim();
   if(!name||name.length>40)throw new Error('请输入 1–40 字的字体预设名称');
   if(!validFontCombination(selectedFonts)||selectedFonts.some(f=>!fonts.some(font=>font.id===f.font_id)))throw new Error('请选择 1–16 种可用字体并填写有效权重，至少一种权重大于 0');
   if(update&&!fontPresets.some(p=>p.id===selectedFontPreset))throw new Error('请先选择要更新的字体预设');
   if(fontPresets.some(p=>p.name===name&&(!update||p.id!==selectedFontPreset)))throw new Error('已有同名字体预设，请选择后点击“更新字体预设”');
-  if(!update&&fontPresets.length>=50)throw new Error('最多保存 50 个字体预设，请先删除不用的预设');
+  if(!update&&fontPresets.length>=500)throw new Error('最多保存 500 个字体预设，请先删除不用的预设');
   const preset={id:update?selectedFontPreset:'font-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),name,
-    mix:selectedFonts.map(f=>({font_id:f.font_id,weight:f.weight,name:fonts.find(font=>font.id===f.font_id).name}))};
+    mix:selectedFonts.map(f=>({font_id:f.font_id,weight:f.weight,scope:currentScope(f),name:fonts.find(font=>font.id===f.font_id).name}))};
   const next=update?fontPresets.map(p=>p.id===selectedFontPreset?preset:p):[...fontPresets,preset];
-  try{storeFontPresets(next,preset.id);}catch(error){throw new Error('浏览器不允许保存字体预设，请检查存储设置');}
-  fontPresets=next;selectedFontPreset=preset.id;deletedFontPreset=null;renderFontPresets();notice(update?'字体预设已更新':'字体组合与权重已保存，刷新后仍可使用');
+  await storeFontPresets(next,preset.id);
+  fontPresets=next;selectedFontPreset=preset.id;deletedFontPreset=null;renderFontPresets();notice(update?'字体预设已更新到服务器':'字体组合与权重已保存到服务器');
 }
 function renderFontMix(){
   $('fontMix').replaceChildren();
@@ -440,13 +638,17 @@ function renderFontMix(){
     const font=fonts.find(f=>f.id===selected.font_id);
     const row=document.createElement('div');row.className='font-mix-row';
     const name=document.createElement('span');name.className='font-mix-name';name.textContent=font.name;name.title=font.name;
+    const scope=document.createElement('select');scope.className='font-scope';scope.setAttribute('aria-label',font.name+' 适用范围');
+    for(const value of fontScopes){const option=document.createElement('option');option.value=value;option.textContent=scopeLabels[value];scope.append(option);}
+    scope.value=currentScope(selected);
+    scope.onchange=()=>{selected.scope=scope.value;invalidate();updateProbabilities();};
     const weight=document.createElement('input');weight.type='number';weight.min='0';weight.max='1000000';weight.step='any';weight.value=selected.weight;weight.setAttribute('aria-label',font.name+' 权重');
     weight.oninput=()=>{selected.weight=weight.value===''?0:Number(weight.value);invalidate();updateProbabilities();};
     const probability=document.createElement('span');probability.className='font-probability';
     const remove=document.createElement('button');remove.className='text-button font-remove';remove.type='button';remove.textContent='×';remove.setAttribute('aria-label','移除 '+font.name);
     remove.onclick=()=>{selectedFonts=selectedFonts.filter(f=>f!==selected);invalidate();renderFontMix();};
     const sample=document.createElement('div');sample.className='font-sample font-mix-sample';sample.dataset.fontPreview=font.id;sample.textContent='加载字形…';
-    row.append(name,weight,probability,remove,sample);$('fontMix').append(row);
+    row.append(name,scope,weight,probability,remove,sample);$('fontMix').append(row);
   }
   if(!selectedFonts.length){const empty=document.createElement('p');empty.className='hint';empty.textContent='从上方添加至少一种字体。';$('fontMix').append(empty);}
   updateProbabilities();
@@ -457,10 +659,26 @@ function renderFontUsage(metadata){
   const title=document.createElement('p');title.className='font-usage-title';title.textContent='本次预览的实际字体分布';$('fontUsage').append(title);
   for(const item of metadata.font_mix||[]){
     const row=document.createElement('div');row.className='font-usage-row';
-    const name=document.createElement('span');name.textContent=fonts.find(f=>f.id===item.font_id)?.name||item.font;name.title=name.textContent;
-    const count=document.createElement('span');count.textContent=`${item.used} 字 · ${(100*item.actual_probability).toFixed(1)}%`;row.append(name,count);$('fontUsage').append(row);
+    const name=document.createElement('span');name.textContent=(item.external_fallback?'补字 · ':'')+(fonts.find(f=>f.id===item.font_id)?.name||item.font)+(item.scope&&item.scope!=='all'?`（${scopeLabels[item.scope]}）`:'');name.title=name.textContent;
+    const count=document.createElement('span');count.textContent=`${item.used} 字 · ${(100*item.actual_probability).toFixed(1)}%`;const balance=metadata.font_balance?.fonts.find(f=>f.font_id===item.font_id);if(balance){const detail=document.createElement('small');detail.style.display='block';detail.textContent=`英数实际缩放：字母 ${(100*balance.letters.scale).toFixed(0)}% / 数字 ${(100*balance.digits.scale).toFixed(0)}%`;if(!balance.letters.samples||!balance.digits.samples)detail.textContent+='（部分样本不足，保留原比例）';name.append(detail);}row.append(name,count);$('fontUsage').append(row);
   }
-  const note=document.createElement('p');note.className='hint';note.textContent=`${metadata.fallback_characters||0} 个字符因部分字体缺字而重分配。下载及写入使用当前预览；再次生成会重新随机。`;$('fontUsage').append(note);$('fontUsage').hidden=false;
+  if(metadata.fallback_characters){const note=document.createElement('p');note.className='hint';note.textContent=`缺字替代 ${metadata.fallback_characters} 字 · 相近字体补字 ${metadata.external_fallback_characters||0} 字（橙色）`;$('fontUsage').append(note);}
+  if(metadata.repeat_distribution?.groups.length){
+    const details=document.createElement('details'),summary=document.createElement('summary'),list=document.createElement('ul');
+    summary.textContent=`本页同字分散 · ${metadata.repeat_distribution.groups.length} 种重复字符`;
+    for(const group of metadata.repeat_distribution.groups.slice(0,40)){
+      const row=document.createElement('li');row.textContent=`「${group.character}」× ${group.occurrences} · 使用 ${group.used_fonts} / ${group.available_fonts} 种可用字体`+(group.nearest_same_font_mm===null?' · 字体未重复':` · 最近同字体距离 ${group.nearest_same_font_mm.toFixed(1)} mm`);list.append(row);
+    }
+    if(metadata.repeat_distribution.groups.length>40){const more=document.createElement('li');more.textContent='更多结果见页面 JSON。';list.append(more);}
+    details.append(summary,list);$('fontUsage').append(details);
+  }
+  if(metadata.glyph_fallbacks?.length){
+    const list=document.createElement('ul');list.className='fallback-details';
+    const seen=new Set();for(const item of metadata.glyph_fallbacks){const key=JSON.stringify([item.character,item.reference_font_id,item.font_id]);if(seen.has(key))continue;seen.add(key);
+      const row=document.createElement('li');row.textContent=`「${item.character}」 ${item.reference_font} → ${item.font} · 相似评分 ${item.score}`;list.append(row);}
+    $('fontUsage').append(list);
+  }
+  $('fontUsage').hidden=false;
 }
 function filterFonts(){
   const selected=$('font').value;
@@ -489,19 +707,31 @@ async function loadPorts(){
     if(state.device_control)draft.device_control=state.device_control;
     deviceProfiles[legacyPort]=(await api('/api/device-profiles',draft)).profile;
   }
-  if(!profileLoaded||profilePort!==$('port').value){applyDeviceProfile($('port').value);profileLoaded=true;}else renderDeviceNames();
+  if(!profileLoaded||profilePort!==$('port').value){
+    const switchWorkspace=window.sharedWorkspace?.ready;
+    if(switchWorkspace)await window.sharedWorkspace.save();
+    applyDeviceProfile($('port').value);profileLoaded=true;
+    if(switchWorkspace)await window.sharedWorkspace.open(profilePort);
+  }else renderDeviceNames();
 }
 async function load(){
+  await serverPresets.init();
+  if(!serverPresetUIReady){
+    restorePresets();serverPresetUIReady=true;
+    if(serverPresets.imported)notice(`已将本机 ${serverPresets.imported} 个预设迁移到服务器，本地备份已保留`);
+  }
   const result=await api('/api/fonts');fonts=result.fonts;filterFonts();
   const defaultFont=fonts.find(f=>f.name==='blood8-2_kvenjoy_blood8');if(defaultFont)$('font').value=defaultFont.id;
   selectedFonts=selectedFonts.filter(f=>fonts.some(font=>font.id===f.font_id));
-  if(!selectedFonts.length&&$('font').value)selectedFonts=[{font_id:$('font').value,weight:100}];
+  if(!selectedFonts.length&&$('font').value)selectedFonts=[{font_id:$('font').value,weight:100,scope:'all'}];
   if(!fontPresetsLoaded)restoreFontPresets();
   else renderFontPresets();
   renderFontMix();
   window.FontBrowser?.start();
   state=await api('/api/state');renderState();await loadPorts();
+  await refreshLinePitch();
   await refreshCoordinatePreview();
+  await window.sharedWorkspace?.open(profilePort);
 }
 async function action(task){if(busy)return;actionRevision++;busy=true;renderState();try{await task();}catch(error){notice(error.message,true);}finally{busy=false;renderState();}}
 async function realtimeAction(task){actionRevision++;try{await task();}catch(error){notice(error.message,true);}finally{renderState();}}
@@ -518,6 +748,7 @@ function renderSourcePages(){
 function selectSource(index){sourcePages[sourceIndex]=$('text').value;sourceIndex=index;renderSourcePages();}
 function captureMode(){return {values:currentLayout(),humanization:currentHumanization(),drawLines:$('gridDrawLines').checked,selectedPreset,...notebookSizing()};}
 function setMode(mode){
+  if(serverPresets.pending){$('layoutMode').value=layoutMode;return;}
   if(!['notebook','grid'].includes(mode))return;
   if(layoutMode)modeDrafts[layoutMode]=captureMode();
   layoutMode=mode;$('layoutMode').value=mode;$('compositionFields').disabled=false;
@@ -534,8 +765,7 @@ function setMode(mode){
   }
   $('gridOptions').hidden=mode!=='grid';$('notebookOptions').hidden=mode!=='notebook';
   sizingPanel.hidden=mode!=='notebook';
-  for(const key of ['size','spacing'])$(key).closest('label').hidden=mode==='grid';
-  $('modeHint').textContent=mode==='grid'?'表格模式：普通字符逐格居中，公式占连续多格；预设与笔记模式独立。':'笔记模式：按宽度换行，支持中文标点留白与公式；预设与表格模式独立。';
+  for(const key of ['size','latinSize','spacing'])$(key).closest('label').hidden=mode==='grid';
   try{localStorage.setItem('plotter.layout-mode.v1',mode);}catch(error){/* Mode remains usable without storage. */}
   coordinateChanged();
 }
@@ -546,16 +776,18 @@ function renderOutputNavigation(){
   $('previewPage').value=pages.length?outputIndex:0;$('previewPage').disabled=!pages.length;
   $('previewPrev').disabled=!pages.length||outputIndex===0;$('previewNext').disabled=!pages.length||outputIndex===pages.length-1;
   $('downloadAll').disabled=!pages.length||busy;
-  $('documentSummary').textContent=pages.length?`共 ${pages.length} 张纸 · 来自 ${sourcePages.length} 个预设内容页 · 当前页来自预设第 ${pages[outputIndex].metadata.source_page} 页。每页需换纸并重新确认原点。`:layoutMode?'尚未生成全部页面。':'选择排版模式后开始编辑。';
+  $('documentSummary').textContent=pages.length?`共 ${pages.length} 页 · 当前来自预设第 ${pages[outputIndex].metadata.source_page} 页`:'';
+  $('documentSummary').hidden=!pages.length;
 }
 function showOutputPage(index){
   if(!documentResult?.pages[index])return;
   outputIndex=index;const page=documentResult.pages[index],m=page.metadata;
-  currentJob=m.empty||startedJobs.has(page.job_id)?null:page.job_id;downloadJob=page.job_id;$('origin').checked=false;
+  // Content stays writable: every start becomes a new execution of this page.
+  currentJob=m.empty?null:page.job_id;downloadJob=page.job_id;$('origin').checked=false;
   axisRevision++;clearTimeout(axisTimer);displayPaper(page.svg,m);renderOutputNavigation();
-  $('previewStatus').textContent=m.empty?'本页为空白页，可下载；不会发送书写任务。':`第 ${index+1} 页路径已生成${startedJobs.has(page.job_id)?'，已提交过该页任务':''}。下载与写入使用同一份路径。`;
+  $('previewStatus').textContent=m.empty?'本页为空白页':`第 ${index+1} 页已生成`;
   $('metrics').replaceChildren();
-  for(const value of [`${m.lines.length} 行 · ${m.strokes} 笔画`,`${m.formula_count||0} 个公式 · ${m.commands} 条指令`,`${m.xy_mm} mm 路程`,`绘图 ${m.feed} / 移动 ${m.move_feed??3000} mm/min`]){const span=document.createElement('span');span.textContent=value;$('metrics').append(span);}
+  for(const value of [`${m.lines.length} 行 · ${m.strokes} 笔画`,`${m.formula_count||0} 个公式 · ${m.commands} 条指令`,`${m.xy_mm} mm 路程`,`绘图 ${m.feed} / 移动 ${m.move_feed??10000} mm/min`]){const span=document.createElement('span');span.textContent=value;$('metrics').append(span);}
   renderFontUsage(m);renderState();
 }
 function saveBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
@@ -569,10 +801,10 @@ $('preview').onclick=()=>action(async()=>{
   const capturedRevision=revision;
   $('preview').disabled=true;
   try{
-    const result=await api('/api/preview',data);
+    const result=window.sharedWorkspace?await window.sharedWorkspace.generate(data):await api('/api/preview',data);
     if(capturedRevision!==revision){notice('生成期间内容发生了修改，请重新生成预览');return;}
     if(result.metadata.motion_revision!==undefined){state.motion_revision=result.metadata.motion_revision;observedMotionRevision=result.metadata.motion_revision;}
-    documentResult=result;startedJobs.clear();showOutputPage(0);
+    documentResult=result;showOutputPage(0);
     notice(`已生成 ${result.page_count} 页，可切换预览、逐页写字或下载全部页面`);
   }finally{$('preview').disabled=false;}
 });
@@ -587,16 +819,24 @@ $('sourcePage').onchange=()=>selectSource(Number($('sourcePage').value));
 $('sourcePrev').onclick=()=>selectSource(sourceIndex-1);$('sourceNext').onclick=()=>selectSource(sourceIndex+1);
 $('addPage').onclick=()=>{sourcePages[sourceIndex]=$('text').value;sourcePages.splice(sourceIndex+1,0,'');sourceIndex++;renderSourcePages();invalidate();$('text').focus();};
 $('removePage').onclick=()=>{if(sourcePages.length<=1)return;sourcePages.splice(sourceIndex,1);sourceIndex=Math.min(sourceIndex,sourcePages.length-1);renderSourcePages();invalidate();};
+removeBlankLines.onclick=()=>{
+  const text=$('text').value,lines=text.split(/\r\n?|\n/);
+  const kept=lines.filter(line=>line.trim()!==''||line.includes('\f'));
+  const removed=lines.length-kept.length;
+  if(!text||!removed){notice('当前页没有可删除的空白行');return;}
+  $('text').value=kept.join('\n');invalidate();
+  notice(`已删除当前页 ${removed} 个空白行，请重新生成预览。`);
+};
 $('layoutMode').onchange=()=>setMode($('layoutMode').value);
 $('pagination').onchange=invalidate;$('inputFormat').onchange=invalidate;
 $('importText').onclick=()=>$('textFile').click();
 $('textFile').onchange=()=>action(async()=>{
   const file=$('textFile').files[0];$('textFile').value='';if(!file)return;
   if(file.size>524288||! /\.(txt|md|markdown)$/i.test(file.name))throw new Error('请选择不超过 512 KiB 的 TXT / Markdown 文件');
-  const text=(await file.text()).replace(/^\uFEFF/,'');sourcePages[sourceIndex]=$('text').value;
-  if(sourcePages.reduce((n,p)=>n+p.length,0)+text.length>30000||sourcePages.length>=100)throw new Error('导入后超过 30000 字或 100 个预设页，请拆分文档');
-  sourcePages.push(text);sourceIndex=sourcePages.length-1;$('inputFormat').value=/\.(md|markdown)$/i.test(file.name)?'markdown':'plain';
-  renderSourcePages();invalidate();notice(`已将 ${file.name} 追加为预设第 ${sourceIndex+1} 页`);
+  const text=(await file.text()).replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');
+  if(sourcePages.reduce((n,p,i)=>n+(i===sourceIndex?0:p.length),0)+text.length>30000)throw new Error('导入后超过 30000 字，请拆分文档');
+  sourcePages[sourceIndex]=text;$('inputFormat').value=/\.(md|markdown)$/i.test(file.name)?'markdown':'plain';
+  renderSourcePages();invalidate();notice(`已用 ${file.name} 替换预设第 ${sourceIndex+1} 页的内容`);
 });
 $('insertFormula').onclick=()=>{const input=$('text');input.setRangeText('$x^2 + \\frac{1}{2} = \\sqrt{4}$',input.selectionStart,input.selectionEnd,'end');invalidate();input.focus();};
 $('exportDocument').onclick=()=>{
@@ -612,13 +852,13 @@ $('documentFile').onchange=()=>action(async()=>{
   if(value.version!==1||!['notebook','grid'].includes(value.layout_mode)||!Array.isArray(value.pages)||!value.pages.length||value.pages.length>100||value.pages.some(p=>typeof p!=='string')||value.pages.reduce((n,p)=>n+p.length,0)>30000||!['auto','fixed'].includes(value.pagination)||!['plain','markdown'].includes(value.input_format)||!validFontCombination(value.font_mix))throw new Error('文档格式或内容无效');
   if(!value.modeDrafts||typeof value.modeDrafts!=='object'||!value.modeDrafts[value.layout_mode])throw new Error('文档缺少当前模式的排版设置');
   for(const [mode,draft] of Object.entries(value.modeDrafts)){
-    if(draft?.values&&typeof draft.values==='object'&&draft.values.moveFeed===undefined)draft.values.moveFeed=3000;
+    if(draft?.values&&typeof draft.values==='object'&&draft.values.moveFeed===undefined)draft.values.moveFeed=10000;
     if(!['notebook','grid'].includes(mode)||!draft||!validPresetValues(draft.values,mode)||!validNotebookSizing(draft)||!validHumanization(draft.humanization)||typeof draft.drawLines!=='boolean')throw new Error('文档排版设置无效');
   }
   const c=value.coordinate_system;
   if(!c||!['top-left','top-right','bottom-left','bottom-right'].includes(c.origin)||['reverse_x','reverse_y','swap_xy'].some(k=>typeof c[k]!=='boolean'))throw new Error('文档坐标设置无效');
   if(value.font_mix.some(f=>!fonts.some(font=>font.id===f.font_id)))throw new Error('文档使用的字体在当前服务中不可用，请先配置相同字体目录');
-  sourcePages=[...value.pages];sourceIndex=0;renderSourcePages();selectedFonts=value.font_mix.map(f=>({...f}));renderFontMix();
+  sourcePages=[...value.pages];sourceIndex=0;renderSourcePages();selectedFonts=value.font_mix.map(f=>({...f,scope:currentScope(f)}));renderFontMix();
   $('pagination').value=value.pagination;$('inputFormat').value=value.input_format;
   $('reverseX').checked=c.reverse_x;$('reverseY').checked=c.reverse_y;$('swapXY').checked=c.swap_xy;$('originCorner').value=c.origin;
   layoutMode='';modeDrafts=value.modeDrafts;setMode(value.layout_mode);notice('文档已载入，请重新生成全部页面预览');
@@ -628,10 +868,10 @@ $('authenticate').onclick=()=>action(load);
 $('connect').onclick=()=>action(async()=>{await saveDeviceProfile();state=await api('/api/connect',{port:profilePort});$('origin').checked=false;notice('机器已连接，已载入对应设备控制配置');});
 $('disconnect').onclick=()=>action(async()=>{state=await api('/api/disconnect',{});});
 $('check').onclick=()=>action(async()=>{state=await api('/api/check',{job_id:currentJob});notice('原点与机器配置检查通过');});
-$('start').onclick=()=>action(async()=>{const job=currentJob, page=documentResult?.pages.find(p=>p.job_id===job)?.metadata;state=await api('/api/start',{job_id:job,origin_confirmed:$('origin').checked});window.pageReminders?.remember(state,{device:deviceLabel(state.port),simulation:state.mode==='simulation',page:page?.page_number,pages:page?.page_count});startedJobs.add(job);if(currentJob===job)currentJob=null;$('origin').checked=false;notice(state.mode==='simulation'?'模拟单页任务开始':'当前页写字任务开始；完成并换纸后再选择下一页');});
+$('start').onclick=()=>action(async()=>{const job=currentJob, page=documentResult?.pages.find(p=>p.job_id===job)?.metadata;state=await api('/api/start',{job_id:job,origin_confirmed:$('origin').checked});window.pageReminders?.remember(state,{device:deviceLabel(state.port),simulation:state.mode==='simulation',page:page?.page_number,pages:page?.page_count});$('origin').checked=false;notice(state.mode==='simulation'?'模拟单页任务开始':'当前页写字任务开始；完成后可换纸重新确认原点，再写同一页');});
 $('pause').onclick=()=>realtimeAction(async()=>{state=await api('/api/pause',{});});
 $('resume').onclick=()=>realtimeAction(async()=>{state=await api('/api/resume',{});});
-$('stop').onclick=()=>realtimeAction(async()=>{const returning=state.phase==='returning';state=await api('/api/stop',{});$('origin').checked=false;currentJob=null;notice(returning?'已请求停止回原点；请重新连接并确认位置':'已请求终止；停稳后先抬笔至 Z0，再返回本次 XY 原点');});
+$('stop').onclick=()=>realtimeAction(async()=>{const returning=state.phase==='returning';state=await api('/api/stop',{});$('origin').checked=false;notice(returning?'已请求停止回原点；请重新连接并确认位置':'已请求终止；停稳后先抬笔至 Z0，再返回本次 XY 原点');});
 $('penUp').onclick=()=>action(async()=>{state=await api('/api/pen',{position:'up'});});
 $('penDown').onclick=()=>action(async()=>{state=await api('/api/pen',{position:'down'});});
 $('manualPause').onclick=()=>realtimeAction(async()=>{state=await api('/api/manual-pause',{});});
@@ -649,37 +889,44 @@ $('saveCoordinates').onclick=()=>action(async()=>{await saveDeviceProfile();noti
 $('resetCoordinates').onclick=()=>{$('reverseX').checked=false;$('reverseY').checked=false;$('swapXY').checked=false;$('originCorner').value='top-left';coordinateChanged();};
 $('addFont').onclick=()=>{
   if(!$('font').value||selectedFonts.length>=16||selectedFonts.some(f=>f.font_id===$('font').value))return;
-  selectedFonts.push({font_id:$('font').value,weight:100});invalidate();renderFontMix();
+  selectedFonts.push({font_id:$('font').value,weight:100,scope:$('fontScope').value});invalidate();renderFontMix();
 };
 $('font').onchange=()=>{updateProbabilities();window.FontBrowser?.focus();};
 $('fontSearch').oninput=filterFonts;
 $('fontPreset').onchange=()=>{
+  if(busy){$('fontPreset').value=selectedFontPreset;return;}
   const preset=fontPresets.find(p=>p.id===$('fontPreset').value);
   if(preset){if(!applyFontPreset(preset))return;}
   else{selectedFontPreset='';$('fontPresetName').value='';renderFontPresets();}
-  try{storeFontPresets();}catch(error){notice('组合已载入，但浏览器未能记住本次选择',true);}
+  serverPresets.selection(fontPresetStorage,selectedFontPreset);
 };
 $('saveFontPreset').onclick=()=>action(()=>saveFontPreset());
 $('updateFontPreset').onclick=()=>action(()=>saveFontPreset(true));
-$('deleteFontPreset').onclick=()=>{
+$('deleteFontPreset').onclick=()=>action(async()=>{
   const preset=fontPresets.find(p=>p.id===selectedFontPreset);if(!preset)return;
   const next=fontPresets.filter(p=>p!==preset);
-  try{storeFontPresets(next,'');}catch(error){notice('删除未保存，请检查浏览器存储设置',true);return;}
+  await storeFontPresets(next,'');
   deletedFontPreset={preset,index:fontPresets.indexOf(preset)};fontPresets=next;selectedFontPreset='';$('fontPresetName').value='';renderFontPresets();notice('字体预设已删除，当前组合保留，可撤销删除');
-};
-$('undoFontPreset').onclick=()=>{
+});
+$('undoFontPreset').onclick=()=>action(async()=>{
   if(!deletedFontPreset)return;
   const preset=deletedFontPreset.preset,next=[...fontPresets];next.splice(deletedFontPreset.index,0,preset);
   // Restore the saved entry even if its fonts are temporarily unavailable.
   const usable=!missingPresetFonts(preset).length;
-  try{storeFontPresets(next,usable?preset.id:selectedFontPreset);}catch(error){notice('恢复未保存，请检查浏览器存储设置',true);return;}
+  await storeFontPresets(next,usable?preset.id:selectedFontPreset);
   fontPresets=next;deletedFontPreset=null;
   if(usable)applyFontPreset(preset);else renderFontPresets();notice('字体预设已恢复');
-};
+});
 for(const key of ['text','spacing','feed','moveFeed'])$(key).addEventListener('input',invalidate);
+$('smartBalance').onchange=()=>{coordinateChanged();updatePresetHint();};
+for(const key of ['letterScale','digitScale']){
+  $(key).addEventListener('input',()=>{$(key+'Slider').value=$(key).value;coordinateChanged();updatePresetHint();});
+  $(key+'Slider').addEventListener('input',()=>{$(key).value=$(key+'Slider').value;coordinateChanged();updatePresetHint();});
+}
 $('lineSizing').onchange=()=>{coordinateChanged();updatePresetHint();};
 $('lineLooseness').addEventListener('input',()=>{coordinateChanged();updatePresetHint();});
-for(const key of ['width','height','marginTop','marginBottom','marginLeft','marginRight','rows','size'])$(key).addEventListener('input',coordinateChanged);
+$('allowOverlap').onchange=()=>{coordinateChanged();scheduleLinePitch();updatePresetHint();};
+for(const key of ['width','height','marginTop','marginBottom','marginLeft','marginRight','rows','size','latinSize'])$(key).addEventListener('input',coordinateChanged);
 for(const key of ['punctuationWidth','gridColumns','gridRowGap','gridColumnGap','gridSizePercent','gridPadding'])$(key).addEventListener('input',coordinateChanged);
 $('gridDrawLines').onchange=()=>{coordinateChanged();updatePresetHint();};
 for(const key of layoutFields)$(key).addEventListener('input',updatePresetHint);
@@ -695,25 +942,26 @@ $('humanStrength').onchange=()=>{
 };
 $('rerandomize').onclick=()=>{$('preview').click();};
 $('layoutPreset').onchange=()=>{
+  if(busy){$('layoutPreset').value=selectedPreset;return;}
   const preset=[...builtinPresets,...layoutPresets].find(p=>p.id===$('layoutPreset').value);
   if(!preset)return;
   applyPreset(preset);
-  try{storePresets();}catch(error){notice('已应用预设，但浏览器未能记住本次选择',true);}
+  serverPresets.selection(presetStorage,selectedPreset);
 };
 $('savePreset').onclick=()=>action(()=>saveLayoutPreset());
 $('updatePreset').onclick=()=>action(()=>saveLayoutPreset(true));
-$('deletePreset').onclick=()=>{
+$('deletePreset').onclick=()=>action(async()=>{
   const preset=layoutPresets.find(p=>p.id===selectedPreset);if(!preset)return;
   const next=layoutPresets.filter(p=>p!==preset);
-  try{storePresets(next,builtinPresets[0].id);}catch(error){notice('删除未保存，请检查浏览器存储设置',true);return;}
+  await storePresets(next,builtinPresets[0].id);
   deletedPreset={preset,index:layoutPresets.indexOf(preset)};layoutPresets=next;applyPreset(builtinPresets[0]);notice('预设已删除，可点击“撤销删除”恢复');
-};
-$('undoPreset').onclick=()=>{
+});
+$('undoPreset').onclick=()=>action(async()=>{
   if(!deletedPreset)return;
   const next=[...layoutPresets];next.splice(deletedPreset.index,0,deletedPreset.preset);
-  try{storePresets(next,deletedPreset.preset.id);}catch(error){notice('恢复未保存，请检查浏览器存储设置',true);return;}
+  await storePresets(next,deletedPreset.preset.id);
   const preset=deletedPreset.preset;layoutPresets=next;deletedPreset=null;applyPreset(preset);notice('预设已恢复');
-};
+});
 async function poll(){
   try{if(!busy&&!speedSending){const capturedAction=actionRevision;const result=await api('/api/state');if(capturedAction===actionRevision&&!busy&&!speedSending){state=result;renderState();if(state.error&&state.error!==lastError){lastError=state.error;notice(state.error,true);}}}}
   catch(error){

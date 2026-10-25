@@ -1,0 +1,18 @@
+{
+  "files": {
+    "controller.xml": {
+      "bytes": 1818,
+      "sha256": "8fffaa565180167de53d533222a72b5011bd6bcaea8e6b52d660de458d4f3a8c"
+    },
+    "state-after.json": {
+      "bytes": 667,
+      "sha256": "5e39ff6ceabd8455e065c5a696134c8b584965b0256a435f2026d203dda87461"
+    },
+    "state-before.json": {
+      "bytes": 1180,
+      "sha256": "87c2371d8e7de1b0eaee6175844166d817b2394bc43f9682adecc30e5ffbb33e"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": null
+}

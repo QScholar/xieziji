@@ -1,0 +1,14 @@
+{
+  "files": {
+    "Xieziji-Controller.xml": {
+      "bytes": 3624,
+      "sha256": "617ce72df40b1974dfe95e930c9ec5e4cf9803e62dc49c70a5123441b2af2210"
+    },
+    "state-before.json": {
+      "bytes": 590,
+      "sha256": "6dec2a5ac479562e9fb7dfcddccd313c2c5e047eda213859bdc4a5146c692180"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": null
+}

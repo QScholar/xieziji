@@ -47,9 +47,9 @@ class SpeedTests(unittest.TestCase):
             self.assertNotEqual(slow['metadata']['sha256'],fast['metadata']['sha256'])
             self.assertEqual(slow['metadata']['strokes'],fast['metadata']['strokes'])
 
-    def test_old_requests_keep_3000_and_invalid_speeds_fail(self):
+    def test_old_requests_get_current_defaults_and_invalid_speeds_fail(self):
         for result in self.generate(2400):
-            self.assertEqual(result['metadata']['move_feed'],3000)
+            self.assertEqual(result['metadata']['move_feed'],10000)
         for bad in (99,12001,True,float('nan'),float('inf')):
             with self.assertRaises(ValueError): self.generate(2400,bad)
 

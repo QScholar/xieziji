@@ -1,0 +1,4580 @@
+{
+  "version": 1,
+  "benchmark": {
+    "size_mm": 5,
+    "spacing_mm": 1,
+    "draw_feed": 3000,
+    "move_feed": 3000,
+    "xy_acceleration": 3000,
+    "z_acceleration": 8000,
+    "pen_travel_mm": 10,
+    "median_score": 100,
+    "description": "5 mm 中文字高，绘图/移动均 3000 mm/min，Z 行程 10 mm；100 为样本充分字体的中位水平，越高越快。"
+  },
+  "sample_text": "永国田日目中你好字体天地人山水木火土金风雨云春夏秋冬年月时光清音明白的一了是在不有和我这他大来上个到说们为子生道出也得就那要下以会可成发对作能于之与自心长面家前看只如其学高多用行方经么去法都过定所动还进小部事理些现无最重并当起同开合因从力实意公问使情头物每",
+  "fonts": [
+    {
+      "id": "be9db045f09ed3b6",
+      "file": "0_kvenjoy_0.gfont",
+      "bytes": 345851,
+      "speed": {
+        "score": 123.5,
+        "sample_characters": 41,
+        "confidence": "limited",
+        "standardized_seconds_per_100": 220.0,
+        "draw_mm_per_character": 14.95,
+        "move_mm_per_character": 8.5,
+        "strokes_per_character": 3,
+        "pen_time_percent": 68.5
+      }
+    },
+    {
+      "id": "60c7d1b0dfc333c3",
+      "file": "1111122_kvenjoy_1223.gfont",
+      "bytes": 1238197,
+      "speed": {
+        "score": 114.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 238.5,
+        "draw_mm_per_character": 14.26,
+        "move_mm_per_character": 9.78,
+        "strokes_per_character": 4.34,
+        "pen_time_percent": 74.1
+      }
+    },
+    {
+      "id": "cc9387fb584c3b56",
+      "file": "112233445566_kvenjoy_123456.gfont",
+      "bytes": 1664113,
+      "speed": {
+        "score": 127.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 213.3,
+        "draw_mm_per_character": 13.55,
+        "move_mm_per_character": 8.55,
+        "strokes_per_character": 3.87,
+        "pen_time_percent": 73.7
+      }
+    },
+    {
+      "id": "87fd85167be9e644",
+      "file": "123456_kvenjoy_123456.gfont",
+      "bytes": 3012452,
+      "speed": {
+        "score": 79.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 340.8,
+        "draw_mm_per_character": 18.33,
+        "move_mm_per_character": 16.24,
+        "strokes_per_character": 6.27,
+        "pen_time_percent": 74.2
+      }
+    },
+    {
+      "id": "ff6f359cf1aa6f6c",
+      "file": "123_kvenjoy_XL.gfont",
+      "bytes": 2457402,
+      "speed": {
+        "score": 101.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 268.1,
+        "draw_mm_per_character": 11.54,
+        "move_mm_per_character": 8.61,
+        "strokes_per_character": 5.22,
+        "pen_time_percent": 78.9
+      }
+    },
+    {
+      "id": "3213631ea94ec2fc",
+      "file": "222_kvenjoy_222.gfont",
+      "bytes": 3215514,
+      "speed": {
+        "score": 83.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 327.0,
+        "draw_mm_per_character": 16.3,
+        "move_mm_per_character": 13.69,
+        "strokes_per_character": 6.17,
+        "pen_time_percent": 76.0
+      }
+    },
+    {
+      "id": "1e68f2799808d697",
+      "file": "321_kvenjoy_Nobody.gfont",
+      "bytes": 3655061,
+      "speed": {
+        "score": 128.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 210.8,
+        "draw_mm_per_character": 14.09,
+        "move_mm_per_character": 7.63,
+        "strokes_per_character": 3.78,
+        "pen_time_percent": 73.6
+      }
+    },
+    {
+      "id": "0996e344cfdf229f",
+      "file": "33_kvenjoy_66.gfont",
+      "bytes": 1890230,
+      "speed": {
+        "score": 106.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 256.3,
+        "draw_mm_per_character": 13.12,
+        "move_mm_per_character": 9.83,
+        "strokes_per_character": 4.79,
+        "pen_time_percent": 76.2
+      }
+    },
+    {
+      "id": "a3916e7b786bf87e",
+      "file": "44971fc5-8b41-419a-970c-208b822e63d5.gfont",
+      "bytes": 3907231,
+      "speed": {
+        "score": 175.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 154.6,
+        "draw_mm_per_character": 17.46,
+        "move_mm_per_character": 6.31,
+        "strokes_per_character": 2.45,
+        "pen_time_percent": 64.4
+      }
+    },
+    {
+      "id": "a56f692e95362a62",
+      "file": "6900qx_kvenjoy_qx.gfont",
+      "bytes": 3637013,
+      "speed": {
+        "score": 102.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 266.4,
+        "draw_mm_per_character": 17.57,
+        "move_mm_per_character": 11.08,
+        "strokes_per_character": 4.79,
+        "pen_time_percent": 73.0
+      }
+    },
+    {
+      "id": "924aa42e9a9eda3e",
+      "file": "ANDREW_kvenjoy_andrew.gfont",
+      "bytes": 3033489,
+      "speed": {
+        "score": 79.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 340.9,
+        "draw_mm_per_character": 18.15,
+        "move_mm_per_character": 16.18,
+        "strokes_per_character": 6.27,
+        "pen_time_percent": 74.3
+      }
+    },
+    {
+      "id": "cde63ec4334e7705",
+      "file": "Apollo_kvenjoy_Zl.gfont",
+      "bytes": 2834834,
+      "speed": {
+        "score": 87.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 311.7,
+        "draw_mm_per_character": 15.52,
+        "move_mm_per_character": 12.02,
+        "strokes_per_character": 5.84,
+        "pen_time_percent": 76.4
+      }
+    },
+    {
+      "id": "d867d61465a6fedb",
+      "file": "A_kvenjoy_yyy.gfont",
+      "bytes": 3822667,
+      "speed": {
+        "score": 99.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 273.9,
+        "draw_mm_per_character": 16.61,
+        "move_mm_per_character": 10.74,
+        "strokes_per_character": 4.91,
+        "pen_time_percent": 74.0
+      }
+    },
+    {
+      "id": "aa231e280ffe0d90",
+      "file": "bian3_kvenjoy_bian6900.gfont",
+      "bytes": 3816601,
+      "speed": {
+        "score": 102.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 264.5,
+        "draw_mm_per_character": 18.27,
+        "move_mm_per_character": 9.79,
+        "strokes_per_character": 4.73,
+        "pen_time_percent": 73.1
+      }
+    },
+    {
+      "id": "cc396328b11280a0",
+      "file": "bjzt_kvenjoy_xxx.gfont",
+      "bytes": 1543104,
+      "speed": {
+        "score": 156.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 173.7,
+        "draw_mm_per_character": 15.09,
+        "move_mm_per_character": 6.27,
+        "strokes_per_character": 2.97,
+        "pen_time_percent": 70.0
+      }
+    },
+    {
+      "id": "d5f05456c3e935ce",
+      "file": "blood8-2_kvenjoy_blood8.gfont",
+      "bytes": 4985398,
+      "speed": {
+        "score": 83.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 324.5,
+        "draw_mm_per_character": 15.21,
+        "move_mm_per_character": 12.09,
+        "strokes_per_character": 6.18,
+        "pen_time_percent": 77.3
+      }
+    },
+    {
+      "id": "6b30487e1f9953df",
+      "file": "blood8-2_xiongzai_blood8.gfont",
+      "bytes": 2480463,
+      "speed": {
+        "score": 84.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 320.9,
+        "draw_mm_per_character": 14.78,
+        "move_mm_per_character": 11.74,
+        "strokes_per_character": 6.16,
+        "pen_time_percent": 77.6
+      }
+    },
+    {
+      "id": "d4cb5bfa1a0e6a48",
+      "file": "blood8_kvenjoy_blood8.gfont",
+      "bytes": 4746684,
+      "speed": {
+        "score": 127.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 214.1,
+        "draw_mm_per_character": 17.43,
+        "move_mm_per_character": 7.67,
+        "strokes_per_character": 3.75,
+        "pen_time_percent": 71.2
+      }
+    },
+    {
+      "id": "d1a521f0968cded3",
+      "file": "blood8真迹2_kvenjoy_blood8.gfont",
+      "bytes": 4889828,
+      "speed": {
+        "score": 271.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 100.1,
+        "draw_mm_per_character": 19.56,
+        "move_mm_per_character": 3.99,
+        "strokes_per_character": 1.1,
+        "pen_time_percent": 47.2
+      }
+    },
+    {
+      "id": "c87bd5f60e6980d7",
+      "file": "blood8真迹2_xiongzai_blood8.gfont",
+      "bytes": 5031619,
+      "speed": {
+        "score": 271.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 100.1,
+        "draw_mm_per_character": 19.56,
+        "move_mm_per_character": 3.99,
+        "strokes_per_character": 1.1,
+        "pen_time_percent": 47.2
+      }
+    },
+    {
+      "id": "8aa58d57052da533",
+      "file": "blood8真迹3_kvenjoy_blood8.gfont",
+      "bytes": 2395454,
+      "speed": {
+        "score": 152.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 178.7,
+        "draw_mm_per_character": 17.77,
+        "move_mm_per_character": 6.52,
+        "strokes_per_character": 2.91,
+        "pen_time_percent": 67.4
+      }
+    },
+    {
+      "id": "d9ffe516dc7b45d6",
+      "file": "blood8真迹3_xiongzai_blood8.gfont",
+      "bytes": 2479669,
+      "speed": {
+        "score": 151.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 179.2,
+        "draw_mm_per_character": 17.74,
+        "move_mm_per_character": 6.54,
+        "strokes_per_character": 2.94,
+        "pen_time_percent": 67.5
+      }
+    },
+    {
+      "id": "6c0a903d3d83b43f",
+      "file": "blood8真迹4_kvenjoy_blood8.gfont",
+      "bytes": 2346427,
+      "speed": {
+        "score": 133.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 203.8,
+        "draw_mm_per_character": 17.81,
+        "move_mm_per_character": 7.52,
+        "strokes_per_character": 3.45,
+        "pen_time_percent": 69.6
+      }
+    },
+    {
+      "id": "9a1e2e0445575006",
+      "file": "blood8真迹4_xiongzai_blood8.gfont",
+      "bytes": 2430318,
+      "speed": {
+        "score": 133.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 203.8,
+        "draw_mm_per_character": 17.81,
+        "move_mm_per_character": 7.52,
+        "strokes_per_character": 3.45,
+        "pen_time_percent": 69.6
+      }
+    },
+    {
+      "id": "e0e5808d4aaebd8f",
+      "file": "blood8真迹5_kvenjoy_blood8.gfont",
+      "bytes": 2343996,
+      "speed": {
+        "score": 133.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 204.1,
+        "draw_mm_per_character": 17.03,
+        "move_mm_per_character": 7.66,
+        "strokes_per_character": 3.48,
+        "pen_time_percent": 70.2
+      }
+    },
+    {
+      "id": "bf1587dc5fc1a50c",
+      "file": "blood8真迹5_xiongzai_blood8.gfont",
+      "bytes": 2428461,
+      "speed": {
+        "score": 133.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 204.1,
+        "draw_mm_per_character": 17.03,
+        "move_mm_per_character": 7.66,
+        "strokes_per_character": 3.48,
+        "pen_time_percent": 70.2
+      }
+    },
+    {
+      "id": "b561e0b9360facc2",
+      "file": "blood8真迹_kvenjoy_blood8.gfont",
+      "bytes": 6266038,
+      "speed": {
+        "score": 110.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 246.1,
+        "draw_mm_per_character": 17.29,
+        "move_mm_per_character": 9.3,
+        "strokes_per_character": 4.39,
+        "pen_time_percent": 72.8
+      }
+    },
+    {
+      "id": "ce45cd660b6ef4e9",
+      "file": "blood8真迹_xiongzai_blood8.gfont",
+      "bytes": 6281247,
+      "speed": {
+        "score": 110.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 246.1,
+        "draw_mm_per_character": 17.29,
+        "move_mm_per_character": 9.3,
+        "strokes_per_character": 4.39,
+        "pen_time_percent": 72.8
+      }
+    },
+    {
+      "id": "4c5961990fe4237c",
+      "file": "ccc_kvenjoy_陈.gfont",
+      "bytes": 3329923,
+      "speed": {
+        "score": 102.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 265.5,
+        "draw_mm_per_character": 12.39,
+        "move_mm_per_character": 8.62,
+        "strokes_per_character": 5.11,
+        "pen_time_percent": 78.2
+      }
+    },
+    {
+      "id": "ca174a62a4c31d57",
+      "file": "cx510_kvenjoy_cx.gfont",
+      "bytes": 2823962,
+      "speed": {
+        "score": 92.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 294.5,
+        "draw_mm_per_character": 17.76,
+        "move_mm_per_character": 11.36,
+        "strokes_per_character": 5.41,
+        "pen_time_percent": 74.6
+      }
+    },
+    {
+      "id": "d01875a671f75f7a",
+      "file": "Dax_kvenjoy_大雄.gfont",
+      "bytes": 3468604,
+      "speed": {
+        "score": 175.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 155.1,
+        "draw_mm_per_character": 15.42,
+        "move_mm_per_character": 5.88,
+        "strokes_per_character": 2.55,
+        "pen_time_percent": 67.3
+      }
+    },
+    {
+      "id": "034b94f11e9d8d14",
+      "file": "DJ_kvenjoy_DJ.gfont",
+      "bytes": 2386209,
+      "speed": {
+        "score": 84.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 323.5,
+        "draw_mm_per_character": 14.46,
+        "move_mm_per_character": 12.61,
+        "strokes_per_character": 6.18,
+        "pen_time_percent": 77.3
+      }
+    },
+    {
+      "id": "47e8aa674bad561b",
+      "file": "DJ肖_kvenjoy_karen.gfont",
+      "bytes": 3648266,
+      "speed": {
+        "score": 95.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 283.3,
+        "draw_mm_per_character": 17.68,
+        "move_mm_per_character": 12.14,
+        "strokes_per_character": 5.07,
+        "pen_time_percent": 73.2
+      }
+    },
+    {
+      "id": "adcbe9bf8f3955ad",
+      "file": "fxw字库001_kvenjoy_fxw.gfont",
+      "bytes": 3945000,
+      "speed": {
+        "score": 127.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 213.3,
+        "draw_mm_per_character": 15.99,
+        "move_mm_per_character": 8.09,
+        "strokes_per_character": 3.75,
+        "pen_time_percent": 71.9
+      }
+    },
+    {
+      "id": "d423b63f8fb19c51",
+      "file": "guitar522_kvenjoy_塔依尔.gfont",
+      "bytes": 3465153,
+      "speed": {
+        "score": 102.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 264.1,
+        "draw_mm_per_character": 13.58,
+        "move_mm_per_character": 8.96,
+        "strokes_per_character": 4.99,
+        "pen_time_percent": 77.0
+      }
+    },
+    {
+      "id": "a33eaee629941b90",
+      "file": "hyl_kvenjoy_小小名.gfont",
+      "bytes": 3092160,
+      "speed": {
+        "score": 79.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 340.4,
+        "draw_mm_per_character": 19.77,
+        "move_mm_per_character": 16.97,
+        "strokes_per_character": 6.15,
+        "pen_time_percent": 73.0
+      }
+    },
+    {
+      "id": "53c4b286a6a5d235",
+      "file": "K先生_kvenjoy_小K.gfont",
+      "bytes": 3579606,
+      "speed": {
+        "score": 84.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 320.5,
+        "draw_mm_per_character": 16.19,
+        "move_mm_per_character": 13.41,
+        "strokes_per_character": 5.96,
+        "pen_time_percent": 75.7
+      }
+    },
+    {
+      "id": "d63108c39c322056",
+      "file": "lf_kvenjoy_l.gfont",
+      "bytes": 3532436,
+      "speed": {
+        "score": 103.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 263.8,
+        "draw_mm_per_character": 18.25,
+        "move_mm_per_character": 11.1,
+        "strokes_per_character": 4.66,
+        "pen_time_percent": 72.1
+      }
+    },
+    {
+      "id": "94040ac7190c07c5",
+      "file": "lml2021_kvenjoy_lml.gfont",
+      "bytes": 4205916,
+      "speed": {
+        "score": 89.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 304.1,
+        "draw_mm_per_character": 14.59,
+        "move_mm_per_character": 10.56,
+        "strokes_per_character": 5.81,
+        "pen_time_percent": 77.5
+      }
+    },
+    {
+      "id": "9f92b700af6a642b",
+      "file": "lydsq_kvenjoy_li.gfont",
+      "bytes": 2609869,
+      "speed": {
+        "score": 125.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 217.0,
+        "draw_mm_per_character": 11.38,
+        "move_mm_per_character": 5.76,
+        "strokes_per_character": 4.24,
+        "pen_time_percent": 78.5
+      }
+    },
+    {
+      "id": "ffff1d06eaf9a190",
+      "file": "mengfengling_kvenjoy_夏目.gfont",
+      "bytes": 3074131,
+      "speed": {
+        "score": 91.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 298.1,
+        "draw_mm_per_character": 12.92,
+        "move_mm_per_character": 10.1,
+        "strokes_per_character": 5.82,
+        "pen_time_percent": 78.6
+      }
+    },
+    {
+      "id": "67f423d8db6f06b2",
+      "file": "Mlx_kvenjoy_Mlx.gfont",
+      "bytes": 4239944,
+      "speed": {
+        "score": 118.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 229.9,
+        "draw_mm_per_character": 18.2,
+        "move_mm_per_character": 8.7,
+        "strokes_per_character": 4.08,
+        "pen_time_percent": 71.4
+      }
+    },
+    {
+      "id": "0abb7805fa715b22",
+      "file": "mr_kvenjoy_m_.gfont",
+      "bytes": 3047179,
+      "speed": {
+        "score": 94.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 287.7,
+        "draw_mm_per_character": 15.58,
+        "move_mm_per_character": 11.42,
+        "strokes_per_character": 5.29,
+        "pen_time_percent": 75.3
+      }
+    },
+    {
+      "id": "bf75af2c85023bef",
+      "file": "mt__kvenjoy_s.gfont",
+      "bytes": 2859794,
+      "speed": {
+        "score": 97.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 279.8,
+        "draw_mm_per_character": 14.7,
+        "move_mm_per_character": 10.36,
+        "strokes_per_character": 5.23,
+        "pen_time_percent": 76.2
+      }
+    },
+    {
+      "id": "848b9f51d5c0186f",
+      "file": "m_kvenjoy_m.gfont",
+      "bytes": 3021363,
+      "speed": {
+        "score": 106.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 254.9,
+        "draw_mm_per_character": 14.1,
+        "move_mm_per_character": 8.73,
+        "strokes_per_character": 4.75,
+        "pen_time_percent": 76.2
+      }
+    },
+    {
+      "id": "0747d7605c738b6c",
+      "file": "nm_kvenjoy_rr_.gfont",
+      "bytes": 3422974,
+      "speed": {
+        "score": 89.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 305.0,
+        "draw_mm_per_character": 17.8,
+        "move_mm_per_character": 13.26,
+        "strokes_per_character": 5.54,
+        "pen_time_percent": 73.9
+      }
+    },
+    {
+      "id": "3e42e7a25248884c",
+      "file": "shen_kvenjoy_婧.gfont",
+      "bytes": 3584282,
+      "speed": {
+        "score": 184.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 147.4,
+        "draw_mm_per_character": 16.86,
+        "move_mm_per_character": 5.48,
+        "strokes_per_character": 2.31,
+        "pen_time_percent": 64.6
+      }
+    },
+    {
+      "id": "c5e002138d5027dd",
+      "file": "sunsfont6_kvenjoy_sun.gfont",
+      "bytes": 3513921,
+      "speed": {
+        "score": 108.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 250.4,
+        "draw_mm_per_character": 16.79,
+        "move_mm_per_character": 10.08,
+        "strokes_per_character": 4.39,
+        "pen_time_percent": 72.6
+      }
+    },
+    {
+      "id": "7d3e8a097b0e2233",
+      "file": "wyw123_kvenjoy_王叔叔.gfont",
+      "bytes": 2522238,
+      "speed": {
+        "score": 91.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 296.8,
+        "draw_mm_per_character": 12.57,
+        "move_mm_per_character": 9.5,
+        "strokes_per_character": 5.73,
+        "pen_time_percent": 79.0
+      }
+    },
+    {
+      "id": "2658dfb1699d15d8",
+      "file": "Xztianyuanti_kvenjoy_田园.gfont",
+      "bytes": 1545356,
+      "speed": {
+        "score": 84.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 322.0,
+        "draw_mm_per_character": 14.27,
+        "move_mm_per_character": 12.95,
+        "strokes_per_character": 6.18,
+        "pen_time_percent": 77.3
+      }
+    },
+    {
+      "id": "95c27191974d7414",
+      "file": "Y2_kvenjoy_.gfont",
+      "bytes": 1182198,
+      "speed": {
+        "score": 80.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 337.8,
+        "draw_mm_per_character": 17.68,
+        "move_mm_per_character": 13.84,
+        "strokes_per_character": 6.28,
+        "pen_time_percent": 75.5
+      }
+    },
+    {
+      "id": "edeb01af91f017d9",
+      "file": "yuki_kvenjoy_ifdream.gfont",
+      "bytes": 1658874,
+      "speed": {
+        "score": 107.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 254.0,
+        "draw_mm_per_character": 16.89,
+        "move_mm_per_character": 9.81,
+        "strokes_per_character": 4.91,
+        "pen_time_percent": 74.4
+      }
+    },
+    {
+      "id": "6048a742c8cb9e03",
+      "file": "y_kvenjoy_y.gfont",
+      "bytes": 1186054,
+      "speed": {
+        "score": 143.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 189.9,
+        "draw_mm_per_character": 14.24,
+        "move_mm_per_character": 7.3,
+        "strokes_per_character": 3.41,
+        "pen_time_percent": 72.1
+      }
+    },
+    {
+      "id": "23639a061735bf00",
+      "file": "zdd_kvenjoy_zdd.gfont",
+      "bytes": 3757226,
+      "speed": {
+        "score": 95.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 284.9,
+        "draw_mm_per_character": 18.65,
+        "move_mm_per_character": 11.97,
+        "strokes_per_character": 5.11,
+        "pen_time_percent": 72.9
+      }
+    },
+    {
+      "id": "6088169373a72590",
+      "file": "zy01.gfont",
+      "bytes": 1194192,
+      "speed": {
+        "score": 150.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 180.7,
+        "draw_mm_per_character": 13.95,
+        "move_mm_per_character": 6.61,
+        "strokes_per_character": 3.31,
+        "pen_time_percent": 72.4
+      }
+    },
+    {
+      "id": "c4324533f050885c",
+      "file": "zzz_kvenjoy_zzz.gfont",
+      "bytes": 3983604,
+      "speed": {
+        "score": 92.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 295.3,
+        "draw_mm_per_character": 15.28,
+        "move_mm_per_character": 10.22,
+        "strokes_per_character": 5.59,
+        "pen_time_percent": 76.9
+      }
+    },
+    {
+      "id": "84fa697e7561ea2e",
+      "file": "zzz_kvenjoy_张宏荣.gfont",
+      "bytes": 1193880,
+      "speed": {
+        "score": 220.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 123.1,
+        "draw_mm_per_character": 16.18,
+        "move_mm_per_character": 4.84,
+        "strokes_per_character": 1.83,
+        "pen_time_percent": 61.1
+      }
+    },
+    {
+      "id": "c4577465ca20aad5",
+      "file": "z_kvenjoy_z.gfont",
+      "bytes": 1185752,
+      "speed": {
+        "score": 91.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 296.0,
+        "draw_mm_per_character": 16.45,
+        "move_mm_per_character": 12.36,
+        "strokes_per_character": 5.36,
+        "pen_time_percent": 74.6
+      }
+    },
+    {
+      "id": "d5239f7dddd10c68",
+      "file": "z_kvenjoy_zz.gfont",
+      "bytes": 2916660,
+      "speed": {
+        "score": 100.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 271.5,
+        "draw_mm_per_character": 12.13,
+        "move_mm_per_character": 8.67,
+        "strokes_per_character": 5.24,
+        "pen_time_percent": 78.6
+      }
+    },
+    {
+      "id": "be623c08bae16207",
+      "file": "熊仔字体1.gfont",
+      "bytes": 2185976,
+      "speed": {
+        "score": 94.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 287.2,
+        "draw_mm_per_character": 15.99,
+        "move_mm_per_character": 11.41,
+        "strokes_per_character": 5.33,
+        "pen_time_percent": 75.2
+      }
+    },
+    {
+      "id": "b3bbf0ab608dec36",
+      "file": "熊仔字体2.gfont",
+      "bytes": 2137638,
+      "speed": {
+        "score": 118.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 229.6,
+        "draw_mm_per_character": 15.67,
+        "move_mm_per_character": 9.45,
+        "strokes_per_character": 4.12,
+        "pen_time_percent": 72.7
+      }
+    },
+    {
+      "id": "c5afd25c9dce2321",
+      "file": "熊仔字体3.gfont",
+      "bytes": 1213151,
+      "speed": {
+        "score": 169.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 160.5,
+        "draw_mm_per_character": 16.5,
+        "move_mm_per_character": 6.69,
+        "strokes_per_character": 2.63,
+        "pen_time_percent": 66.3
+      }
+    },
+    {
+      "id": "ee0f8144c223c14d",
+      "file": "熊仔字体4.gfont",
+      "bytes": 2198133,
+      "speed": {
+        "score": 122.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 222.6,
+        "draw_mm_per_character": 20.19,
+        "move_mm_per_character": 10.37,
+        "strokes_per_character": 3.7,
+        "pen_time_percent": 67.5
+      }
+    },
+    {
+      "id": "8b611110a3198be4",
+      "file": "熊仔字体5.gfont",
+      "bytes": 2071618,
+      "speed": {
+        "score": 93.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 291.4,
+        "draw_mm_per_character": 17.69,
+        "move_mm_per_character": 12.37,
+        "strokes_per_character": 5.27,
+        "pen_time_percent": 73.7
+      }
+    },
+    {
+      "id": "c8962cdcb4a5e2be",
+      "file": "一只小墩墩_kvenjoy_嘿嘿.gfont",
+      "bytes": 2593955,
+      "speed": {
+        "score": 87.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 311.6,
+        "draw_mm_per_character": 13.73,
+        "move_mm_per_character": 11.06,
+        "strokes_per_character": 6,
+        "pen_time_percent": 78.1
+      }
+    },
+    {
+      "id": "92a4710600d0ee81",
+      "file": "七彩体_xiongzai_熊仔.gfont",
+      "bytes": 3730298,
+      "speed": {
+        "score": 93.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 290.3,
+        "draw_mm_per_character": 16.8,
+        "move_mm_per_character": 12.0,
+        "strokes_per_character": 5.3,
+        "pen_time_percent": 74.4
+      }
+    },
+    {
+      "id": "2ff00434838b926b",
+      "file": "严寒_kvenjoy_严寒.gfont",
+      "bytes": 2615105,
+      "speed": {
+        "score": 126.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 215.5,
+        "draw_mm_per_character": 16.08,
+        "move_mm_per_character": 8.33,
+        "strokes_per_character": 3.74,
+        "pen_time_percent": 71.6
+      }
+    },
+    {
+      "id": "2e57947f0197fc63",
+      "file": "乐乐字体_kvenjoy_乐乐.gfont",
+      "bytes": 1361810,
+      "speed": {
+        "score": 89.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 303.1,
+        "draw_mm_per_character": 14.76,
+        "move_mm_per_character": 11.27,
+        "strokes_per_character": 5.73,
+        "pen_time_percent": 76.9
+      }
+    },
+    {
+      "id": "0d534785621cf4d8",
+      "file": "乐行书_kvenjoy_乐乐.gfont",
+      "bytes": 1859114,
+      "speed": {
+        "score": 106.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 256.0,
+        "draw_mm_per_character": 16.5,
+        "move_mm_per_character": 10.19,
+        "strokes_per_character": 4.7,
+        "pen_time_percent": 73.8
+      }
+    },
+    {
+      "id": "44fd9a18223173f3",
+      "file": "于明1_kvenjoy_5.18.gfont",
+      "bytes": 1105520,
+      "speed": {
+        "score": 128.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 211.4,
+        "draw_mm_per_character": 16.48,
+        "move_mm_per_character": 7.96,
+        "strokes_per_character": 3.71,
+        "pen_time_percent": 71.5
+      }
+    },
+    {
+      "id": "2000dd8a7ffa8a85",
+      "file": "云姐姐字体_kvenjoy_杨云.gfont",
+      "bytes": 2948281,
+      "speed": {
+        "score": 100.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 269.7,
+        "draw_mm_per_character": 15.42,
+        "move_mm_per_character": 10.1,
+        "strokes_per_character": 4.9,
+        "pen_time_percent": 75.0
+      }
+    },
+    {
+      "id": "d76394e025067691",
+      "file": "云姐字体_kvenjoy_云姐.gfont",
+      "bytes": 4309763,
+      "speed": {
+        "score": 92.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 295.1,
+        "draw_mm_per_character": 17.52,
+        "move_mm_per_character": 12.17,
+        "strokes_per_character": 5.34,
+        "pen_time_percent": 74.1
+      }
+    },
+    {
+      "id": "6998e5342625d60c",
+      "file": "云姐字体_kvenjoy_洁洁.gfont",
+      "bytes": 3598428,
+      "speed": {
+        "score": 95.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 284.4,
+        "draw_mm_per_character": 13.96,
+        "move_mm_per_character": 9.96,
+        "strokes_per_character": 5.36,
+        "pen_time_percent": 77.1
+      }
+    },
+    {
+      "id": "cd2c32eff202cb02",
+      "file": "云诺_kvenjoy_修诺.gfont",
+      "bytes": 2334446,
+      "speed": {
+        "score": 85.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 318.4,
+        "draw_mm_per_character": 12.18,
+        "move_mm_per_character": 10.33,
+        "strokes_per_character": 6.29,
+        "pen_time_percent": 79.8
+      }
+    },
+    {
+      "id": "0369b8d71bfbfe7a",
+      "file": "云骢_kvenjoy_云骢.gfont",
+      "bytes": 3221467,
+      "speed": {
+        "score": 82.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 328.0,
+        "draw_mm_per_character": 14.7,
+        "move_mm_per_character": 12.5,
+        "strokes_per_character": 6.26,
+        "pen_time_percent": 77.5
+      }
+    },
+    {
+      "id": "465a26988418e7ed",
+      "file": "井柏然字体_kvenjoy_瑞瑞.gfont",
+      "bytes": 4300371,
+      "speed": {
+        "score": 45.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 604.3,
+        "draw_mm_per_character": 14.18,
+        "move_mm_per_character": 14.49,
+        "strokes_per_character": 12.76,
+        "pen_time_percent": 85.0
+      }
+    },
+    {
+      "id": "f449cdd7407741f6",
+      "file": "亚_kvenjoy_亚.gfont",
+      "bytes": 4169919,
+      "speed": {
+        "score": 173.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 156.6,
+        "draw_mm_per_character": 18.87,
+        "move_mm_per_character": 5.97,
+        "strokes_per_character": 2.45,
+        "pen_time_percent": 63.7
+      }
+    },
+    {
+      "id": "fcb64dbd87151e3a",
+      "file": "亦兮_kvenjoy_亦兮.gfont",
+      "bytes": 3369135,
+      "speed": {
+        "score": 88.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 306.9,
+        "draw_mm_per_character": 13.39,
+        "move_mm_per_character": 10.33,
+        "strokes_per_character": 5.91,
+        "pen_time_percent": 78.5
+      }
+    },
+    {
+      "id": "c97512e5366ab0d3",
+      "file": "仲行_kvenjoy_。。.gfont",
+      "bytes": 2791610,
+      "speed": {
+        "score": 87.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 309.1,
+        "draw_mm_per_character": 14.55,
+        "move_mm_per_character": 11.66,
+        "strokes_per_character": 5.91,
+        "pen_time_percent": 77.2
+      }
+    },
+    {
+      "id": "bca8ebe5f46643f9",
+      "file": "俊_皓字库_kvenjoy_Jack.gfont",
+      "bytes": 3422953,
+      "speed": {
+        "score": 46.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 587.7,
+        "draw_mm_per_character": 22.35,
+        "move_mm_per_character": 19.57,
+        "strokes_per_character": 11.77,
+        "pen_time_percent": 80.5
+      }
+    },
+    {
+      "id": "f363269a8d5c3756",
+      "file": "克制的优雅_kvenjoy_Robin.gfont",
+      "bytes": 3158758,
+      "speed": {
+        "score": 93.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 291.5,
+        "draw_mm_per_character": 13.04,
+        "move_mm_per_character": 10.2,
+        "strokes_per_character": 5.57,
+        "pen_time_percent": 78.0
+      }
+    },
+    {
+      "id": "a0cd1b0419356c63",
+      "file": "党员笔记_kvenjoy_王晓亮.gfont",
+      "bytes": 3158461,
+      "speed": {
+        "score": 83.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 326.1,
+        "draw_mm_per_character": 15.42,
+        "move_mm_per_character": 13.13,
+        "strokes_per_character": 6.2,
+        "pen_time_percent": 76.7
+      }
+    },
+    {
+      "id": "f9db738a80f99c7c",
+      "file": "兰亭_kvenjoy_LDG.gfont",
+      "bytes": 1487571,
+      "speed": {
+        "score": 278.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 97.6,
+        "draw_mm_per_character": 19.43,
+        "move_mm_per_character": 4.09,
+        "strokes_per_character": 1.02,
+        "pen_time_percent": 45.6
+      }
+    },
+    {
+      "id": "ee8d5ca147ee7455",
+      "file": "决一死战_kvenjoy_必胜.gfont",
+      "bytes": 3171968,
+      "speed": {
+        "score": 88.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 305.6,
+        "draw_mm_per_character": 14.97,
+        "move_mm_per_character": 10.57,
+        "strokes_per_character": 5.81,
+        "pen_time_percent": 77.3
+      }
+    },
+    {
+      "id": "a0d38a41c41c9d44",
+      "file": "冷_kvenjoy_冷天然.gfont",
+      "bytes": 1145020,
+      "speed": {
+        "score": 91.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 297.4,
+        "draw_mm_per_character": 12.26,
+        "move_mm_per_character": 10.18,
+        "strokes_per_character": 5.8,
+        "pen_time_percent": 78.9
+      }
+    },
+    {
+      "id": "68af73e59e3155b3",
+      "file": "刘东3500_kvenjoy_刘东.gfont",
+      "bytes": 764231,
+      "speed": {
+        "score": 94.8,
+        "sample_characters": 87,
+        "confidence": "limited",
+        "standardized_seconds_per_100": 286.6,
+        "draw_mm_per_character": 12.65,
+        "move_mm_per_character": 9.55,
+        "strokes_per_character": 5.02,
+        "pen_time_percent": 77.3
+      }
+    },
+    {
+      "id": "8ef61d2fe9c1d557",
+      "file": "包氏_kvenjoy_包风梅.gfont",
+      "bytes": 3576572,
+      "speed": {
+        "score": 82.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 327.8,
+        "draw_mm_per_character": 16.11,
+        "move_mm_per_character": 13.49,
+        "strokes_per_character": 6.2,
+        "pen_time_percent": 76.2
+      }
+    },
+    {
+      "id": "37953e2ec1c67e9f",
+      "file": "十二._kvenjoy_十二.gfont",
+      "bytes": 3442243,
+      "speed": {
+        "score": 84.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 320.4,
+        "draw_mm_per_character": 14.7,
+        "move_mm_per_character": 12.42,
+        "strokes_per_character": 6.09,
+        "pen_time_percent": 77.2
+      }
+    },
+    {
+      "id": "e57b113dc7b37601",
+      "file": "十郎_kvenjoy_洋.gfont",
+      "bytes": 3347805,
+      "speed": {
+        "score": 86.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 314.0,
+        "draw_mm_per_character": 14.35,
+        "move_mm_per_character": 11.23,
+        "strokes_per_character": 6.05,
+        "pen_time_percent": 77.8
+      }
+    },
+    {
+      "id": "5cfa031d08072ad2",
+      "file": "华华字体_kvenjoy_华影.gfont",
+      "bytes": 1122014,
+      "speed": {
+        "score": 188.4,
+        "sample_characters": 107,
+        "confidence": "full",
+        "standardized_seconds_per_100": 144.3,
+        "draw_mm_per_character": 16.14,
+        "move_mm_per_character": 4.93,
+        "strokes_per_character": 2.18,
+        "pen_time_percent": 64.5
+      }
+    },
+    {
+      "id": "5dcc33a25955d02b",
+      "file": "华康少女简体_kvenjoy_mrx.gfont",
+      "bytes": 2072511,
+      "speed": {
+        "score": 67.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 405.5,
+        "draw_mm_per_character": 19.66,
+        "move_mm_per_character": 17.38,
+        "strokes_per_character": 7.55,
+        "pen_time_percent": 76.2
+      }
+    },
+    {
+      "id": "39e5c913b5462e2e",
+      "file": "古渡舞6900手写字库_kvenjoy_古渡舞.gfont",
+      "bytes": 2912340,
+      "speed": {
+        "score": 130.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 207.9,
+        "draw_mm_per_character": 17.79,
+        "move_mm_per_character": 8.26,
+        "strokes_per_character": 3.52,
+        "pen_time_percent": 69.5
+      }
+    },
+    {
+      "id": "47c55fb87d479c01",
+      "file": "只只_kvenjoy_羽.gfont",
+      "bytes": 2599536,
+      "speed": {
+        "score": 89.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 302.5,
+        "draw_mm_per_character": 12.23,
+        "move_mm_per_character": 10.22,
+        "strokes_per_character": 5.95,
+        "pen_time_percent": 79.2
+      }
+    },
+    {
+      "id": "3c8b95104cbde452",
+      "file": "叶子启体手写_kvenjoy_高高.gfont",
+      "bytes": 1221672,
+      "speed": {
+        "score": 94.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 287.0,
+        "draw_mm_per_character": 15.89,
+        "move_mm_per_character": 12.34,
+        "strokes_per_character": 5.36,
+        "pen_time_percent": 74.8
+      }
+    },
+    {
+      "id": "07bb20919cc7017d",
+      "file": "叶鸿体_kvenjoy_叶鸿.gfont",
+      "bytes": 3424753,
+      "speed": {
+        "score": 134.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 201.7,
+        "draw_mm_per_character": 16.8,
+        "move_mm_per_character": 7.58,
+        "strokes_per_character": 3.62,
+        "pen_time_percent": 71.1
+      }
+    },
+    {
+      "id": "8d5f45019295ff9f",
+      "file": "吴先生_kvenjoy_吴先生.gfont",
+      "bytes": 2818456,
+      "speed": {
+        "score": 91.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 298.5,
+        "draw_mm_per_character": 15.21,
+        "move_mm_per_character": 11.15,
+        "strokes_per_character": 5.62,
+        "pen_time_percent": 76.5
+      }
+    },
+    {
+      "id": "a654a6062f81ada3",
+      "file": "吴字天书_kvenjoy_吴非非.gfont",
+      "bytes": 2464773,
+      "speed": {
+        "score": 92.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 293.0,
+        "draw_mm_per_character": 13.64,
+        "move_mm_per_character": 9.83,
+        "strokes_per_character": 5.65,
+        "pen_time_percent": 78.0
+      }
+    },
+    {
+      "id": "25a0ea8954c58d43",
+      "file": "命运对我不公_kvenjoy_我自横刀向天笑.gfont",
+      "bytes": 3446544,
+      "speed": {
+        "score": 91.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 298.0,
+        "draw_mm_per_character": 10.19,
+        "move_mm_per_character": 8.5,
+        "strokes_per_character": 6.01,
+        "pen_time_percent": 81.3
+      }
+    },
+    {
+      "id": "2856fc1f0977d2e6",
+      "file": "和煦春风_kvenjoy_。.gfont",
+      "bytes": 3425929,
+      "speed": {
+        "score": 45.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 591.6,
+        "draw_mm_per_character": 21.75,
+        "move_mm_per_character": 19.11,
+        "strokes_per_character": 11.92,
+        "pen_time_percent": 80.9
+      }
+    },
+    {
+      "id": "a53eb922c8ce6b38",
+      "file": "哈哈哈哈_kvenjoy_哈哈.gfont",
+      "bytes": 3117002,
+      "speed": {
+        "score": 85.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 316.6,
+        "draw_mm_per_character": 13.72,
+        "move_mm_per_character": 11.45,
+        "strokes_per_character": 6.09,
+        "pen_time_percent": 78.1
+      }
+    },
+    {
+      "id": "019b740b6bbe1915",
+      "file": "嘻嘻_kvenjoy_贵给.gfont",
+      "bytes": 1554792,
+      "speed": {
+        "score": 58.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 463.5,
+        "draw_mm_per_character": 17.85,
+        "move_mm_per_character": 14.54,
+        "strokes_per_character": 9.38,
+        "pen_time_percent": 80.7
+      }
+    },
+    {
+      "id": "1f21ed210ab87c42",
+      "file": "大东2500_kvenjoy_大东.gfont",
+      "bytes": 1174431,
+      "speed": {
+        "score": 148.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 182.9,
+        "draw_mm_per_character": 12.27,
+        "move_mm_per_character": 6.85,
+        "strokes_per_character": 3.27,
+        "pen_time_percent": 73.3
+      }
+    },
+    {
+      "id": "c292d107321fa70b",
+      "file": "大川体_kvenjoy_大川.gfont",
+      "bytes": 1315847,
+      "speed": {
+        "score": 84.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 320.2,
+        "draw_mm_per_character": 16.22,
+        "move_mm_per_character": 13.14,
+        "strokes_per_character": 6.02,
+        "pen_time_percent": 75.9
+      }
+    },
+    {
+      "id": "88c062d3cf804f6f",
+      "file": "大志体_kvenjoy_孙大志.gfont",
+      "bytes": 4340687,
+      "speed": {
+        "score": 106.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 255.9,
+        "draw_mm_per_character": 15.98,
+        "move_mm_per_character": 9.68,
+        "strokes_per_character": 4.64,
+        "pen_time_percent": 74.2
+      }
+    },
+    {
+      "id": "a18aec8f57c26746",
+      "file": "大画家_kvenjoy_花花.gfont",
+      "bytes": 3131552,
+      "speed": {
+        "score": 106.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 255.4,
+        "draw_mm_per_character": 14.04,
+        "move_mm_per_character": 9.49,
+        "strokes_per_character": 4.75,
+        "pen_time_percent": 75.7
+      }
+    },
+    {
+      "id": "14b1ea3f81cd24d4",
+      "file": "大白体_kvenjoy_大白.gfont",
+      "bytes": 3414863,
+      "speed": {
+        "score": 84.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 323.1,
+        "draw_mm_per_character": 14.09,
+        "move_mm_per_character": 12.45,
+        "strokes_per_character": 6.2,
+        "pen_time_percent": 77.6
+      }
+    },
+    {
+      "id": "314ecef578936888",
+      "file": "奎享手写体2_kvenjoy_奎享科技.gfont",
+      "bytes": 5058115,
+      "speed": {
+        "score": 136.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 198.5,
+        "draw_mm_per_character": 15.0,
+        "move_mm_per_character": 8.45,
+        "strokes_per_character": 3.58,
+        "pen_time_percent": 71.6
+      }
+    },
+    {
+      "id": "414755a035ca2e4a",
+      "file": "如果梦万国库_kvenjoy_如果梦.gfont",
+      "bytes": 8503467,
+      "speed": {
+        "score": 108.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 251.3,
+        "draw_mm_per_character": 15.65,
+        "move_mm_per_character": 8.62,
+        "strokes_per_character": 4.9,
+        "pen_time_percent": 75.8
+      }
+    },
+    {
+      "id": "6359b8e668f1de00",
+      "file": "妮妮_kvenjoy_妮妮.gfont",
+      "bytes": 659601,
+      "speed": {
+        "score": 85.1,
+        "sample_characters": 115,
+        "confidence": "full",
+        "standardized_seconds_per_100": 319.3,
+        "draw_mm_per_character": 15.56,
+        "move_mm_per_character": 13.44,
+        "strokes_per_character": 5.95,
+        "pen_time_percent": 76.0
+      }
+    },
+    {
+      "id": "57c327cd80f48a2c",
+      "file": "姞氐二号_kvenjoy_姞.gfont",
+      "bytes": 3759164,
+      "speed": {
+        "score": 81.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 333.1,
+        "draw_mm_per_character": 16.93,
+        "move_mm_per_character": 14.53,
+        "strokes_per_character": 6.23,
+        "pen_time_percent": 75.5
+      }
+    },
+    {
+      "id": "2570bee647d20df6",
+      "file": "娃哈哈369_kvenjoy_娃哈哈.gfont",
+      "bytes": 3873619,
+      "speed": {
+        "score": 85.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 319.5,
+        "draw_mm_per_character": 16.2,
+        "move_mm_per_character": 13.61,
+        "strokes_per_character": 6,
+        "pen_time_percent": 75.7
+      }
+    },
+    {
+      "id": "4f57af105ddbe3fb",
+      "file": "娜娜1212_kvenjoy_娜娜.gfont",
+      "bytes": 3424390,
+      "speed": {
+        "score": 84.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 321.0,
+        "draw_mm_per_character": 14.79,
+        "move_mm_per_character": 12.09,
+        "strokes_per_character": 6.18,
+        "pen_time_percent": 77.4
+      }
+    },
+    {
+      "id": "45785a7137dc8fcf",
+      "file": "子书A_kvenjoy_D.gfont",
+      "bytes": 3619672,
+      "speed": {
+        "score": 89.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 304.3,
+        "draw_mm_per_character": 14.61,
+        "move_mm_per_character": 11.71,
+        "strokes_per_character": 5.76,
+        "pen_time_percent": 76.8
+      }
+    },
+    {
+      "id": "a80db65bc933acf3",
+      "file": "子显_kvenjoy_黄世伟.gfont",
+      "bytes": 4124302,
+      "speed": {
+        "score": 119.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 227.4,
+        "draw_mm_per_character": 13.94,
+        "move_mm_per_character": 8.3,
+        "strokes_per_character": 4.18,
+        "pen_time_percent": 74.7
+      }
+    },
+    {
+      "id": "d28af2b0384dadc8",
+      "file": "字体1002_kvenjoy_BCD.gfont",
+      "bytes": 3875400,
+      "speed": {
+        "score": 82.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 330.0,
+        "draw_mm_per_character": 16.4,
+        "move_mm_per_character": 13.11,
+        "strokes_per_character": 6.24,
+        "pen_time_percent": 76.4
+      }
+    },
+    {
+      "id": "5976be4d80b84c59",
+      "file": "字体1_kvenjoy_fcy.gfont",
+      "bytes": 1889248,
+      "speed": {
+        "score": 170.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 159.6,
+        "draw_mm_per_character": 10.57,
+        "move_mm_per_character": 5.55,
+        "strokes_per_character": 2.98,
+        "pen_time_percent": 74.6
+      }
+    },
+    {
+      "id": "bd5cbeac0868339f",
+      "file": "字体1_kvenjoy_林.gfont",
+      "bytes": 3703624,
+      "speed": {
+        "score": 130.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 208.0,
+        "draw_mm_per_character": 24.52,
+        "move_mm_per_character": 7.37,
+        "strokes_per_character": 3.5,
+        "pen_time_percent": 66.2
+      }
+    },
+    {
+      "id": "20242e3944d388f4",
+      "file": "学习_kvenjoy_文.gfont",
+      "bytes": 3556503,
+      "speed": {
+        "score": 121.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 223.1,
+        "draw_mm_per_character": 14.24,
+        "move_mm_per_character": 8.58,
+        "strokes_per_character": 4.05,
+        "pen_time_percent": 73.9
+      }
+    },
+    {
+      "id": "ec9db797c9e02c15",
+      "file": "安雪红_kvenjoy_安雪红.gfont",
+      "bytes": 2790718,
+      "speed": {
+        "score": 85.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 316.4,
+        "draw_mm_per_character": 14.48,
+        "move_mm_per_character": 12.66,
+        "strokes_per_character": 6.03,
+        "pen_time_percent": 77.0
+      }
+    },
+    {
+      "id": "a773f9335b907d0d",
+      "file": "宋_kvenjoy_宋培仁.gfont",
+      "bytes": 1668073,
+      "speed": {
+        "score": 108.3,
+        "sample_characters": 114,
+        "confidence": "full",
+        "standardized_seconds_per_100": 250.8,
+        "draw_mm_per_character": 14.54,
+        "move_mm_per_character": 8.77,
+        "strokes_per_character": 4.61,
+        "pen_time_percent": 75.4
+      }
+    },
+    {
+      "id": "fd88ecf471bda5e4",
+      "file": "宋体_kvenjoy_HZ_1_6_92.gfont",
+      "bytes": 2590170,
+      "speed": {
+        "score": 85.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 317.6,
+        "draw_mm_per_character": 20.15,
+        "move_mm_per_character": 13.71,
+        "strokes_per_character": 5.67,
+        "pen_time_percent": 73.0
+      }
+    },
+    {
+      "id": "d77749bab3971d8d",
+      "file": "宝宝的字体_kvenjoy_宝宝.gfont",
+      "bytes": 3978021,
+      "speed": {
+        "score": 95.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 284.3,
+        "draw_mm_per_character": 18.31,
+        "move_mm_per_character": 11.99,
+        "strokes_per_character": 5.25,
+        "pen_time_percent": 73.5
+      }
+    },
+    {
+      "id": "ba9dbf18a698bf80",
+      "file": "寒雪_xiongzai_荣仔.gfont",
+      "bytes": 1194897,
+      "speed": {
+        "score": 87.8,
+        "sample_characters": 119,
+        "confidence": "full",
+        "standardized_seconds_per_100": 309.7,
+        "draw_mm_per_character": 13.04,
+        "move_mm_per_character": 11.3,
+        "strokes_per_character": 5.91,
+        "pen_time_percent": 78.1
+      }
+    },
+    {
+      "id": "cd4b25117f1cb2fa",
+      "file": "小周周_kvenjoy_小小周.gfont",
+      "bytes": 3292134,
+      "speed": {
+        "score": 91.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 296.6,
+        "draw_mm_per_character": 13.87,
+        "move_mm_per_character": 9.83,
+        "strokes_per_character": 5.69,
+        "pen_time_percent": 78.0
+      }
+    },
+    {
+      "id": "756e4969adac2faa",
+      "file": "小强_kvenjoy_小强.gfont",
+      "bytes": 4549698,
+      "speed": {
+        "score": 84.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 322.4,
+        "draw_mm_per_character": 14.2,
+        "move_mm_per_character": 11.11,
+        "strokes_per_character": 6.26,
+        "pen_time_percent": 78.3
+      }
+    },
+    {
+      "id": "dabbc0bc778503c9",
+      "file": "小朋友字体_kvenjoy_reng.gfont",
+      "bytes": 394447,
+      "speed": {
+        "score": 98.0,
+        "sample_characters": 70,
+        "confidence": "limited",
+        "standardized_seconds_per_100": 277.5,
+        "draw_mm_per_character": 15.21,
+        "move_mm_per_character": 10.58,
+        "strokes_per_character": 4.24,
+        "pen_time_percent": 72.7
+      }
+    },
+    {
+      "id": "c86b3230f9ba5589",
+      "file": "小破孩_kvenjoy_.gfont",
+      "bytes": 845682,
+      "speed": {
+        "score": 103.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 262.6,
+        "draw_mm_per_character": 14.34,
+        "move_mm_per_character": 9.77,
+        "strokes_per_character": 4.95,
+        "pen_time_percent": 76.0
+      }
+    },
+    {
+      "id": "96d3579818ee0f8e",
+      "file": "小莹_kvenjoy_小莹.gfont",
+      "bytes": 3063020,
+      "speed": {
+        "score": 132.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 204.8,
+        "draw_mm_per_character": 11.49,
+        "move_mm_per_character": 6.54,
+        "strokes_per_character": 3.84,
+        "pen_time_percent": 76.5
+      }
+    },
+    {
+      "id": "1ce7895e5ebb113f",
+      "file": "小西瓜_kvenjoy_Vivian.gfont",
+      "bytes": 3845869,
+      "speed": {
+        "score": 84.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 321.7,
+        "draw_mm_per_character": 15.02,
+        "move_mm_per_character": 12.31,
+        "strokes_per_character": 6.15,
+        "pen_time_percent": 77.2
+      }
+    },
+    {
+      "id": "1feaa18f081e0581",
+      "file": "尚进20210416_kvenjoy_尚进.gfont",
+      "bytes": 3962750,
+      "speed": {
+        "score": 138.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 196.1,
+        "draw_mm_per_character": 14.49,
+        "move_mm_per_character": 7.49,
+        "strokes_per_character": 3.52,
+        "pen_time_percent": 72.3
+      }
+    },
+    {
+      "id": "4f30fe17cd4861b2",
+      "file": "尤艇_kvenjoy_尤艇.gfont",
+      "bytes": 3765452,
+      "speed": {
+        "score": 151.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 179.1,
+        "draw_mm_per_character": 16.23,
+        "move_mm_per_character": 7.11,
+        "strokes_per_character": 3.12,
+        "pen_time_percent": 69.4
+      }
+    },
+    {
+      "id": "33f556fa1311ecc6",
+      "file": "岁月1_kvenjoy_岁月.gfont",
+      "bytes": 4208339,
+      "speed": {
+        "score": 92.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 295.1,
+        "draw_mm_per_character": 16.42,
+        "move_mm_per_character": 10.92,
+        "strokes_per_character": 5.52,
+        "pen_time_percent": 75.7
+      }
+    },
+    {
+      "id": "f3eb48d8d3da2d14",
+      "file": "左右_kvenjoy_左右.gfont",
+      "bytes": 3364615,
+      "speed": {
+        "score": 107.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 253.4,
+        "draw_mm_per_character": 13.83,
+        "move_mm_per_character": 8.81,
+        "strokes_per_character": 4.75,
+        "pen_time_percent": 76.3
+      }
+    },
+    {
+      "id": "259c330d2142eb3c",
+      "file": "广哥哥_kvenjoy_郭登广.gfont",
+      "bytes": 4054741,
+      "speed": {
+        "score": 152.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 177.8,
+        "draw_mm_per_character": 17.64,
+        "move_mm_per_character": 7.08,
+        "strokes_per_character": 2.89,
+        "pen_time_percent": 66.9
+      }
+    },
+    {
+      "id": "76e7cae32d2605eb",
+      "file": "张16523_kvenjoy_q.gfont",
+      "bytes": 3657035,
+      "speed": {
+        "score": 52.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 514.3,
+        "draw_mm_per_character": 14.75,
+        "move_mm_per_character": 14.7,
+        "strokes_per_character": 10.45,
+        "pen_time_percent": 82.9
+      }
+    },
+    {
+      "id": "b3c82a951af55e2d",
+      "file": "张存喜_kvenjoy_张存喜.gfont",
+      "bytes": 3277099,
+      "speed": {
+        "score": 87.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 311.7,
+        "draw_mm_per_character": 16.26,
+        "move_mm_per_character": 12.98,
+        "strokes_per_character": 5.88,
+        "pen_time_percent": 75.7
+      }
+    },
+    {
+      "id": "c968e0f671b16faf",
+      "file": "张晨昕_kvenjoy_张晨昕.gfont",
+      "bytes": 4150017,
+      "speed": {
+        "score": 126.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 215.2,
+        "draw_mm_per_character": 17.8,
+        "move_mm_per_character": 7.81,
+        "strokes_per_character": 3.65,
+        "pen_time_percent": 70.4
+      }
+    },
+    {
+      "id": "e07947edf9cfcffe",
+      "file": "归_kvenjoy_.gfont",
+      "bytes": 956474,
+      "speed": {
+        "score": 114.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 236.9,
+        "draw_mm_per_character": 15.81,
+        "move_mm_per_character": 9.67,
+        "strokes_per_character": 4.23,
+        "pen_time_percent": 72.8
+      }
+    },
+    {
+      "id": "67916d0ca799fdb0",
+      "file": "彭_kvenjoy_彭.gfont",
+      "bytes": 3724786,
+      "speed": {
+        "score": 105.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 258.8,
+        "draw_mm_per_character": 12.04,
+        "move_mm_per_character": 9.45,
+        "strokes_per_character": 4.88,
+        "pen_time_percent": 77.3
+      }
+    },
+    {
+      "id": "acfe8b3e6f2f60a6",
+      "file": "彭南飞_kvenjoy_彭南飞.gfont",
+      "bytes": 1478783,
+      "speed": {
+        "score": 195.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 139.2,
+        "draw_mm_per_character": 17.42,
+        "move_mm_per_character": 5.59,
+        "strokes_per_character": 2.08,
+        "pen_time_percent": 61.8
+      }
+    },
+    {
+      "id": "0037e63a9468f328",
+      "file": "徐字体_kvenjoy_徐.gfont",
+      "bytes": 3044384,
+      "speed": {
+        "score": 102.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 264.2,
+        "draw_mm_per_character": 15.0,
+        "move_mm_per_character": 10.35,
+        "strokes_per_character": 5.05,
+        "pen_time_percent": 75.5
+      }
+    },
+    {
+      "id": "3f22b1034b82d234",
+      "file": "徐杭专属字体_kvenjoy_徐杭.gfont",
+      "bytes": 4350200,
+      "speed": {
+        "score": 171.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 158.9,
+        "draw_mm_per_character": 16.36,
+        "move_mm_per_character": 6.32,
+        "strokes_per_character": 2.62,
+        "pen_time_percent": 66.7
+      }
+    },
+    {
+      "id": "6a552a971beb0d7f",
+      "file": "徐静蕾字体2_kvenjoy_瑞瑞.gfont",
+      "bytes": 4119175,
+      "speed": {
+        "score": 51.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 532.3,
+        "draw_mm_per_character": 16.33,
+        "move_mm_per_character": 15.2,
+        "strokes_per_character": 10.97,
+        "pen_time_percent": 82.6
+      }
+    },
+    {
+      "id": "9a885b8a2d5ffd71",
+      "file": "必须行_kvenjoy_1.gfont",
+      "bytes": 2649819,
+      "speed": {
+        "score": 125.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 217.0,
+        "draw_mm_per_character": 13.38,
+        "move_mm_per_character": 7.19,
+        "strokes_per_character": 4.07,
+        "pen_time_percent": 75.4
+      }
+    },
+    {
+      "id": "27976d11da14ec4d",
+      "file": "怀冰_kvenjoy_冰.gfont",
+      "bytes": 3974106,
+      "speed": {
+        "score": 170.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 159.5,
+        "draw_mm_per_character": 15.02,
+        "move_mm_per_character": 5.98,
+        "strokes_per_character": 2.7,
+        "pen_time_percent": 68.6
+      }
+    },
+    {
+      "id": "f3fd298c84d3649c",
+      "file": "慧慧_kvenjoy_慧慧.gfont",
+      "bytes": 3816377,
+      "speed": {
+        "score": 107.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 253.0,
+        "draw_mm_per_character": 14.98,
+        "move_mm_per_character": 9.06,
+        "strokes_per_character": 4.68,
+        "pen_time_percent": 75.2
+      }
+    },
+    {
+      "id": "4d9b20a169082c80",
+      "file": "懒人_kvenjoy_懒人.gfont",
+      "bytes": 2660309,
+      "speed": {
+        "score": 96.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 282.9,
+        "draw_mm_per_character": 10.82,
+        "move_mm_per_character": 9.0,
+        "strokes_per_character": 5.57,
+        "pen_time_percent": 79.8
+      }
+    },
+    {
+      "id": "792ab5b7f298b05e",
+      "file": "我_kvenjoy_张亮.gfont",
+      "bytes": 3969300,
+      "speed": {
+        "score": 93.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 289.8,
+        "draw_mm_per_character": 16.1,
+        "move_mm_per_character": 11.22,
+        "strokes_per_character": 5.43,
+        "pen_time_percent": 75.5
+      }
+    },
+    {
+      "id": "6d4592a40001301e",
+      "file": "我的字体_kvenjoy_任利荣.gfont",
+      "bytes": 3363745,
+      "speed": {
+        "score": 57.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 475.1,
+        "draw_mm_per_character": 17.03,
+        "move_mm_per_character": 15.12,
+        "strokes_per_character": 9.54,
+        "pen_time_percent": 81.0
+      }
+    },
+    {
+      "id": "25db40b3eb571ea6",
+      "file": "我的字体_kvenjoy_吉.gfont",
+      "bytes": 3979990,
+      "speed": {
+        "score": 54.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 500.0,
+        "draw_mm_per_character": 17.54,
+        "move_mm_per_character": 15.71,
+        "strokes_per_character": 9.84,
+        "pen_time_percent": 80.9
+      }
+    },
+    {
+      "id": "c1e5e560d3e43f84",
+      "file": "我的字体_kvenjoy_慧.gfont",
+      "bytes": 3772410,
+      "speed": {
+        "score": 85.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 318.1,
+        "draw_mm_per_character": 15.07,
+        "move_mm_per_character": 12.74,
+        "strokes_per_character": 6.04,
+        "pen_time_percent": 76.7
+      }
+    },
+    {
+      "id": "d3c4eeca3946cab7",
+      "file": "我的字体_kvenjoy_朵朵.gfont",
+      "bytes": 3350507,
+      "speed": {
+        "score": 83.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 326.0,
+        "draw_mm_per_character": 16.54,
+        "move_mm_per_character": 13.43,
+        "strokes_per_character": 6.14,
+        "pen_time_percent": 75.9
+      }
+    },
+    {
+      "id": "41a32c77acf9410c",
+      "file": "我自己_kvenjoy_快乐小寅.gfont",
+      "bytes": 3527455,
+      "speed": {
+        "score": 83.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 327.5,
+        "draw_mm_per_character": 16.28,
+        "move_mm_per_character": 14.07,
+        "strokes_per_character": 6.16,
+        "pen_time_percent": 75.8
+      }
+    },
+    {
+      "id": "6c1229a1ff7a63fe",
+      "file": "手书_kvenjoy_佚名.gfont",
+      "bytes": 1844781,
+      "speed": {
+        "score": 86.3,
+        "sample_characters": 96,
+        "confidence": "full",
+        "standardized_seconds_per_100": 315.0,
+        "draw_mm_per_character": 14.43,
+        "move_mm_per_character": 11.72,
+        "strokes_per_character": 5.68,
+        "pen_time_percent": 76.7
+      }
+    },
+    {
+      "id": "8ff1144c0439225b",
+      "file": "手写910_kvenjoy_Hilary.gfont",
+      "bytes": 3323341,
+      "speed": {
+        "score": 89.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 302.5,
+        "draw_mm_per_character": 12.73,
+        "move_mm_per_character": 10.28,
+        "strokes_per_character": 5.94,
+        "pen_time_percent": 78.9
+      }
+    },
+    {
+      "id": "f26a3b3fb2d6a748",
+      "file": "手写_kvenjoy_张天才.gfont",
+      "bytes": 3206237,
+      "speed": {
+        "score": 57.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 475.2,
+        "draw_mm_per_character": 14.17,
+        "move_mm_per_character": 13.83,
+        "strokes_per_character": 9.61,
+        "pen_time_percent": 82.5
+      }
+    },
+    {
+      "id": "07b798a5a64c54f4",
+      "file": "手写_kvenjoy_彭.gfont",
+      "bytes": 4146374,
+      "speed": {
+        "score": 119.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 227.4,
+        "draw_mm_per_character": 16.39,
+        "move_mm_per_character": 8.25,
+        "strokes_per_character": 4.05,
+        "pen_time_percent": 72.7
+      }
+    },
+    {
+      "id": "1580d8dbecab99f3",
+      "file": "手写体_kvenjoy_书法.gfont",
+      "bytes": 3028860,
+      "speed": {
+        "score": 200.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 135.3,
+        "draw_mm_per_character": 12.94,
+        "move_mm_per_character": 5.06,
+        "strokes_per_character": 2.25,
+        "pen_time_percent": 68.1
+      }
+    },
+    {
+      "id": "93d2bcafd93aed05",
+      "file": "手写体_kvenjoy_萧萧南雁.gfont",
+      "bytes": 3701047,
+      "speed": {
+        "score": 82.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 329.9,
+        "draw_mm_per_character": 16.1,
+        "move_mm_per_character": 13.73,
+        "strokes_per_character": 6.23,
+        "pen_time_percent": 76.2
+      }
+    },
+    {
+      "id": "7eda7d582638646f",
+      "file": "手写字体456_kvenjoy_小朋友.gfont",
+      "bytes": 3189745,
+      "speed": {
+        "score": 82.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 330.5,
+        "draw_mm_per_character": 16.77,
+        "move_mm_per_character": 13.92,
+        "strokes_per_character": 6.2,
+        "pen_time_percent": 75.7
+      }
+    },
+    {
+      "id": "876b9a680d05365e",
+      "file": "手写字体_kvenjoy_xxx.gfont",
+      "bytes": 1007146,
+      "speed": {
+        "score": 210.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 129.4,
+        "draw_mm_per_character": 17.15,
+        "move_mm_per_character": 5.39,
+        "strokes_per_character": 1.92,
+        "pen_time_percent": 60.6
+      }
+    },
+    {
+      "id": "3e13a032da45706f",
+      "file": "抄教案专用_kvenjoy_淑淑.gfont",
+      "bytes": 3262212,
+      "speed": {
+        "score": 90.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 301.5,
+        "draw_mm_per_character": 16.0,
+        "move_mm_per_character": 11.73,
+        "strokes_per_character": 5.67,
+        "pen_time_percent": 75.9
+      }
+    },
+    {
+      "id": "baf4999bfcf6ddfe",
+      "file": "抄笔记_xiongzai_玉.gfont",
+      "bytes": 1904998,
+      "speed": {
+        "score": 109.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 248.0,
+        "draw_mm_per_character": 17.77,
+        "move_mm_per_character": 8.73,
+        "strokes_per_character": 4.52,
+        "pen_time_percent": 73.3
+      }
+    },
+    {
+      "id": "109508865ced574c",
+      "file": "拉拉_kvenjoy_赵赵.gfont",
+      "bytes": 3786982,
+      "speed": {
+        "score": 113.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 240.3,
+        "draw_mm_per_character": 15.98,
+        "move_mm_per_character": 9.26,
+        "strokes_per_character": 4.34,
+        "pen_time_percent": 73.4
+      }
+    },
+    {
+      "id": "75631eadad04a126",
+      "file": "教案_kvenjoy_十郎.gfont",
+      "bytes": 3321758,
+      "speed": {
+        "score": 85.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 316.4,
+        "draw_mm_per_character": 15.29,
+        "move_mm_per_character": 11.75,
+        "strokes_per_character": 6.03,
+        "pen_time_percent": 77.1
+      }
+    },
+    {
+      "id": "fd5e616b5da94b2a",
+      "file": "教案_kvenjoy_灵.gfont",
+      "bytes": 1768915,
+      "speed": {
+        "score": 90.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 299.1,
+        "draw_mm_per_character": 14.85,
+        "move_mm_per_character": 11.89,
+        "strokes_per_character": 5.64,
+        "pen_time_percent": 76.3
+      }
+    },
+    {
+      "id": "99da04b221bd1828",
+      "file": "教案字体_kvenjoy_瞳瞳.gfont",
+      "bytes": 2662891,
+      "speed": {
+        "score": 85.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 319.5,
+        "draw_mm_per_character": 13.58,
+        "move_mm_per_character": 11.95,
+        "strokes_per_character": 6.19,
+        "pen_time_percent": 78.1
+      }
+    },
+    {
+      "id": "dd958c9f9a58c8eb",
+      "file": "文琢1_kvenjoy_姜文卓.gfont",
+      "bytes": 1216411,
+      "speed": {
+        "score": 100.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 271.6,
+        "draw_mm_per_character": 18.09,
+        "move_mm_per_character": 9.85,
+        "strokes_per_character": 4.84,
+        "pen_time_percent": 73.5
+      }
+    },
+    {
+      "id": "f36f16e0c363de8a",
+      "file": "文超体_kvenjoy_王文超.gfont",
+      "bytes": 3361024,
+      "speed": {
+        "score": 115.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 235.7,
+        "draw_mm_per_character": 16.75,
+        "move_mm_per_character": 9.18,
+        "strokes_per_character": 4.2,
+        "pen_time_percent": 72.5
+      }
+    },
+    {
+      "id": "66f9156e11f1b441",
+      "file": "新仿宋_kvenjoy_高山流水.gfont",
+      "bytes": 3915108,
+      "speed": {
+        "score": 96.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 282.3,
+        "draw_mm_per_character": 13.92,
+        "move_mm_per_character": 9.65,
+        "strokes_per_character": 5.29,
+        "pen_time_percent": 77.2
+      }
+    },
+    {
+      "id": "1e8c5fda649302b5",
+      "file": "新字体1.1_kvenjoy_sunjie.gfont",
+      "bytes": 3916152,
+      "speed": {
+        "score": 178.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 152.2,
+        "draw_mm_per_character": 16.74,
+        "move_mm_per_character": 6.07,
+        "strokes_per_character": 2.38,
+        "pen_time_percent": 64.8
+      }
+    },
+    {
+      "id": "d5c97a296d353207",
+      "file": "方正佩安字体_kvenjoy_瑞瑞.gfont",
+      "bytes": 3960194,
+      "speed": {
+        "score": 53.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 506.8,
+        "draw_mm_per_character": 14.63,
+        "move_mm_per_character": 15.79,
+        "strokes_per_character": 10.32,
+        "pen_time_percent": 82.3
+      }
+    },
+    {
+      "id": "25795fd03275c7dd",
+      "file": "方正兰亭超细黑体_kvenjoy_奎享科技.gfont",
+      "bytes": 4340661,
+      "speed": {
+        "score": 102.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 265.3,
+        "draw_mm_per_character": 43.37,
+        "move_mm_per_character": 11.32,
+        "strokes_per_character": 3.61,
+        "pen_time_percent": 55.1
+      }
+    },
+    {
+      "id": "66ff2b8b2e9b6d0f",
+      "file": "无所谓_kvenjoy_pitt.gfont",
+      "bytes": 3343744,
+      "speed": {
+        "score": 112.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 241.0,
+        "draw_mm_per_character": 14.76,
+        "move_mm_per_character": 9.13,
+        "strokes_per_character": 4.52,
+        "pen_time_percent": 74.8
+      }
+    },
+    {
+      "id": "722e69ac9700b600",
+      "file": "昌盛字库_kvenjoy_王昌盛.gfont",
+      "bytes": 4423076,
+      "speed": {
+        "score": 104.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 260.7,
+        "draw_mm_per_character": 18.8,
+        "move_mm_per_character": 10.03,
+        "strokes_per_character": 4.6,
+        "pen_time_percent": 72.3
+      }
+    },
+    {
+      "id": "db5e50a6c9383f91",
+      "file": "星望璐_kvenjoy_星望璐1.gfont",
+      "bytes": 3636396,
+      "speed": {
+        "score": 83.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 324.3,
+        "draw_mm_per_character": 14.26,
+        "move_mm_per_character": 12.43,
+        "strokes_per_character": 6.22,
+        "pen_time_percent": 77.6
+      }
+    },
+    {
+      "id": "c5b9ad117ffa571c",
+      "file": "晓李手写_kvenjoy_aren.gfont",
+      "bytes": 1019941,
+      "speed": {
+        "score": 204.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 132.9,
+        "draw_mm_per_character": 19.43,
+        "move_mm_per_character": 6.12,
+        "strokes_per_character": 1.81,
+        "pen_time_percent": 56.7
+      }
+    },
+    {
+      "id": "d2c020c77a8633c8",
+      "file": "晕_kvenjoy_晕了.gfont",
+      "bytes": 1516850,
+      "speed": {
+        "score": 124.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 218.8,
+        "draw_mm_per_character": 15.94,
+        "move_mm_per_character": 7.62,
+        "strokes_per_character": 3.89,
+        "pen_time_percent": 72.8
+      }
+    },
+    {
+      "id": "cbedba9b4f2828f2",
+      "file": "朱宏磊全字体_kvenjoy_朱宏磊.gfont",
+      "bytes": 3563096,
+      "speed": {
+        "score": 107.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 254.1,
+        "draw_mm_per_character": 14.48,
+        "move_mm_per_character": 9.83,
+        "strokes_per_character": 4.7,
+        "pen_time_percent": 75.1
+      }
+    },
+    {
+      "id": "00c01efbffbdac4e",
+      "file": "朱超凡_kvenjoy_朱超凡.gfont",
+      "bytes": 2589226,
+      "speed": {
+        "score": 103.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 263.1,
+        "draw_mm_per_character": 12.8,
+        "move_mm_per_character": 8.85,
+        "strokes_per_character": 4.94,
+        "pen_time_percent": 77.4
+      }
+    },
+    {
+      "id": "2aef819bd71fa470",
+      "file": "机器人_kvenjoy_lsp.gfont",
+      "bytes": 3104432,
+      "speed": {
+        "score": 86.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 314.8,
+        "draw_mm_per_character": 13.89,
+        "move_mm_per_character": 11.32,
+        "strokes_per_character": 6.07,
+        "pen_time_percent": 78.0
+      }
+    },
+    {
+      "id": "976bf464a0c66f67",
+      "file": "李华兰_kvenjoy_李.gfont",
+      "bytes": 3467817,
+      "speed": {
+        "score": 102.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 264.9,
+        "draw_mm_per_character": 10.68,
+        "move_mm_per_character": 7.14,
+        "strokes_per_character": 5.26,
+        "pen_time_percent": 80.4
+      }
+    },
+    {
+      "id": "8eb79e4ba7ad50c9",
+      "file": "李多多_kvenjoy_李多多.gfont",
+      "bytes": 4312631,
+      "speed": {
+        "score": 115.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 234.6,
+        "draw_mm_per_character": 16.57,
+        "move_mm_per_character": 10.2,
+        "strokes_per_character": 4.13,
+        "pen_time_percent": 71.7
+      }
+    },
+    {
+      "id": "ad1b7b5bd3c83c1d",
+      "file": "李字体_kvenjoy_李某人.gfont",
+      "bytes": 3718172,
+      "speed": {
+        "score": 85.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 317.6,
+        "draw_mm_per_character": 16.58,
+        "move_mm_per_character": 12.62,
+        "strokes_per_character": 5.92,
+        "pen_time_percent": 75.8
+      }
+    },
+    {
+      "id": "be9a32fb8c0ea6f2",
+      "file": "李慧娟_kvenjoy_lhj.gfont",
+      "bytes": 3177679,
+      "speed": {
+        "score": 87.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 310.2,
+        "draw_mm_per_character": 14.1,
+        "move_mm_per_character": 11.79,
+        "strokes_per_character": 5.95,
+        "pen_time_percent": 77.4
+      }
+    },
+    {
+      "id": "659dc259ffe70b63",
+      "file": "李文浩_kvenjoy_李文浩.gfont",
+      "bytes": 3195377,
+      "speed": {
+        "score": 107.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 253.1,
+        "draw_mm_per_character": 11.04,
+        "move_mm_per_character": 7.53,
+        "strokes_per_character": 4.91,
+        "pen_time_percent": 79.1
+      }
+    },
+    {
+      "id": "756b05490c1b5fa2",
+      "file": "李晶晶亲笔_kvenjoy_李晶晶.gfont",
+      "bytes": 2952730,
+      "speed": {
+        "score": 87.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 312.3,
+        "draw_mm_per_character": 14.99,
+        "move_mm_per_character": 12.42,
+        "strokes_per_character": 5.88,
+        "pen_time_percent": 76.5
+      }
+    },
+    {
+      "id": "a1c2bbd4a9bd7d91",
+      "file": "李海悦_kvenjoy_李海悦.gfont",
+      "bytes": 1616077,
+      "speed": {
+        "score": 98.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 276.0,
+        "draw_mm_per_character": 12.88,
+        "move_mm_per_character": 10.21,
+        "strokes_per_character": 5.27,
+        "pen_time_percent": 77.4
+      }
+    },
+    {
+      "id": "e7059aafa4691acd",
+      "file": "材料书写_kvenjoy_yxm.gfont",
+      "bytes": 3015178,
+      "speed": {
+        "score": 86.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 316.1,
+        "draw_mm_per_character": 14.61,
+        "move_mm_per_character": 11.16,
+        "strokes_per_character": 6.09,
+        "pen_time_percent": 77.8
+      }
+    },
+    {
+      "id": "cecfe417dca9aefb",
+      "file": "杨咩咩_kvenjoy_杨咩咩.gfont",
+      "bytes": 3984866,
+      "speed": {
+        "score": 113.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 240.5,
+        "draw_mm_per_character": 15.42,
+        "move_mm_per_character": 8.99,
+        "strokes_per_character": 4.52,
+        "pen_time_percent": 74.5
+      }
+    },
+    {
+      "id": "ec3092dbcd631211",
+      "file": "树叶_kvenjoy_树叶.gfont",
+      "bytes": 1411981,
+      "speed": {
+        "score": 192.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 141.4,
+        "draw_mm_per_character": 16.38,
+        "move_mm_per_character": 5.57,
+        "strokes_per_character": 2.24,
+        "pen_time_percent": 64.3
+      }
+    },
+    {
+      "id": "0ff11fc115a02dd4",
+      "file": "楷书_kvenjoy_ziyi.gfont",
+      "bytes": 3536876,
+      "speed": {
+        "score": 52.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 513.4,
+        "draw_mm_per_character": 15.76,
+        "move_mm_per_character": 15.82,
+        "strokes_per_character": 10.31,
+        "pen_time_percent": 82.0
+      }
+    },
+    {
+      "id": "5e712b2aa4a0a77f",
+      "file": "楷书_kvenjoy_兰兰.gfont",
+      "bytes": 3900758,
+      "speed": {
+        "score": 94.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 289.3,
+        "draw_mm_per_character": 14.88,
+        "move_mm_per_character": 10.67,
+        "strokes_per_character": 5.44,
+        "pen_time_percent": 76.4
+      }
+    },
+    {
+      "id": "6bb7aee1c0d11da9",
+      "file": "楷书_kvenjoy_老李.gfont",
+      "bytes": 3004710,
+      "speed": {
+        "score": 106.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 254.2,
+        "draw_mm_per_character": 15.99,
+        "move_mm_per_character": 9.41,
+        "strokes_per_character": 4.62,
+        "pen_time_percent": 74.2
+      }
+    },
+    {
+      "id": "aa915e5a1fc00fa9",
+      "file": "楷体_kvenjoy_1.gfont",
+      "bytes": 3755649,
+      "speed": {
+        "score": 49.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 545.5,
+        "draw_mm_per_character": 17.37,
+        "move_mm_per_character": 17.88,
+        "strokes_per_character": 10.86,
+        "pen_time_percent": 81.3
+      }
+    },
+    {
+      "id": "ef1b65318a298ae2",
+      "file": "楷体_kvenjoy_lht.gfont",
+      "bytes": 96771,
+      "speed": {
+        "score": 47.8,
+        "sample_characters": 22,
+        "confidence": "limited",
+        "standardized_seconds_per_100": 568.1,
+        "draw_mm_per_character": 13.04,
+        "move_mm_per_character": 15.42,
+        "strokes_per_character": 7.59,
+        "pen_time_percent": 79.8
+      }
+    },
+    {
+      "id": "bae4dfaba4472215",
+      "file": "楷体_kvenjoy_唐诚诚.gfont",
+      "bytes": 2987955,
+      "speed": {
+        "score": 90.5,
+        "sample_characters": 124,
+        "confidence": "full",
+        "standardized_seconds_per_100": 300.4,
+        "draw_mm_per_character": 14.91,
+        "move_mm_per_character": 11.32,
+        "strokes_per_character": 5.69,
+        "pen_time_percent": 76.7
+      }
+    },
+    {
+      "id": "a0bad3dd323e5dc5",
+      "file": "楷体_kvenjoy_大孔龙.gfont",
+      "bytes": 1334644,
+      "speed": {
+        "score": 82.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 330.4,
+        "draw_mm_per_character": 16.02,
+        "move_mm_per_character": 13.97,
+        "strokes_per_character": 6.22,
+        "pen_time_percent": 76.1
+      }
+    },
+    {
+      "id": "10ba580cbe578ab8",
+      "file": "楷体_kvenjoy_蔡娟.gfont",
+      "bytes": 3252070,
+      "speed": {
+        "score": 81.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 332.6,
+        "draw_mm_per_character": 17.42,
+        "move_mm_per_character": 14.67,
+        "strokes_per_character": 6.16,
+        "pen_time_percent": 75.0
+      }
+    },
+    {
+      "id": "e1bedfaed9d180de",
+      "file": "楷体_xiongzai_拉拉.gfont",
+      "bytes": 38361,
+      "speed": {
+        "score": 81.0,
+        "sample_characters": 16,
+        "confidence": "limited",
+        "standardized_seconds_per_100": 335.5,
+        "draw_mm_per_character": 16.79,
+        "move_mm_per_character": 13.72,
+        "strokes_per_character": 3.5,
+        "pen_time_percent": 66.5
+      }
+    },
+    {
+      "id": "2fa130f7fb2811d6",
+      "file": "楷体_xiongzai_汪莹.gfont",
+      "bytes": 654857,
+      "speed": {
+        "score": 84.2,
+        "sample_characters": 85,
+        "confidence": "limited",
+        "standardized_seconds_per_100": 322.9,
+        "draw_mm_per_character": 12.95,
+        "move_mm_per_character": 11.16,
+        "strokes_per_character": 5.78,
+        "pen_time_percent": 78.0
+      }
+    },
+    {
+      "id": "d8e85723dd37a518",
+      "file": "欣欣字体_kvenjoy_谖谖.gfont",
+      "bytes": 2461410,
+      "speed": {
+        "score": 104.5,
+        "sample_characters": 107,
+        "confidence": "full",
+        "standardized_seconds_per_100": 260.2,
+        "draw_mm_per_character": 16.9,
+        "move_mm_per_character": 10.43,
+        "strokes_per_character": 4.43,
+        "pen_time_percent": 72.5
+      }
+    },
+    {
+      "id": "eb50cfe178e77948",
+      "file": "汉仪小狐妖_xiongzai_4343.gfont",
+      "bytes": 1262915,
+      "speed": {
+        "score": 56.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 478.3,
+        "draw_mm_per_character": 15.65,
+        "move_mm_per_character": 15.3,
+        "strokes_per_character": 9.65,
+        "pen_time_percent": 81.5
+      }
+    },
+    {
+      "id": "c7afdde206a05f92",
+      "file": "汉仪细行楷简体_kvenjoy_江户川.gfont",
+      "bytes": 1157657,
+      "speed": {
+        "score": 51.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 532.1,
+        "draw_mm_per_character": 18.29,
+        "move_mm_per_character": 16.23,
+        "strokes_per_character": 10.68,
+        "pen_time_percent": 81.5
+      }
+    },
+    {
+      "id": "55a00769d0f1ac46",
+      "file": "没有如果_kvenjoy_没有如果.gfont",
+      "bytes": 1013944,
+      "speed": {
+        "score": 83.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 324.4,
+        "draw_mm_per_character": 15.71,
+        "move_mm_per_character": 13.23,
+        "strokes_per_character": 6.09,
+        "pen_time_percent": 76.3
+      }
+    },
+    {
+      "id": "910618d4f2134ea1",
+      "file": "泠_kvenjoy_西西西.gfont",
+      "bytes": 2737418,
+      "speed": {
+        "score": 115.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 234.9,
+        "draw_mm_per_character": 12.59,
+        "move_mm_per_character": 8.04,
+        "strokes_per_character": 4.46,
+        "pen_time_percent": 76.7
+      }
+    },
+    {
+      "id": "608b4733643e2be2",
+      "file": "洪远佳_kvenjoy_洪远佳.gfont",
+      "bytes": 3506377,
+      "speed": {
+        "score": 87.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 311.5,
+        "draw_mm_per_character": 16.47,
+        "move_mm_per_character": 12.09,
+        "strokes_per_character": 5.77,
+        "pen_time_percent": 75.7
+      }
+    },
+    {
+      "id": "97deb98b36c5fc05",
+      "file": "浩体_kvenjoy_王浩.gfont",
+      "bytes": 3730088,
+      "speed": {
+        "score": 120.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 225.0,
+        "draw_mm_per_character": 12.83,
+        "move_mm_per_character": 6.81,
+        "strokes_per_character": 4.32,
+        "pen_time_percent": 76.9
+      }
+    },
+    {
+      "id": "412a05d6ddc94815",
+      "file": "润宇手写体_kvenjoy_周润宇.gfont",
+      "bytes": 3696653,
+      "speed": {
+        "score": 139.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 194.5,
+        "draw_mm_per_character": 14.96,
+        "move_mm_per_character": 7.31,
+        "strokes_per_character": 3.5,
+        "pen_time_percent": 72.0
+      }
+    },
+    {
+      "id": "2c5b607a1ea059f3",
+      "file": "淘宝_kvenjoy_1.gfont",
+      "bytes": 3965875,
+      "speed": {
+        "score": 139.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 195.0,
+        "draw_mm_per_character": 19.17,
+        "move_mm_per_character": 8.19,
+        "strokes_per_character": 3.17,
+        "pen_time_percent": 66.7
+      }
+    },
+    {
+      "id": "e29bc701307769ab",
+      "file": "滕字_kvenjoy_滕一队.gfont",
+      "bytes": 2482780,
+      "speed": {
+        "score": 100.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 271.7,
+        "draw_mm_per_character": 15.0,
+        "move_mm_per_character": 9.52,
+        "strokes_per_character": 5.05,
+        "pen_time_percent": 76.0
+      }
+    },
+    {
+      "id": "598056d86e3bb846",
+      "file": "潘多拉01_kvenjoy_PP.gfont",
+      "bytes": 3670421,
+      "speed": {
+        "score": 100.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 271.8,
+        "draw_mm_per_character": 15.64,
+        "move_mm_per_character": 10.2,
+        "strokes_per_character": 4.98,
+        "pen_time_percent": 75.1
+      }
+    },
+    {
+      "id": "c1d41d8548a02798",
+      "file": "潘盼字体_kvenjoy_潘盼.gfont",
+      "bytes": 4250773,
+      "speed": {
+        "score": 112.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 241.5,
+        "draw_mm_per_character": 18.79,
+        "move_mm_per_character": 9.19,
+        "strokes_per_character": 4.21,
+        "pen_time_percent": 71.3
+      }
+    },
+    {
+      "id": "25e70e428abda3bc",
+      "file": "潦草222_kvenjoy_123456.gfont",
+      "bytes": 2959214,
+      "speed": {
+        "score": 95.5,
+        "sample_characters": 119,
+        "confidence": "full",
+        "standardized_seconds_per_100": 284.7,
+        "draw_mm_per_character": 16.54,
+        "move_mm_per_character": 11.26,
+        "strokes_per_character": 5.12,
+        "pen_time_percent": 74.4
+      }
+    },
+    {
+      "id": "4a4b31ca4ea6ee70",
+      "file": "灿_kvenjoy_灿.gfont",
+      "bytes": 3417231,
+      "speed": {
+        "score": 84.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 321.4,
+        "draw_mm_per_character": 15.28,
+        "move_mm_per_character": 12.21,
+        "strokes_per_character": 6.12,
+        "pen_time_percent": 77.0
+      }
+    },
+    {
+      "id": "8fca74595fae2ea7",
+      "file": "熊仔字体3_kvenjoy_淘.gfont",
+      "bytes": 1213143,
+      "speed": {
+        "score": 169.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 160.5,
+        "draw_mm_per_character": 16.5,
+        "move_mm_per_character": 6.69,
+        "strokes_per_character": 2.63,
+        "pen_time_percent": 66.3
+      }
+    },
+    {
+      "id": "551ff7413b9e6bde",
+      "file": "熊仔字体3_xiongzai_熊仔科技.gfont",
+      "bytes": 1293538,
+      "speed": {
+        "score": 169.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 160.5,
+        "draw_mm_per_character": 16.5,
+        "move_mm_per_character": 6.69,
+        "strokes_per_character": 2.63,
+        "pen_time_percent": 66.3
+      }
+    },
+    {
+      "id": "8b672420d75e02e7",
+      "file": "熊仔宋体_xiongzai_熊仔科技.gfont",
+      "bytes": 2740555,
+      "speed": {
+        "score": 85.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 317.6,
+        "draw_mm_per_character": 20.15,
+        "move_mm_per_character": 13.71,
+        "strokes_per_character": 5.67,
+        "pen_time_percent": 73.0
+      }
+    },
+    {
+      "id": "ce6c09c36cb7a51d",
+      "file": "熊仔手写体单线字2-180519__xiongzai_熊仔科技.gfont",
+      "bytes": 2098826,
+      "speed": {
+        "score": 118.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 229.6,
+        "draw_mm_per_character": 15.67,
+        "move_mm_per_character": 9.45,
+        "strokes_per_character": 4.12,
+        "pen_time_percent": 72.7
+      }
+    },
+    {
+      "id": "44ccf55602d367b0",
+      "file": "熊仔手写体单线字2.gfont",
+      "bytes": 2098826,
+      "speed": {
+        "score": 118.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 229.6,
+        "draw_mm_per_character": 15.67,
+        "move_mm_per_character": 9.45,
+        "strokes_per_character": 4.12,
+        "pen_time_percent": 72.7
+      }
+    },
+    {
+      "id": "666a686b2221d58d",
+      "file": "熊字体1_kvenjoy_无名英雄.gfont",
+      "bytes": 641833,
+      "speed": {
+        "score": 88.1,
+        "sample_characters": 123,
+        "confidence": "full",
+        "standardized_seconds_per_100": 308.3,
+        "draw_mm_per_character": 14.93,
+        "move_mm_per_character": 12.02,
+        "strokes_per_character": 5.77,
+        "pen_time_percent": 76.6
+      }
+    },
+    {
+      "id": "9579f509c3a0adc4",
+      "file": "猪肉炖粉条_kvenjoy_哈哈哈.gfont",
+      "bytes": 3324039,
+      "speed": {
+        "score": 99.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 274.6,
+        "draw_mm_per_character": 16.29,
+        "move_mm_per_character": 10.46,
+        "strokes_per_character": 4.99,
+        "pen_time_percent": 74.6
+      }
+    },
+    {
+      "id": "f0400459f90889af",
+      "file": "王云龙_kvenjoy_.gfont",
+      "bytes": 3384855,
+      "speed": {
+        "score": 121.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 223.6,
+        "draw_mm_per_character": 15.29,
+        "move_mm_per_character": 8.04,
+        "strokes_per_character": 4,
+        "pen_time_percent": 73.4
+      }
+    },
+    {
+      "id": "ac229008de9b2cf5",
+      "file": "王翔_kvenjoy_王翔.gfont",
+      "bytes": 3355081,
+      "speed": {
+        "score": 130.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 207.7,
+        "draw_mm_per_character": 18.19,
+        "move_mm_per_character": 9.03,
+        "strokes_per_character": 3.38,
+        "pen_time_percent": 68.0
+      }
+    },
+    {
+      "id": "e27b590bd6a7ebfd",
+      "file": "琳_kvenjoy_琳琳.gfont",
+      "bytes": 508278,
+      "speed": {
+        "score": 83.2,
+        "sample_characters": 75,
+        "confidence": "limited",
+        "standardized_seconds_per_100": 326.8,
+        "draw_mm_per_character": 14.93,
+        "move_mm_per_character": 12.21,
+        "strokes_per_character": 5.52,
+        "pen_time_percent": 75.8
+      }
+    },
+    {
+      "id": "6ab1a0bbc8e075bf",
+      "file": "田英章楷书_kvenjoy_瑞瑞.gfont",
+      "bytes": 3831547,
+      "speed": {
+        "score": 51.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 532.7,
+        "draw_mm_per_character": 14.56,
+        "move_mm_per_character": 15.82,
+        "strokes_per_character": 10.84,
+        "pen_time_percent": 82.9
+      }
+    },
+    {
+      "id": "73f2fbfc33c9cde6",
+      "file": "瘪瘪_kvenjoy_吃瘪.gfont",
+      "bytes": 3169102,
+      "speed": {
+        "score": 85.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 319.6,
+        "draw_mm_per_character": 13.53,
+        "move_mm_per_character": 11.3,
+        "strokes_per_character": 6.19,
+        "pen_time_percent": 78.4
+      }
+    },
+    {
+      "id": "42ccd8b6418c335d",
+      "file": "盛世字体_kvenjoy_王昌盛.gfont",
+      "bytes": 3421638,
+      "speed": {
+        "score": 132.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 205.6,
+        "draw_mm_per_character": 12.14,
+        "move_mm_per_character": 5.88,
+        "strokes_per_character": 3.94,
+        "pen_time_percent": 76.8
+      }
+    },
+    {
+      "id": "e71b57ba422d0e65",
+      "file": "真迹01_kvenjoy_真迹01.gfont",
+      "bytes": 3884908,
+      "speed": {
+        "score": 181.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 149.9,
+        "draw_mm_per_character": 18.01,
+        "move_mm_per_character": 5.86,
+        "strokes_per_character": 2.38,
+        "pen_time_percent": 63.8
+      }
+    },
+    {
+      "id": "3de3cc3b6af5449f",
+      "file": "石123_kvenjoy_头456.gfont",
+      "bytes": 3759666,
+      "speed": {
+        "score": 90.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 299.8,
+        "draw_mm_per_character": 16.32,
+        "move_mm_per_character": 12.74,
+        "strokes_per_character": 5.55,
+        "pen_time_percent": 75.0
+      }
+    },
+    {
+      "id": "030af352793dd983",
+      "file": "祝林手写_kvenjoy_祝林.gfont",
+      "bytes": 3216643,
+      "speed": {
+        "score": 90.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 300.4,
+        "draw_mm_per_character": 13.89,
+        "move_mm_per_character": 10.61,
+        "strokes_per_character": 5.84,
+        "pen_time_percent": 77.9
+      }
+    },
+    {
+      "id": "c5f7df3725637ee3",
+      "file": "秋秋_kvenjoy_秋秋.gfont",
+      "bytes": 3969745,
+      "speed": {
+        "score": 100.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 269.3,
+        "draw_mm_per_character": 14.16,
+        "move_mm_per_character": 8.98,
+        "strokes_per_character": 5.09,
+        "pen_time_percent": 76.9
+      }
+    },
+    {
+      "id": "e30418f4c4417b75",
+      "file": "笑_kvenjoy_S.gfont",
+      "bytes": 3742087,
+      "speed": {
+        "score": 101.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 266.9,
+        "draw_mm_per_character": 18.83,
+        "move_mm_per_character": 11.31,
+        "strokes_per_character": 4.66,
+        "pen_time_percent": 71.7
+      }
+    },
+    {
+      "id": "a45c86cc9a737e9c",
+      "file": "笔记2_kvenjoy_zheng.gfont",
+      "bytes": 4150247,
+      "speed": {
+        "score": 112.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 241.2,
+        "draw_mm_per_character": 16.5,
+        "move_mm_per_character": 9.4,
+        "strokes_per_character": 4.34,
+        "pen_time_percent": 73.0
+      }
+    },
+    {
+      "id": "f904bc7316bdb689",
+      "file": "笔记_kvenjoy_围墙.gfont",
+      "bytes": 4298233,
+      "speed": {
+        "score": 99.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 272.0,
+        "draw_mm_per_character": 14.7,
+        "move_mm_per_character": 10.4,
+        "strokes_per_character": 5.06,
+        "pen_time_percent": 75.7
+      }
+    },
+    {
+      "id": "bccfaf401330f348",
+      "file": "笔记_kvenjoy_比.gfont",
+      "bytes": 4657289,
+      "speed": {
+        "score": 92.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 292.9,
+        "draw_mm_per_character": 14.38,
+        "move_mm_per_character": 10.03,
+        "strokes_per_character": 5.59,
+        "pen_time_percent": 77.4
+      }
+    },
+    {
+      "id": "515173baab6f3072",
+      "file": "管管管_kvenjoy_管管管.gfont",
+      "bytes": 2957017,
+      "speed": {
+        "score": 90.2,
+        "sample_characters": 127,
+        "confidence": "full",
+        "standardized_seconds_per_100": 301.4,
+        "draw_mm_per_character": 14.37,
+        "move_mm_per_character": 10.48,
+        "strokes_per_character": 5.78,
+        "pen_time_percent": 77.6
+      }
+    },
+    {
+      "id": "cd1c420b1061fadb",
+      "file": "粒_kvenjoy_粒粒.gfont",
+      "bytes": 2799540,
+      "speed": {
+        "score": 89.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 303.8,
+        "draw_mm_per_character": 12.17,
+        "move_mm_per_character": 10.3,
+        "strokes_per_character": 5.98,
+        "pen_time_percent": 79.2
+      }
+    },
+    {
+      "id": "91539a23e0c57515",
+      "file": "继发体_xiongzai_王继发.gfont",
+      "bytes": 526923,
+      "speed": {
+        "score": 87.4,
+        "sample_characters": 75,
+        "confidence": "limited",
+        "standardized_seconds_per_100": 311.1,
+        "draw_mm_per_character": 15.0,
+        "move_mm_per_character": 11.68,
+        "strokes_per_character": 5.29,
+        "pen_time_percent": 75.5
+      }
+    },
+    {
+      "id": "99609b659369c6d0",
+      "file": "罗文翠_kvenjoy_罗文翠.gfont",
+      "bytes": 3773622,
+      "speed": {
+        "score": 155.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 175.0,
+        "draw_mm_per_character": 10.37,
+        "move_mm_per_character": 5.52,
+        "strokes_per_character": 3.17,
+        "pen_time_percent": 75.6
+      }
+    },
+    {
+      "id": "fd325ad3c2fa190a",
+      "file": "老虎_kvenjoy_老虎.gfont",
+      "bytes": 3692147,
+      "speed": {
+        "score": 82.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 331.6,
+        "draw_mm_per_character": 18.28,
+        "move_mm_per_character": 14.61,
+        "strokes_per_character": 6.09,
+        "pen_time_percent": 74.5
+      }
+    },
+    {
+      "id": "942d24d70c1e70de",
+      "file": "老邓01_kvenjoy_老邓.gfont",
+      "bytes": 3806131,
+      "speed": {
+        "score": 144.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 187.9,
+        "draw_mm_per_character": 13.32,
+        "move_mm_per_character": 6.94,
+        "strokes_per_character": 3.41,
+        "pen_time_percent": 73.1
+      }
+    },
+    {
+      "id": "c5c00cf6708a56e0",
+      "file": "老邓04_kvenjoy_老邓.gfont",
+      "bytes": 3345547,
+      "speed": {
+        "score": 99.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 272.8,
+        "draw_mm_per_character": 13.66,
+        "move_mm_per_character": 9.95,
+        "strokes_per_character": 5.21,
+        "pen_time_percent": 76.9
+      }
+    },
+    {
+      "id": "8f284a2f49d7de5b",
+      "file": "胡坤字体_kvenjoy_胡坤.gfont",
+      "bytes": 3217438,
+      "speed": {
+        "score": 148.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 183.1,
+        "draw_mm_per_character": 14.04,
+        "move_mm_per_character": 6.99,
+        "strokes_per_character": 3.3,
+        "pen_time_percent": 72.0
+      }
+    },
+    {
+      "id": "f300a9662ea9cb2f",
+      "file": "胡家字体_kvenjoy_胡强.gfont",
+      "bytes": 3190217,
+      "speed": {
+        "score": 83.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 325.8,
+        "draw_mm_per_character": 16.34,
+        "move_mm_per_character": 13.37,
+        "strokes_per_character": 6.14,
+        "pen_time_percent": 76.0
+      }
+    },
+    {
+      "id": "c712fd1349757e52",
+      "file": "胡文华2500_kvenjoy_胡文华.gfont",
+      "bytes": 1226311,
+      "speed": {
+        "score": 218.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 124.7,
+        "draw_mm_per_character": 16.81,
+        "move_mm_per_character": 5.15,
+        "strokes_per_character": 1.81,
+        "pen_time_percent": 59.9
+      }
+    },
+    {
+      "id": "42377cb895054352",
+      "file": "胡晓东_kvenjoy_胡晓东.gfont",
+      "bytes": 3168972,
+      "speed": {
+        "score": 92.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 294.5,
+        "draw_mm_per_character": 14.3,
+        "move_mm_per_character": 11.25,
+        "strokes_per_character": 5.55,
+        "pen_time_percent": 76.7
+      }
+    },
+    {
+      "id": "f9b7ca7db0a46fd1",
+      "file": "自己_kvenjoy_lp.gfont",
+      "bytes": 2081234,
+      "speed": {
+        "score": 110.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 246.0,
+        "draw_mm_per_character": 14.47,
+        "move_mm_per_character": 9.55,
+        "strokes_per_character": 4.55,
+        "pen_time_percent": 74.8
+      }
+    },
+    {
+      "id": "78792c2a1ddf91e2",
+      "file": "自己_kvenjoy_婷婷.gfont",
+      "bytes": 3917659,
+      "speed": {
+        "score": 98.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 277.1,
+        "draw_mm_per_character": 14.4,
+        "move_mm_per_character": 9.62,
+        "strokes_per_character": 5.29,
+        "pen_time_percent": 76.9
+      }
+    },
+    {
+      "id": "4aa90913522771cd",
+      "file": "自己写_kvenjoy_我.gfont",
+      "bytes": 923792,
+      "speed": {
+        "score": 105.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 257.9,
+        "draw_mm_per_character": 16.49,
+        "move_mm_per_character": 9.97,
+        "strokes_per_character": 4.72,
+        "pen_time_percent": 74.0
+      }
+    },
+    {
+      "id": "66dbd9da2eb0016f",
+      "file": "自己的字体_xiongzai_何小旭.gfont",
+      "bytes": 891565,
+      "speed": {
+        "score": 142.1,
+        "sample_characters": 91,
+        "confidence": "limited",
+        "standardized_seconds_per_100": 191.3,
+        "draw_mm_per_character": 10.78,
+        "move_mm_per_character": 6.04,
+        "strokes_per_character": 3.27,
+        "pen_time_percent": 75.2
+      }
+    },
+    {
+      "id": "84685f3c8280a822",
+      "file": "自我造体_kvenjoy_沙漠小蜜獾.gfont",
+      "bytes": 3790152,
+      "speed": {
+        "score": 122.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 221.2,
+        "draw_mm_per_character": 14.57,
+        "move_mm_per_character": 8.43,
+        "strokes_per_character": 4.02,
+        "pen_time_percent": 73.7
+      }
+    },
+    {
+      "id": "81a38467accd7697",
+      "file": "自用手写_kvenjoy_136697050.gfont",
+      "bytes": 3175272,
+      "speed": {
+        "score": 82.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 331.5,
+        "draw_mm_per_character": 16.58,
+        "move_mm_per_character": 13.93,
+        "strokes_per_character": 6.2,
+        "pen_time_percent": 75.8
+      }
+    },
+    {
+      "id": "3651887e2ffe79bd",
+      "file": "苏新诗柳楷简_kvenjoy_瑞瑞.gfont",
+      "bytes": 4221206,
+      "speed": {
+        "score": 43.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 630.6,
+        "draw_mm_per_character": 16.59,
+        "move_mm_per_character": 17.73,
+        "strokes_per_character": 13.09,
+        "pen_time_percent": 83.6
+      }
+    },
+    {
+      "id": "32ebb183c555c398",
+      "file": "苗恒嘉_kvenjoy_苗恒嘉.gfont",
+      "bytes": 2908372,
+      "speed": {
+        "score": 81.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 333.5,
+        "draw_mm_per_character": 14.75,
+        "move_mm_per_character": 12.76,
+        "strokes_per_character": 6.33,
+        "pen_time_percent": 77.5
+      }
+    },
+    {
+      "id": "ece26a92abedb0ee",
+      "file": "茫体_kvenjoy_李茫.gfont",
+      "bytes": 2730056,
+      "speed": {
+        "score": 103.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 262.9,
+        "draw_mm_per_character": 12.49,
+        "move_mm_per_character": 8.52,
+        "strokes_per_character": 4.99,
+        "pen_time_percent": 77.9
+      }
+    },
+    {
+      "id": "91c6cade41ef5457",
+      "file": "葛艳_kvenjoy_葛艳的字.gfont",
+      "bytes": 3661573,
+      "speed": {
+        "score": 94.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 286.3,
+        "draw_mm_per_character": 14.42,
+        "move_mm_per_character": 10.67,
+        "strokes_per_character": 5.42,
+        "pen_time_percent": 76.6
+      }
+    },
+    {
+      "id": "561adbac95f580ec",
+      "file": "董佳航的字_kvenjoy_董佳航.gfont",
+      "bytes": 3390996,
+      "speed": {
+        "score": 119.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 227.1,
+        "draw_mm_per_character": 12.22,
+        "move_mm_per_character": 6.36,
+        "strokes_per_character": 4.42,
+        "pen_time_percent": 77.9
+      }
+    },
+    {
+      "id": "a6e506f51297fd1d",
+      "file": "薛3500字库_kvenjoy_xxb.gfont",
+      "bytes": 1300073,
+      "speed": {
+        "score": 89.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 305.0,
+        "draw_mm_per_character": 12.08,
+        "move_mm_per_character": 10.28,
+        "strokes_per_character": 5.99,
+        "pen_time_percent": 79.3
+      }
+    },
+    {
+      "id": "427b46db6907453e",
+      "file": "虫工_kvenjoy_虫工.gfont",
+      "bytes": 4388438,
+      "speed": {
+        "score": 106.6,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 255.1,
+        "draw_mm_per_character": 15.49,
+        "move_mm_per_character": 8.85,
+        "strokes_per_character": 4.7,
+        "pen_time_percent": 75.1
+      }
+    },
+    {
+      "id": "5b2f4ed211cc2137",
+      "file": "虫虫_kvenjoy_向梦.gfont",
+      "bytes": 3882964,
+      "speed": {
+        "score": 85.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 319.3,
+        "draw_mm_per_character": 14.73,
+        "move_mm_per_character": 11.51,
+        "strokes_per_character": 6.12,
+        "pen_time_percent": 77.6
+      }
+    },
+    {
+      "id": "c2966baa9686ba91",
+      "file": "行书_kvenjoy_琴.gfont",
+      "bytes": 1288852,
+      "speed": {
+        "score": 104.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 259.3,
+        "draw_mm_per_character": 16.48,
+        "move_mm_per_character": 9.91,
+        "strokes_per_character": 4.8,
+        "pen_time_percent": 74.2
+      }
+    },
+    {
+      "id": "bb94d190322e5d98",
+      "file": "行书_kvenjoy_疯子.gfont",
+      "bytes": 4165438,
+      "speed": {
+        "score": 137.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 197.7,
+        "draw_mm_per_character": 17.27,
+        "move_mm_per_character": 8.46,
+        "strokes_per_character": 3.34,
+        "pen_time_percent": 68.7
+      }
+    },
+    {
+      "id": "343e18b54bbf316d",
+      "file": "行书_kvenjoy_郑平.gfont",
+      "bytes": 3567644,
+      "speed": {
+        "score": 56.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 483.7,
+        "draw_mm_per_character": 15.29,
+        "move_mm_per_character": 15.73,
+        "strokes_per_character": 9.96,
+        "pen_time_percent": 81.8
+      }
+    },
+    {
+      "id": "e3f674737436c125",
+      "file": "行书_xiongzai_w.gfont",
+      "bytes": 2466926,
+      "speed": {
+        "score": 40.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 676.5,
+        "draw_mm_per_character": 14.45,
+        "move_mm_per_character": 14.73,
+        "strokes_per_character": 14.38,
+        "pen_time_percent": 85.9
+      }
+    },
+    {
+      "id": "11fea5af8d5ce3e1",
+      "file": "赛汉123_kvenjoy_赛汉.gfont",
+      "bytes": 3391937,
+      "speed": {
+        "score": 87.1,
+        "sample_characters": 116,
+        "confidence": "full",
+        "standardized_seconds_per_100": 312.2,
+        "draw_mm_per_character": 16.44,
+        "move_mm_per_character": 12.13,
+        "strokes_per_character": 5.61,
+        "pen_time_percent": 75.3
+      }
+    },
+    {
+      "id": "b8827084c83f98b4",
+      "file": "超连笔快写-3500字_kvenjoy_gantry.gfont",
+      "bytes": 2841361,
+      "speed": {
+        "score": 190.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 143.0,
+        "draw_mm_per_character": 17.43,
+        "move_mm_per_character": 5.49,
+        "strokes_per_character": 2.22,
+        "pen_time_percent": 63.2
+      }
+    },
+    {
+      "id": "13d62223db93cd94",
+      "file": "超连笔快写-500字A_kvenjoy_gantry.gfont",
+      "bytes": 421832,
+      "speed": {
+        "score": 151.9,
+        "sample_characters": 114,
+        "confidence": "full",
+        "standardized_seconds_per_100": 178.9,
+        "draw_mm_per_character": 22.33,
+        "move_mm_per_character": 6.47,
+        "strokes_per_character": 2.72,
+        "pen_time_percent": 62.7
+      }
+    },
+    {
+      "id": "2e6d3ad3b2116ba6",
+      "file": "超连笔快写_kvenjoy_gantry.gfont",
+      "bytes": 5371314,
+      "speed": {
+        "score": 133.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 204.3,
+        "draw_mm_per_character": 20.6,
+        "move_mm_per_character": 7.82,
+        "strokes_per_character": 3.3,
+        "pen_time_percent": 66.7
+      }
+    },
+    {
+      "id": "4cfde705a3469eec",
+      "file": "超连笔快写－500字B_kvenjoy_gantry.gfont",
+      "bytes": 434238,
+      "speed": {
+        "score": 198.8,
+        "sample_characters": 114,
+        "confidence": "full",
+        "standardized_seconds_per_100": 136.7,
+        "draw_mm_per_character": 24.98,
+        "move_mm_per_character": 5.18,
+        "strokes_per_character": 1.66,
+        "pen_time_percent": 50.9
+      }
+    },
+    {
+      "id": "09fc5e4af049de76",
+      "file": "軍_kvenjoy_王軍.gfont",
+      "bytes": 3671117,
+      "speed": {
+        "score": 127.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 213.9,
+        "draw_mm_per_character": 14.0,
+        "move_mm_per_character": 7.19,
+        "strokes_per_character": 3.98,
+        "pen_time_percent": 74.7
+      }
+    },
+    {
+      "id": "ee988c3742072b50",
+      "file": "轩哥_kvenjoy_萍娃.gfont",
+      "bytes": 2963035,
+      "speed": {
+        "score": 87.6,
+        "sample_characters": 123,
+        "confidence": "full",
+        "standardized_seconds_per_100": 310.3,
+        "draw_mm_per_character": 11.37,
+        "move_mm_per_character": 9.29,
+        "strokes_per_character": 6.11,
+        "pen_time_percent": 80.4
+      }
+    },
+    {
+      "id": "ea14313f93629b96",
+      "file": "轻羽_kvenjoy_羽.gfont",
+      "bytes": 2683427,
+      "speed": {
+        "score": 83.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 324.8,
+        "draw_mm_per_character": 15.04,
+        "move_mm_per_character": 12.41,
+        "strokes_per_character": 6.22,
+        "pen_time_percent": 77.3
+      }
+    },
+    {
+      "id": "f0d8911730a43b36",
+      "file": "迷你简YY_kvenjoy_瑞瑞.gfont",
+      "bytes": 3061486,
+      "speed": {
+        "score": 58.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 461.6,
+        "draw_mm_per_character": 17.96,
+        "move_mm_per_character": 17.02,
+        "strokes_per_character": 9.04,
+        "pen_time_percent": 79.3
+      }
+    },
+    {
+      "id": "fa4f96a560ddd20b",
+      "file": "邓持_kvenjoy_邓持.gfont",
+      "bytes": 3715405,
+      "speed": {
+        "score": 114.7,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 237.1,
+        "draw_mm_per_character": 16.29,
+        "move_mm_per_character": 8.93,
+        "strokes_per_character": 4.21,
+        "pen_time_percent": 72.9
+      }
+    },
+    {
+      "id": "99f383e2432c81f9",
+      "file": "郑强狂草_kvenjoy_Shaojiayi198.gfont",
+      "bytes": 3991737,
+      "speed": {
+        "score": 91.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 295.8,
+        "draw_mm_per_character": 17.53,
+        "move_mm_per_character": 12.61,
+        "strokes_per_character": 5.46,
+        "pen_time_percent": 74.2
+      }
+    },
+    {
+      "id": "1405d77e3829f1e9",
+      "file": "铜铃_kvenjoy_铜铃.gfont",
+      "bytes": 2829569,
+      "speed": {
+        "score": 109.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 248.6,
+        "draw_mm_per_character": 12.77,
+        "move_mm_per_character": 7.51,
+        "strokes_per_character": 4.72,
+        "pen_time_percent": 77.6
+      }
+    },
+    {
+      "id": "be75e5f98cd03939",
+      "file": "阿尧划拉体_kvenjoy_1110.gfont",
+      "bytes": 3052895,
+      "speed": {
+        "score": 111.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 244.9,
+        "draw_mm_per_character": 13.37,
+        "move_mm_per_character": 8.08,
+        "strokes_per_character": 4.74,
+        "pen_time_percent": 77.0
+      }
+    },
+    {
+      "id": "29f843cd84510ee3",
+      "file": "阿布拉江8750_kvenjoy_阿.gfont",
+      "bytes": 3754299,
+      "speed": {
+        "score": 105.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 257.8,
+        "draw_mm_per_character": 16.9,
+        "move_mm_per_character": 9.76,
+        "strokes_per_character": 4.71,
+        "pen_time_percent": 73.8
+      }
+    },
+    {
+      "id": "24bd3aae577ecc1b",
+      "file": "阿米娜102_kvenjoy_字体.gfont",
+      "bytes": 3446258,
+      "speed": {
+        "score": 95.8,
+        "sample_characters": 127,
+        "confidence": "full",
+        "standardized_seconds_per_100": 283.8,
+        "draw_mm_per_character": 14.76,
+        "move_mm_per_character": 10.67,
+        "strokes_per_character": 5.35,
+        "pen_time_percent": 76.3
+      }
+    },
+    {
+      "id": "3ed30dee1add24dd",
+      "file": "阿香2号_xiongzai_阿香.gfont",
+      "bytes": 1405280,
+      "speed": {
+        "score": 94.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 289.0,
+        "draw_mm_per_character": 13.46,
+        "move_mm_per_character": 10.17,
+        "strokes_per_character": 5.44,
+        "pen_time_percent": 77.5
+      }
+    },
+    {
+      "id": "27ca097c63252fe4",
+      "file": "陈v_kvenjoy_刚刚.gfont",
+      "bytes": 589206,
+      "speed": {
+        "score": 146.4,
+        "sample_characters": 112,
+        "confidence": "full",
+        "standardized_seconds_per_100": 185.6,
+        "draw_mm_per_character": 15.26,
+        "move_mm_per_character": 7.83,
+        "strokes_per_character": 3.17,
+        "pen_time_percent": 69.8
+      }
+    },
+    {
+      "id": "b719096a17275873",
+      "file": "陈_kvenjoy_陈玉竹.gfont",
+      "bytes": 4206451,
+      "speed": {
+        "score": 148.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 182.6,
+        "draw_mm_per_character": 14.26,
+        "move_mm_per_character": 6.44,
+        "strokes_per_character": 3.32,
+        "pen_time_percent": 72.3
+      }
+    },
+    {
+      "id": "41f9bdff47f160bc",
+      "file": "陈卓CZ01_kvenjoy_陈卓CZ01.gfont",
+      "bytes": 4198388,
+      "speed": {
+        "score": 111.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 243.0,
+        "draw_mm_per_character": 19.34,
+        "move_mm_per_character": 10.37,
+        "strokes_per_character": 4.29,
+        "pen_time_percent": 70.6
+      }
+    },
+    {
+      "id": "994322e8cf5d00f3",
+      "file": "陈继世1_kvenjoy_1.gfont",
+      "bytes": 3783247,
+      "speed": {
+        "score": 167.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 161.9,
+        "draw_mm_per_character": 17.68,
+        "move_mm_per_character": 6.62,
+        "strokes_per_character": 2.55,
+        "pen_time_percent": 64.8
+      }
+    },
+    {
+      "id": "715ed7cd86ae8796",
+      "file": "陈继世2_kvenjoy_1.gfont",
+      "bytes": 3720385,
+      "speed": {
+        "score": 176.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 154.1,
+        "draw_mm_per_character": 16.71,
+        "move_mm_per_character": 6.36,
+        "strokes_per_character": 2.45,
+        "pen_time_percent": 65.0
+      }
+    },
+    {
+      "id": "b7da5924b2c034b7",
+      "file": "陈继世6_kvenjoy_1.gfont",
+      "bytes": 3776646,
+      "speed": {
+        "score": 175.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 154.6,
+        "draw_mm_per_character": 17.46,
+        "move_mm_per_character": 6.31,
+        "strokes_per_character": 2.45,
+        "pen_time_percent": 64.4
+      }
+    },
+    {
+      "id": "852b93d5558dc114",
+      "file": "陈继世7_kvenjoy_1.gfont",
+      "bytes": 3883569,
+      "speed": {
+        "score": 178.9,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 151.9,
+        "draw_mm_per_character": 17.91,
+        "move_mm_per_character": 6.14,
+        "strokes_per_character": 2.35,
+        "pen_time_percent": 63.4
+      }
+    },
+    {
+      "id": "429b3e7778f9655e",
+      "file": "陈继世完整版_kvenjoy_1.gfont",
+      "bytes": 3929425,
+      "speed": {
+        "score": 174.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 156.0,
+        "draw_mm_per_character": 17.63,
+        "move_mm_per_character": 6.43,
+        "strokes_per_character": 2.48,
+        "pen_time_percent": 64.4
+      }
+    },
+    {
+      "id": "5ab415bbd89fe505",
+      "file": "陈继世完整版_xiongzai_1.gfont",
+      "bytes": 4061414,
+      "speed": {
+        "score": 174.2,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 156.0,
+        "draw_mm_per_character": 17.63,
+        "move_mm_per_character": 6.43,
+        "strokes_per_character": 2.48,
+        "pen_time_percent": 64.4
+      }
+    },
+    {
+      "id": "c6b43a0b430e562d",
+      "file": "随便_kvenjoy_小鹿.gfont",
+      "bytes": 3292451,
+      "speed": {
+        "score": 119.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 227.9,
+        "draw_mm_per_character": 13.75,
+        "move_mm_per_character": 7.91,
+        "strokes_per_character": 4.18,
+        "pen_time_percent": 75.1
+      }
+    },
+    {
+      "id": "8ccf7a6a637998d8",
+      "file": "随便写_kvenjoy_樱桃小龙虾.gfont",
+      "bytes": 3387511,
+      "speed": {
+        "score": 119.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 228.2,
+        "draw_mm_per_character": 17.27,
+        "move_mm_per_character": 8.8,
+        "strokes_per_character": 4.04,
+        "pen_time_percent": 71.8
+      }
+    },
+    {
+      "id": "b54daff55704b758",
+      "file": "随意_kvenjoy_小白马.gfont",
+      "bytes": 3955406,
+      "speed": {
+        "score": 116.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 234.2,
+        "draw_mm_per_character": 14.78,
+        "move_mm_per_character": 9.13,
+        "strokes_per_character": 4.27,
+        "pen_time_percent": 74.0
+      }
+    },
+    {
+      "id": "fa9360bdc925f04f",
+      "file": "随笔_kvenjoy_曹元春.gfont",
+      "bytes": 3733174,
+      "speed": {
+        "score": 125.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 216.9,
+        "draw_mm_per_character": 16.28,
+        "move_mm_per_character": 8.26,
+        "strokes_per_character": 3.87,
+        "pen_time_percent": 72.0
+      }
+    },
+    {
+      "id": "1ad3410d4b78d422",
+      "file": "难看944_kvenjoy_123.gfont",
+      "bytes": 3186296,
+      "speed": {
+        "score": 86.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 314.6,
+        "draw_mm_per_character": 12.8,
+        "move_mm_per_character": 10.82,
+        "strokes_per_character": 6.16,
+        "pen_time_percent": 79.0
+      }
+    },
+    {
+      "id": "c7fdff2a458757a3",
+      "file": "青山新建_kvenjoy_陈.gfont",
+      "bytes": 4288320,
+      "speed": {
+        "score": 82.4,
+        "sample_characters": 126,
+        "confidence": "full",
+        "standardized_seconds_per_100": 329.7,
+        "draw_mm_per_character": 15.85,
+        "move_mm_per_character": 12.6,
+        "strokes_per_character": 6.18,
+        "pen_time_percent": 76.7
+      }
+    },
+    {
+      "id": "1c675a766b68b23f",
+      "file": "韦旭_kvenjoy_韦旭.gfont",
+      "bytes": 3792112,
+      "speed": {
+        "score": 187.5,
+        "sample_characters": 127,
+        "confidence": "full",
+        "standardized_seconds_per_100": 144.9,
+        "draw_mm_per_character": 15.78,
+        "move_mm_per_character": 5.38,
+        "strokes_per_character": 2.36,
+        "pen_time_percent": 66.0
+      }
+    },
+    {
+      "id": "4eaf3b02888edcfa",
+      "file": "马学昆字体_kvenjoy_马学昆.gfont",
+      "bytes": 3561901,
+      "speed": {
+        "score": 88.3,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 307.8,
+        "draw_mm_per_character": 14.35,
+        "move_mm_per_character": 12.1,
+        "strokes_per_character": 5.9,
+        "pen_time_percent": 77.1
+      }
+    },
+    {
+      "id": "30258848b6d51e98",
+      "file": "鬼画符_kvenjoy_小贤贤.gfont",
+      "bytes": 3185152,
+      "speed": {
+        "score": 83.0,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 327.5,
+        "draw_mm_per_character": 15.62,
+        "move_mm_per_character": 13.13,
+        "strokes_per_character": 6.21,
+        "pen_time_percent": 76.6
+      }
+    },
+    {
+      "id": "5df217671ab312af",
+      "file": "鱼皮_kvenjoy_彭云鹏.gfont",
+      "bytes": 3674798,
+      "speed": {
+        "score": 88.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 307.1,
+        "draw_mm_per_character": 14.75,
+        "move_mm_per_character": 12.44,
+        "strokes_per_character": 5.81,
+        "pen_time_percent": 76.5
+      }
+    },
+    {
+      "id": "7d098a16547c1070",
+      "file": "鲲_kvenjoy_tyk.gfont",
+      "bytes": 3790550,
+      "speed": {
+        "score": 56.4,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 481.7,
+        "draw_mm_per_character": 12.98,
+        "move_mm_per_character": 13.53,
+        "strokes_per_character": 9.94,
+        "pen_time_percent": 83.2
+      }
+    },
+    {
+      "id": "a1d21f831f56d227",
+      "file": "鲲鹏_kvenjoy_zpj.gfont",
+      "bytes": 3365002,
+      "speed": {
+        "score": 92.8,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 292.9,
+        "draw_mm_per_character": 14.98,
+        "move_mm_per_character": 11.1,
+        "strokes_per_character": 5.46,
+        "pen_time_percent": 76.2
+      }
+    },
+    {
+      "id": "9c2bf9539d1112cd",
+      "file": "麻烦_kvenjoy_3分.gfont",
+      "bytes": 2799181,
+      "speed": {
+        "score": 84.5,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 321.5,
+        "draw_mm_per_character": 17.54,
+        "move_mm_per_character": 13.48,
+        "strokes_per_character": 5.95,
+        "pen_time_percent": 75.0
+      }
+    },
+    {
+      "id": "65484526927ad4c4",
+      "file": "黄生冈.gfont",
+      "bytes": 1188039,
+      "speed": {
+        "score": 124.1,
+        "sample_characters": 128,
+        "confidence": "full",
+        "standardized_seconds_per_100": 219.0,
+        "draw_mm_per_character": 15.15,
+        "move_mm_per_character": 7.41,
+        "strokes_per_character": 3.95,
+        "pen_time_percent": 73.7
+      }
+    }
+  ],
+  "errors": [],
+  "method": "Per-character cost divided by library median for that same character; geometric mean, reciprocal scaled to library median = 100.",
+  "limitations": "模型估计，非实测速度。包括笔画路径、笔间空移、抬落笔及简化加减速；不模拟拐角减速、串口吞吐、行尾换行和起止回位。缺字不按零耗时计，少于96个样本为参考分。"
+}

@@ -1,0 +1,11 @@
+{
+  "Result": "UPDATED",
+  "Release": "C:\\Users\\102\\plotter-web-20261014\\releases\\89df8a2-20261020-live-speed",
+  "ControllerPid": 10704,
+  "JobId": "686e05b809b144b1aa50fa2b5e678c80",
+  "Phase": "running",
+  "Limit": 12000.0,
+  "FontCount": 304,
+  "Recommendations": 7,
+  "Backup": "C:\\Users\\102\\plotter-web-20261014\\deploy\\backups\\before-font-previews-20261020202726"
+}

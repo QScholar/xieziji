@@ -161,7 +161,7 @@ class DocumentTests(unittest.TestCase):
                 self.assertAlmostEqual(a,b,delta=.0011)  # G-code rounds absolute coordinates to 0.001 mm.
 
     def test_invalid_formula_and_geometry_are_rejected(self):
-        for source in (r'$\unknown{x}$', '$x', r'$\frac{1}$', r'$x^^2$', r'$\sqrt{$', r'$\sqrt[3]{x}$', '${x$', '$x}$', '$'+('{'*20)+'x'+('}'*20)+'$'):
+        for source in (r'$\unknown{x}$', '$x', r'$\frac{1}$', r'$x^^2$', r'$\sqrt{$', '${x$', '$x}$', '$'+('{'*20)+'x'+('}'*20)+'$'):
             with self.subTest(source=source), self.assertRaises(ValueError):
                 self.generate(text=source)
         for extra in (dict(rows=2.5), dict(punctuation_width=float('nan')), dict(layout_mode='other'),
@@ -193,7 +193,7 @@ class DocumentTests(unittest.TestCase):
                 self.assertEqual(archive.read(f'page-{i+1:03d}.gcode'),cached['gcode'].encode('ascii'))
                 self.assertEqual((folder/'job.gcode').read_bytes(),archive.read(f'page-{i+1:03d}.gcode'))
 
-    def test_blank_page_cannot_start_and_whole_documents_expire_together(self):
+    def test_blank_page_cannot_start_and_previews_persist_across_eviction(self):
         with test_temp() as temp:
             app=Application(FONT_DIR,pathlib.Path(temp),controller=TestController())
             data=self.data();data.update(font_id=next(iter(app.fonts)),pages=[dict(text='AB'),dict(text='')])
@@ -201,9 +201,12 @@ class DocumentTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'没有可书写'):
                 app.api('/api/start',dict(job_id=first['pages'][1]['job_id'],origin_confirmed=True))
             for i in range(8):app.preview(data)
+            # 持久预览：缓存淘汰后整份文档仍可从磁盘恢复、下载与再次写入。
             for page in first['pages']:
-                with self.assertRaisesRegex(ValueError,'过期'):app.job(page['job_id'])
-            with self.assertRaisesRegex(ValueError,'过期'):app.archive(first['document_id'])
+                folder,cached=app.job(page['job_id'])
+                self.assertTrue((folder/'job.gcode').exists())
+            archive=zipfile.ZipFile(io.BytesIO(app.archive(first['document_id'])))
+            self.assertEqual(json.loads(archive.read('manifest.json'))['page_count'],2)
 
 
 if __name__=='__main__':unittest.main()

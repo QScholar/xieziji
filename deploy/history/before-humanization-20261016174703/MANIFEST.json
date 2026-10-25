@@ -1,0 +1,38 @@
+{
+  "files": {
+    "plotter/coordinates.py": {
+      "bytes": 5740,
+      "sha256": "e72e728f03330ee67372c96fb9fde4c26382551034765332e2c88fe5c94bf347"
+    },
+    "plotter/layout.py": {
+      "bytes": 7454,
+      "sha256": "6f743dd05c245ab1ce302cc0f1852560021e0c58fd7a2e6e134ea600c8a73772"
+    },
+    "plotter/machine.py": {
+      "bytes": 22831,
+      "sha256": "b30c108d5d6bc38c8a82c5843d8015f7138231b9cf087b863dd0ac98e8008af7"
+    },
+    "plotter/mixing.py": {
+      "bytes": 6523,
+      "sha256": "efdee649f345fff74eaf9c6b33b983d844a8863184013c328734aa8135818377"
+    },
+    "plotter/server.py": {
+      "bytes": 11638,
+      "sha256": "b1ed630005c0cbcddbfa9722ca92c00049f950c506694ad51bfbac1eb37b9cd1"
+    },
+    "plotter/static/app.js": {
+      "bytes": 32288,
+      "sha256": "eedf5e1a7edab02d4ca4fef5271bf7a3ffcffd1363ca354f802b5d6d5373f47f"
+    },
+    "plotter/static/index.html": {
+      "bytes": 10772,
+      "sha256": "678d8b44908e550c1a691312ab73993d7d91533fc235b48922e795f1aac08b8a"
+    },
+    "plotter/static/style.css": {
+      "bytes": 9661,
+      "sha256": "54e068fab24c302f37ca11c3b749e39de50329988bfd0e97d0c719334ea2a3d7"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before-humanization-20261016174703.tar"
+}

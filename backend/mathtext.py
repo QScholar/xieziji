@@ -10,9 +10,12 @@ class Box:
     baseline: float
     paths: list
     spacing: float | None = None
+    glue: bool = False
+    limits: bool = False
 
     def placed(self, x=0., y=0., scale=1.):
-        return [[(x + px * scale, y + py * scale) for px, py in stroke] for stroke in self.paths]
+        from backend.glyph_fallback import moved
+        return [moved(stroke,((x+px*scale,y+py*scale) for px,py in stroke)) for stroke in self.paths]
 
 
 def join(boxes, gap=0.):
@@ -59,12 +62,17 @@ SYMBOLS = {
     '→': [[(.05,.5),(.95,.5)],[(.65,.2),(.95,.5),(.65,.8)]],
     '°': [[(.5,.05),(.3,.1),(.25,.3),(.45,.4),(.65,.3),(.7,.1),(.5,.05)]],
     '∂': [[(.2,.1),(.55,.05),(.8,.3),(.85,.65),(.65,.9),(.3,.9),(.15,.7),(.3,.45),(.65,.45),(.85,.65)]],
+    '≡': [[(.1,.2),(.9,.2)],[(.1,.5),(.9,.5)],[(.1,.8),(.9,.8)]],
 }
 COMMANDS = dict(alpha='α', beta='β', gamma='γ', delta='δ', theta='θ', lambda_='λ', mu='μ',
                 sigma='σ', phi='φ', omega='ω', pi='π', Delta='Δ', Sigma='Σ', sum='∑',
                 int='∫', infty='∞', times='×', div='÷', pm='±', cdot='·', le='≤', leq='≤',
-                ge='≥', geq='≥', ne='≠', neq='≠', to='→', rightarrow='→', partial='∂', circ='°')
+                ge='≥', geq='≥', ne='≠', neq='≠', to='→', rightarrow='→', partial='∂', circ='°',
+                equiv='≡', varphi='φ', lbrack='[', rbrack=']')
 COMMANDS['lambda'] = COMMANDS.pop('lambda_')
+from backend.math_symbols import EXTRA_COMMANDS, EXTRA_SYMBOLS
+SYMBOLS.update(EXTRA_SYMBOLS)
+COMMANDS.update(EXTRA_COMMANDS)
 
 
 def symbol(char, size):
@@ -73,146 +81,9 @@ def symbol(char, size):
     return Box(size, height, size, paths)
 
 
-class Parser:
-    def __init__(self, source, glyph):
-        if not source.strip() or len(source) > 1000:
-            raise ValueError('公式需为 1–1000 个字符')
-        self.source, self.glyph, self.pos = source, glyph, 0
-
-    def spaces(self):
-        while self.pos < len(self.source) and self.source[self.pos].isspace():
-            self.pos += 1
-
-    def group(self, size, depth):
-        self.spaces()
-        if self.pos >= len(self.source):
-            raise ValueError('公式缺少参数或上下标内容')
-        if self.source[self.pos] == '{':
-            self.pos += 1
-            return self.sequence(size, depth + 1, closing=True)
-        return self.atom(size, depth + 1)
-
-    def sequence(self, size, depth=0, closing=False):
-        if depth > 12:
-            raise ValueError('公式嵌套超过 12 层')
-        boxes = []
-        while True:
-            self.spaces()
-            if self.pos >= len(self.source):
-                if closing:
-                    raise ValueError('公式缺少右花括号 }')
-                break
-            if self.source[self.pos] == '}':
-                if not closing:
-                    raise ValueError('公式存在多余的右花括号 }')
-                self.pos += 1
-                break
-            base = self.group(size, depth) if self.source[self.pos] == '{' else self.atom(size, depth)
-            scripts = {}
-            self.spaces()
-            while self.pos < len(self.source) and self.source[self.pos] in '^_':
-                kind = self.source[self.pos]
-                if kind in scripts:
-                    raise ValueError('公式的上下标重复，请用花括号分组')
-                self.pos += 1
-                scripts[kind] = self.group(size * .62, depth + 1)
-                self.spaces()
-            if scripts:
-                top = -scripts['^'].height * .65 if '^' in scripts else 0.
-                paths = base.placed(0, -top)
-                bottom = base.height
-                for kind, box in scripts.items():
-                    y = top if kind == '^' else base.baseline - box.baseline * .15
-                    paths.extend(box.placed(base.width + size * .06, y - top))
-                    bottom = max(bottom, y + box.height)
-                base = Box(base.width + size * .06 + max(b.width for b in scripts.values()),
-                           bottom - top, base.baseline - top, paths)
-            boxes.append(base)
-        return join(boxes, size * .1)
-
-    def atom(self, size, depth):
-        if depth > 12:
-            raise ValueError('公式嵌套超过 12 层')
-        char = self.source[self.pos]
-        self.pos += 1
-        if char in '^_}':
-            raise ValueError('公式上下标前缺少主体或括号不匹配')
-        if char == '\\':
-            match = re.match(r'[A-Za-z]+|.', self.source[self.pos:])
-            if not match:
-                raise ValueError('公式末尾的反斜杠无效')
-            command = match[0]
-            self.pos += len(command)
-            if command in ('frac', 'dfrac', 'tfrac'):
-                numerator = self.group(size * .72, depth + 1)
-                denominator = self.group(size * .72, depth + 1)
-                width = max(numerator.width, denominator.width) + size * .3
-                line_y = numerator.height + size * .15
-                paths = numerator.placed((width - numerator.width) / 2)
-                paths.append([(0., line_y), (width, line_y)])
-                paths.extend(denominator.placed((width - denominator.width) / 2, line_y + size * .15))
-                return Box(width, line_y + size * .15 + denominator.height, line_y + size * .35, paths)
-            if command == 'sqrt':
-                self.spaces()
-                if self.pos < len(self.source) and self.source[self.pos] == '[':
-                    raise ValueError('根号暂不支持可选次数，请使用普通平方根或分数指数')
-                body = self.group(size, depth + 1)
-                pad = size * .15
-                paths = body.placed(size * .65, pad)
-                paths.append([(0., body.height * .55), (size * .18, body.height * .45),
-                              (size * .35, body.height + pad), (size * .6, 0.),
-                              (body.width + size * .7, 0.)])
-                return Box(body.width + size * .75, body.height + pad, body.baseline + pad, paths)
-            if command == 'text':
-                self.spaces()
-                if self.pos >= len(self.source) or self.source[self.pos] != '{':
-                    raise ValueError('\\text 的文字请放在花括号中')
-                self.pos += 1
-                letters, level = [], 1
-                while self.pos < len(self.source):
-                    letter = self.source[self.pos]; self.pos += 1
-                    if letter == '\\':
-                        if self.pos >= len(self.source) or self.source[self.pos] not in '{}%$#_& ':
-                            raise ValueError('\\text 中暂只支持纯文本及转义标点')
-                        letter = self.source[self.pos]; self.pos += 1
-                    elif letter == '{':
-                        level += 1
-                        if level > 12: raise ValueError('公式嵌套超过 12 层')
-                        continue
-                    elif letter == '}':
-                        level -= 1
-                        if not level: break
-                        continue
-                    letters.append(Box(size * .35, size, size, []) if letter.isspace() else self.glyph(letter, size))
-                if level: raise ValueError('\\text 缺少右花括号 }')
-                return join(letters, size * .05)
-            if command in ('overline', 'bar'):
-                body = self.group(size, depth + 1)
-                paths = body.placed(0., size * .15)
-                paths.append([(0., 0.), (body.width, 0.)])
-                return Box(body.width, body.height + size * .15, body.baseline + size * .15, paths)
-            if command in ('mathrm', 'mathbf', 'operatorname'):
-                return self.group(size, depth + 1)
-            if command in ('sin', 'cos', 'tan', 'log', 'ln', 'exp', 'lim'):
-                return join([self.glyph(c, size) for c in command], size * .05)
-            if command in (',', ';', ' ', 'quad', 'qquad', '!'):
-                return Box(size * ({'!':0., ',':.16, ';':.3, 'qquad':2.}.get(command, 1.)), size, size, [])
-            if command in ('left', 'right'):
-                self.spaces()
-                if self.pos >= len(self.source) or self.source[self.pos] not in '()[]|':
-                    raise ValueError('\\left / \\right 后暂只支持圆括号、方括号和竖线')
-                return self.atom(size, depth + 1)
-            if command in COMMANDS:
-                char = COMMANDS[command]
-            elif command in '{}%$#_':
-                char = command
-            else:
-                raise ValueError('暂不支持 LaTeX 命令：\\' + command)
-        return symbol(char, size) if char in SYMBOLS else self.glyph(char, size)
-
-
-def render(source, size, glyph):
-    return Parser(source, glyph).sequence(size)
+def render(source, size, glyph, display=False):
+    from backend.latex import Parser
+    return Parser(source, glyph, display=display).sequence(size)
 
 
 def items(text):
@@ -228,7 +99,16 @@ def items(text):
             yield 'text', ''.join(pending); pending = []
         closer = {'\\(':'\\)', '\\[':'\\]'}.get(opener, opener)
         start = pos + len(opener)
-        end = text.find(closer, start)
+        end = start
+        while end < len(text):
+            if text[end] == '%':
+                newline = text.find('\n', end)
+                end = len(text) if newline < 0 else newline + 1
+                continue
+            if text.startswith(closer, end): break
+            # Skip an escaped character (including \$), not a closing delimiter.
+            end += 2 if text[end] == '\\' else 1
+        if end >= len(text): end = -1
         if end < 0:
             raise ValueError('公式分隔符未闭合：' + opener)
         yield ('display' if opener in ('$$', '\\[') else 'formula'), text[start:end]

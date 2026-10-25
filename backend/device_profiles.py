@@ -43,7 +43,7 @@ def validate_profile(data):
     if origin not in ('top-left', 'top-right', 'bottom-left', 'bottom-right'):
         raise ValueError('起点方向无效')
     result['coordinate_system']['origin'] = origin
-    for key, default, low, high in [('feed', 1800, 100, 12000), ('move_feed', 3000, 100, 12000),
+    for key, default, low, high in [('feed', 10000, 100, 12000), ('move_feed', 10000, 100, 12000),
                                    ('jog_distance', 1, .01, 20), ('jog_feed', 300, 50, 1000)]:
         n = data.get(key, default)
         if type(n) not in (int, float) or not math.isfinite(n) or not low <= n <= high:

@@ -90,7 +90,7 @@ def analyze(font_dir,output,report_path,sample_count=128):
     chars=eligible[:sample_count];s=len(chars)
     if s<32:
         # Sparse / English-only libraries stay usable without fabricated similarities.
-        result=dict(version=1, fonts=[dict(f, nearest=[]) for f in fonts], recommendations=[],
+        result=dict(version=2, fonts=[dict(f, nearest=[],fallback_rankings=[]) for f in fonts], recommendations=[],
                     sample_text=''.join(dict.fromkeys(POOL))[:sample_count], duplicate_pairs=[], errors=errors,
                     note='共同汉字样本不足 32 个，暂不计算相似度。')
         pathlib.Path(output).write_text(json.dumps(result,ensure_ascii=False),encoding='utf8')
@@ -206,11 +206,13 @@ def analyze(font_dir,output,report_path,sample_count=128):
     for i,info in enumerate(fonts):
         info['sample_characters']=int(mask[i].sum())
         info['nearest']=[dict(font_id=fonts[int(j)]['id'],**pair(i,int(j))) for j in np.argsort(distance[i])[:6] if np.isfinite(distance[i,j])]
+        info['fallback_rankings']=[[fonts[int(j)]['id'],round(float(distance[i,j]),8),round(float(scores[i,j]),1)]
+                                   for j in np.argsort(distance[i]) if np.isfinite(distance[i,j])]
         if i in aliases:info['duplicate_of']=fonts[aliases[i]]['id']
     references=[dict(a=fonts[i]['name'],b=fonts[j]['name'],**pair(i,j)) for i,j in anchor_pairs]
     finite_scores=scores[np.triu(np.isfinite(distance),1)]
     distribution=list(map(float,np.quantile(finite_scores,[.05,.5,.95]))) if finite_scores.size else [None,None,None]
-    result=dict(version=1,font_count=n,sample_text=''.join(chars),reference_family='blood8真迹',reference_pairs=references,
+    result=dict(version=2,font_count=n,sample_text=''.join(chars),reference_family='blood8真迹',reference_pairs=references,
                 metric='0.60 × normalized ink distance + 0.30 × ordered arc-length stroke distance + 0.10 × pen-lift-count difference',
                 calibration=dict(reference_pairs=len(anchor_pairs),reference_distance_min=min(anchor_dist,default=None),reference_distance_max=max(anchor_dist,default=None),
                                  recommendation_distance_max=threshold,reference_score_min=round(min(float(scores[i,j]) for i,j in anchor_pairs),1) if anchor_pairs else None,
