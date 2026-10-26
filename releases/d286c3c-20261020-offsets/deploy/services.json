@@ -1,0 +1,10 @@
+﻿{
+    "Release":  "C:\\Users\\102\\plotter-web-20261014\\releases\\d286c3c-20261020-offsets",
+    "Commit":  "d286c3c240552df776dbab6bbe13c198a66a66da",
+    "Python":  "C:\\Users\\102\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+    "FontDir":  "C:\\tools\\奎享雕刻\\奎享雕刻\\gcodeFonts",
+    "BackendJobs":  "C:\\Users\\102\\plotter-web-20261014\\backend-jobs",
+    "ControllerJobs":  "C:\\Users\\102\\plotter-web-20261014\\controller-jobs",
+    "LogDir":  "C:\\Users\\102\\plotter-web-20261014\\deploy\\services",
+    "Backup":  "C:\\Users\\102\\plotter-web-20261014\\deploy\\backups\\before-split-autostart-20261020-130003"
+}

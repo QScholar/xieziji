@@ -1,0 +1,22 @@
+{
+  "files": {
+    "controller.xml": {
+      "bytes": 1820,
+      "sha256": "11d7c337359687c78a9976b737504a7eacef9e61fcb8e144e72540edd8dd6825"
+    },
+    "state-after.json": {
+      "bytes": 651,
+      "sha256": "5610fdc8e63ea2ede43552c677962390c9630d8c1ee3700e6656693bec17d7ec"
+    },
+    "state-before.json": {
+      "bytes": 842,
+      "sha256": "b8e82f9c1d9776b572cb94ed045fab52cecae8b7f1dff06fab15ca4a0fdce28a"
+    },
+    "web.xml": {
+      "bytes": 1803,
+      "sha256": "8f32271d01ab009510fb27e5413c7ebe6f9f5bd0da4d142b152792a8645597ae"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": null
+}

@@ -1,0 +1,10 @@
+{
+  "Result": "UPDATED",
+  "Backup": "C:\\Users\\102\\plotter-web-20261014\\deploy\\backups\\before-workbench-type-20261021164115",
+  "BackendPid": 13784,
+  "ControllerPid": 10168,
+  "Files": {
+    "frontend/style.css": "e8adb177ce4416a4da7c91977088d99bf7b92ab0ba6aa508d1cb43c397a99acb",
+    "frontend/workbench.css": "7cf772d42ec2b3cfe8e749712fbbe91719e39e00bf10a93839fb2e1719d4096b"
+  }
+}

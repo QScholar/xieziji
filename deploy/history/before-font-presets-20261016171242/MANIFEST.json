@@ -1,0 +1,18 @@
+{
+  "files": {
+    "plotter/static/app.js": {
+      "bytes": 25831,
+      "sha256": "11587fc10e92a74fde6a08c01feb259a7abd6535cbaf95488637d5e6dec4c7f4"
+    },
+    "plotter/static/index.html": {
+      "bytes": 9894,
+      "sha256": "ff24c9fec2d7d2464a89d65af2cb07986c9173fbb46756a10f4a9220b6160810"
+    },
+    "plotter/static/style.css": {
+      "bytes": 9661,
+      "sha256": "54e068fab24c302f37ca11c3b749e39de50329988bfd0e97d0c719334ea2a3d7"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before-font-presets-20261016171242.tar"
+}

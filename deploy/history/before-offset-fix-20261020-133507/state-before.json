@@ -1,0 +1,23 @@
+﻿{
+    "acknowledged":  0,
+    "connected":  true,
+    "controller":  "cpp",
+    "error":  null,
+    "job_id":  null,
+    "last_action":  "Manual movement complete",
+    "mode":  "serial",
+    "motion_revision":  2,
+    "operation_type":  null,
+    "pen":  "up",
+    "pen_top":  true,
+    "phase":  "idle",
+    "port":  "COM5",
+    "position":  [
+                     14.0,
+                     16.0,
+                     0.0
+                 ],
+    "protocol_version":  1,
+    "status":  "\u003cIdle|MPos:14.000,16.000,0.000|FS:0,0|Pn:XY\u003e",
+    "total":  0
+}

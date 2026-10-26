@@ -1,0 +1,9 @@
+{
+  "Result": "UPDATED",
+  "Phase": "disconnected",
+  "Connected": false,
+  "Backup": "C:\\Users\\102\\plotter-web-20261014\\deploy\\backups\\before-device-profiles-20261021022959",
+  "PreviousPort": "COM5",
+  "ControllerPid": 10168,
+  "BackendPid": 13892
+}

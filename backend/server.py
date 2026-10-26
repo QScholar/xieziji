@@ -330,6 +330,7 @@ class Handler(BaseHTTPRequestHandler):
             files['/config.js'] = ('config.js', 'text/javascript')
             files['/notebook-sizing.js'] = ('notebook-sizing.js', 'text/javascript')
             files['/preset-store.js'] = ('preset-store.js', 'text/javascript')
+            files['/markdown-preview.js'] = ('markdown-preview.js', 'text/javascript')
             files['/workspace-sync.js'] = ('workspace-sync.js', 'text/javascript')
             files['/font-library.js'] = ('font-library.js', 'text/javascript')
             files['/page-notifications.js'] = ('page-notifications.js', 'text/javascript')

@@ -1,0 +1,29 @@
+﻿{
+    "acknowledged":  48675,
+    "connected":  true,
+    "controller":  "cpp",
+    "error":  null,
+    "job_id":  "af36a0c7b1134560ad008081e2944e12",
+    "last_action":  "Task stopped; pen raised and returned to task origin",
+    "mode":  "serial",
+    "motion_revision":  19,
+    "operation_type":  null,
+    "pen":  "up",
+    "pen_top":  true,
+    "phase":  "complete",
+    "port":  "COM5",
+    "position":  [
+                     16.413,
+                     21.188,
+                     0.0
+                 ],
+    "protocol_version":  1,
+    "returned_to_origin":  false,
+    "status":  "\u003cIdle|MPos:16.413,21.188,0.000|FS:0,0|Pn:XY\u003e",
+    "task_origin":  [
+                        16.413,
+                        21.188,
+                        0.0
+                    ],
+    "total":  48675
+}

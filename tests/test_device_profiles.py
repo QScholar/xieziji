@@ -33,10 +33,10 @@ class DeviceProfileTests(unittest.TestCase):
 
     def test_each_generator_uses_device_z_and_binds_output_to_port(self):
         font = next(FONT_DIR.glob('*.gfont'))
-        data = dict(text='Hello', device_port='COM1', device_control=dict(controller_type='grbl', pen_up=-1.25, pen_down=-3.5))
+        data = dict(text='Hello', device_port='COM1', device_control=dict(controller_type='grbl', pen_up=-1.25, pen_down=-3.5), feed=2400, move_feed=3000)
         for result in [generate(font, data), *generate_document(font, {**data, 'layout_mode': 'notebook'})]:
             self.assertIn('G1 Z-1.25 F3000', result['gcode'])
-            self.assertIn('G1 Z-3.5 F10000', result['gcode'])
+            self.assertIn('G1 Z-3.5 F3000', result['gcode'])
             self.assertNotIn('G1 Z10 ', result['gcode'])
             self.assertEqual(result['metadata']['device_port'], 'COM1')
             self.assertEqual(result['metadata']['device_control']['pen_up'], -1.25)

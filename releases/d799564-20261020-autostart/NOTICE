@@ -1,0 +1,13 @@
+Required Notice: Copyright 2026 QScholar and xieziji contributors.
+
+This project's original software and original demonstration/test fonts are
+provided under the PolyForm Noncommercial License 1.0.0 in LICENSE.
+
+The project does not distribute third-party .gfont libraries, vendor software,
+device firmware, or device drivers. These remain subject to
+their respective owners' terms. The project license does not grant rights to
+third-party fonts or other materials supplied separately by users.
+
+The C++ controller includes third-party MIT-licensed headers under
+controller/third_party. Their original copyright notices and licenses are
+included there. See controller/third_party/README.md and SHA256SUMS.

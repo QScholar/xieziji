@@ -1,0 +1,12 @@
+{
+  "release": "C:\\Users\\102\\plotter-web-20261014\\releases\\89df8a2-20261020-live-speed",
+  "expected": {
+    "frontend/style.css": "60026820B2E61465DBFF6190D08F93FDFCA135261B70A13556ACD31B59E0B6CC",
+    "frontend/workbench.css": "c961118c184dc051ea5d4ef873889b1b84d5d670a2f8ceb8e5993294f8a562b4"
+  },
+  "files": {
+    "frontend/style.css": "e8adb177ce4416a4da7c91977088d99bf7b92ab0ba6aa508d1cb43c397a99acb",
+    "frontend/workbench.css": "7cf772d42ec2b3cfe8e749712fbbe91719e39e00bf10a93839fb2e1719d4096b"
+  },
+  "package_sha256": "88305880ba0efebee38700867ca77abc1afa6ef131a112ff5a787267674fec4a"
+}

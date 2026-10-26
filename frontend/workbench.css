@@ -34,7 +34,7 @@ body > header {
 .indicator::before { background: #a29688; width: 6px; height: 6px; }
 .indicator.online::before { background: #43815d; }
 .workbench-intro {
-  max-width: 1440px; margin: 0 auto; padding: 42px 32px 28px;
+  margin: 0 auto; padding: 42px 32px 28px;
   display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 48px;
   position: relative; border-bottom: 1px solid var(--line);
 }
@@ -51,7 +51,7 @@ body > header {
 .intro-index a:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--wood-light); border-color: var(--wood); }
 .intro-index b { font: 14px Consolas, monospace; color: var(--wood); }
 .intro-index span { font-size: 15px; font-weight: 700; }
-main { max-width: 1440px; grid-template-columns: minmax(340px, .8fr) minmax(0, 1.35fr); padding: 0 32px; gap: 28px; margin: 28px auto 40px; }
+main { grid-template-columns: minmax(340px, 460px) minmax(0, 1fr); padding: 0 32px; gap: 28px; margin: 28px auto 40px; }
 .panel { background: white; border: 1px solid var(--line); padding: 24px; box-shadow: 6px 6px 0 var(--wood-light); min-width: 0; }
 .editor { border-top: 4px solid var(--wood); }
 .section-heading { padding-bottom: 22px; margin-bottom: 22px; border-bottom: 1px solid var(--line); }
@@ -106,7 +106,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible,
 }
 .paper-stage::before { content: "+"; position: absolute; top: 9px; left: 12px; color: #866446; font: 17px Consolas, monospace; }
 .paper-stage::after { content: "+"; position: absolute; bottom: 9px; right: 12px; color: #866446; font: 17px Consolas, monospace; }
-.paper { width: min(100%, 390px); box-shadow: 8px 8px 0 #9b775348; background: white; }
+.paper { width: min(100%, var(--paper-max, 390px)); margin-inline: auto; box-shadow: 8px 8px 0 #9b775348; background: white; }
 .empty { color: var(--muted); }
 .empty span { color: #b79a7c; font-size: 76px; }
 .metrics { padding: 18px 0 24px; font-variant-numeric: tabular-nums; }
@@ -134,13 +134,12 @@ button:focus-visible, a:focus-visible, summary:focus-visible,
 .font-similar-choice { background: var(--wash); border-color: var(--line); color: var(--ink); }
 .font-similar-choice:hover { background: #efe4d8; border-color: var(--wood); }
 .font-combination-details, .font-recommendation-row, .font-mix-sample, .formula-help { border-color: var(--line); color: var(--muted); }
-footer { max-width: 1376px; border-top: 1px solid var(--line); padding: 20px 0 28px; color: var(--muted); font-size: 13px; margin: 0 32px; }
-@media(min-width:1440px) { footer { margin: 0 auto; } }
+footer { border-top: 1px solid var(--line); padding: 20px 0 28px; color: var(--muted); font-size: 13px; margin: 0 32px; }
 @media(max-width:1100px) {
   .brand span { display: none; }
   .intro-index { grid-template-columns: repeat(3, 90px); }
   .intro-index a { padding: 12px; }
-  main { grid-template-columns: minmax(320px, .9fr) minmax(0, 1.2fr); gap: 24px; }
+  main { grid-template-columns: minmax(320px, 420px) minmax(0, 1fr); gap: 24px; }
   .panel { padding: 20px; }
   .preview-bar { flex-wrap: wrap; }
   .small-label { display: none; }

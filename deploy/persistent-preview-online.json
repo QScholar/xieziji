@@ -1,0 +1,41 @@
+{
+  "passed": true,
+  "recovered_legacy_pages": [
+    {
+      "job_id": "1716b61e27804fb88b2eb584c63c5a13",
+      "sha256": "ab1a0ed9ea410c8016537f436f5ce188a7009da9dce1d010b4781d4b2a2ac765",
+      "page_number": 1,
+      "page_count": 1,
+      "status_before": 409,
+      "status_after": 200,
+      "hash_matches": true
+    },
+    {
+      "job_id": "32d7b2fb5103400fb6e72c5397a1db4f",
+      "sha256": "7c7b5fd2266ae61167df6312ba117d0f02b3a01caceb59c72c08453dd944a866",
+      "page_number": 2,
+      "page_count": 2,
+      "status_before": 409,
+      "status_after": 200,
+      "hash_matches": true
+    },
+    {
+      "job_id": "a3b53307fbcb455296c40fec7aaadd39",
+      "sha256": "1ff68038392f090f9d05b16fc305775d9283c11e4ec5e43d84d7f5b5d3ab3188",
+      "page_number": 2,
+      "page_count": 2,
+      "status_before": 409,
+      "status_after": 200,
+      "hash_matches": true
+    }
+  ],
+  "new_document_pages": 2,
+  "eviction_survived": true,
+  "fresh_application_archive_identical": true,
+  "no_regeneration": true,
+  "no_machine_actions": true,
+  "job_id": "9d138e520a934073b1f69be888392312",
+  "phase": "running",
+  "acknowledged_before": 31479,
+  "acknowledged_after": 31558
+}

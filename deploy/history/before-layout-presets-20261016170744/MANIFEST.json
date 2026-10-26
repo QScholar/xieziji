@@ -1,0 +1,18 @@
+{
+  "files": {
+    "plotter/static/app.js": {
+      "bytes": 19235,
+      "sha256": "fa88a6ff071b2f7e251b03a9304ba7945653175d868dd635a84df3a38485e068"
+    },
+    "plotter/static/index.html": {
+      "bytes": 8983,
+      "sha256": "8e4c2bc7e2256012c0fc2777f76f89aad9509d85cfec0f46deb42e7ac134381c"
+    },
+    "plotter/static/style.css": {
+      "bytes": 9225,
+      "sha256": "bc2709b2aa2638f0286daa67aeeff266a020a90c4dd62f2d305eb0909ee68ac4"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before-layout-presets-20261016170744.tar"
+}

@@ -1,0 +1,18 @@
+{
+  "files": {
+    "backend/font_library.py": {
+      "bytes": 4812,
+      "sha256": "9f29ad7d7dfd4ac93a5c736fcef99a420e133510ddab6dba0fb22618fcbd21d4"
+    },
+    "frontend/font-library.js": {
+      "bytes": 8194,
+      "sha256": "7beb242ed1b000964da67a716ab557a20ab83af8b800bfbb52a4fb4dcb6196f7"
+    },
+    "frontend/style.css": {
+      "bytes": 17924,
+      "sha256": "7c52711fdbf985f44d0536b05993571bcd0577a31b316e2b9f4ec31a02c56a19"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "before.tar"
+}

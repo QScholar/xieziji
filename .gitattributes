@@ -7,3 +7,11 @@
 *.yml text eol=lf
 *.ps1 text eol=crlf
 *.gfont binary
+
+# Archived snapshots and deployment artifacts are byte-exact copies of what was
+# deployed. Any end-of-line conversion would silently change their content and
+# break the SHA-256 recorded in each MANIFEST.json, so keep them verbatim.
+releases/** -text
+deploy/** -text
+plotter/** -text
+analysis/** -text

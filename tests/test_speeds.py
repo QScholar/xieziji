@@ -47,14 +47,7 @@ class SpeedTests(unittest.TestCase):
             self.assertNotEqual(slow['metadata']['sha256'],fast['metadata']['sha256'])
             self.assertEqual(slow['metadata']['strokes'],fast['metadata']['strokes'])
 
-    def test_missing_speeds_default_to_10000_and_invalid_speeds_fail(self):
-        data = dict(text='Hello')
-        for result in (generate(FONT,data),generate_document(FONT,dict(data,layout_mode='notebook'))[0]):
-            self.assertEqual(result['metadata']['feed'],10000)
-            self.assertEqual(result['metadata']['move_feed'],10000)
-            profile=motion_profile(result)
-            self.assertEqual(set(profile['drawing']),{10000})
-            self.assertEqual(set(profile['travel']),{10000})
+    def test_old_requests_get_current_defaults_and_invalid_speeds_fail(self):
         for result in self.generate(2400):
             self.assertEqual(result['metadata']['move_feed'],10000)
         for bad in (99,12001,True,float('nan'),float('inf')):

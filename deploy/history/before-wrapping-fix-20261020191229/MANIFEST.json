@@ -1,0 +1,18 @@
+{
+  "files": {
+    "backend/document.py": {
+      "bytes": 24386,
+      "sha256": "f9359299f07d795635122cf8f830890b528ffba50a861b330f9389133ea61f2b"
+    },
+    "backend/layout.py": {
+      "bytes": 7870,
+      "sha256": "856557aff6b1887945a85b71880ee0c9114e600be41e3c4574f38451cb0c9957"
+    },
+    "backend/mixing.py": {
+      "bytes": 7451,
+      "sha256": "657b52f07afa055f3b7519dea0e02a325a1c25477df1adc7372ef718f784526a"
+    }
+  },
+  "rebuildable": {},
+  "source_archive": "backend-before.tar"
+}

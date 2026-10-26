@@ -212,6 +212,8 @@ python -m backend.server --host 0.0.0.0 --allow-host 192.168.1.20 --controller-u
 
 独立部署前端的方法见 [frontend/README.md](frontend/README.md)。后端支持 `--api-only` 和显式 `--frontend-origin` 白名单。
 
+本机正式服务由计划任务 `Xieziji-Web` / `Xieziji-Controller` 从 `releases/<commit>-<名称>/` 运行，与仓库工作区相互独立；改动生效规则、实例判别与热更新规程见 [deploy/README.md](deploy/README.md)。
+
 ## 任务与执行行为
 
 1. 后端生成并缓存预览、元数据和同一份 G-code；即使控制端离线，也可排版和下载。

@@ -1,0 +1,28 @@
+{
+  "release": "C:\\Users\\102\\plotter-web-20261014\\releases\\89df8a2-20261020-live-speed",
+  "expected": {
+    "frontend/font-library.js": "72379518a3f61d622054f6b220db393060ed39d0bbeb232f5456ca3cc12e943b",
+    "frontend/index.html": "139a6b39fac4d8857721707e3b95510626de8f094071b3ed82366a8e9051a539",
+    "backend/server.py": "982488d1c276d9d391f1237fef0838a38e94234e4f71d2a04b84c6c2cc4dd13a",
+    "backend/font_updates.py": null,
+    "scripts/analyze_font_speed.py": null,
+    "scripts/analyze_font_similarity.py": null,
+    "requirements-analysis.txt": null,
+    "frontend/style.css": "c31dbfad08f0805f253a00e4fc51e4e5310d870d438044f40e9d57099ab3634c",
+    "backend/font_library.py": "755acd6a004277fe2ccff5caf298d344fee5faf5db309e8997cc574383cf3090"
+  },
+  "files": {
+    "frontend/font-library.js": "40e73f004202dad45426a0817018bab6d09a013e799c15e67b6cbeb58d3d3c17",
+    "frontend/index.html": "25070aaab09558eab95c0921a924dc1ee2409fe769f8c680ebc847a32be14f77",
+    "backend/server.py": "8400c095f9fad657350b30272a92b7cd45f426408e6a18bb193fad4511125ce0",
+    "backend/font_updates.py": "99a34d3703448c7ebb629e6760d457c81fe0c0361a0db6915eff2cbbe9fcaf8c",
+    "scripts/analyze_font_speed.py": "5fa896ca6299e925cc10cb3b750abe469243f2089233334b4f8d6a29e77d45aa",
+    "scripts/analyze_font_similarity.py": "52deca9c1b1d7b684a77a4b9dc3ce9809a4221238e68322a63488ccafd3f17d7",
+    "requirements-analysis.txt": "1e9d27b90fd0be23d979b45ed0747528cb10c7d92f90af2bcf956a756f5a3bf7",
+    "frontend/style.css": "36036d08ad399996142bd3af953bd326a7f2a6a6350aba807f008059495fa56c",
+    "backend/font_library.py": "485979661a31ced4f6d693e212bc4c0a94743b71ff5795fc13b6a9c34543ab77"
+  },
+  "package_sha256": "3dc59dabf83052eefd2ce1daeb6018bb5cba8a24aab506ba87481ac6ffaee61a",
+  "dependency_install": "python -m pip install -r requirements-analysis.txt",
+  "validation": "131 Python tests; existing font browser regression; font refresh browser integration; real CJK analysis"
+}

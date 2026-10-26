@@ -1,0 +1,39 @@
+﻿{
+    "acknowledged":  50292,
+    "connected":  true,
+    "controller":  "cpp",
+    "error":  null,
+    "feed_override":  100,
+    "feed_override_requested":  100,
+    "job_id":  "26956e64254d4d3ea5483facf7cca732",
+    "last_action":  "Task stopped; pen raised and returned to task origin",
+    "mode":  "serial",
+    "motion_revision":  1,
+    "operation_type":  null,
+    "pen":  "up",
+    "pen_top":  true,
+    "phase":  "complete",
+    "port":  "COM5",
+    "position":  [
+                     16.413,
+                     21.188,
+                     0.0
+                 ],
+    "protocol_version":  1,
+    "returned_to_origin":  false,
+    "speed_max_percent":  100,
+    "status":  "\u003cIdle|MPos:16.413,21.188,0.000|FS:0,0|Pn:XY\u003e",
+    "task_origin":  [
+                        16.413,
+                        21.188,
+                        0.0
+                    ],
+    "total":  50292,
+    "speed_limit_update_pending":  true,
+    "eta":  {
+                "remaining_seconds":  0,
+                "estimated_finish_at":  null,
+                "source":  "complete",
+                "status":  "complete"
+            }
+}

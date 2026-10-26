@@ -1,0 +1,33 @@
+name: Tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.12']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: cmake -S controller -B controller/build -DBUILD_TESTING=ON
+      - run: cmake --build controller/build --config Release --parallel 2
+      - run: ctest --test-dir controller/build -C Release --output-on-failure
+      - name: Locate controller binary
+        shell: python
+        run: |
+          import os, pathlib
+          root = pathlib.Path.cwd()
+          paths = [root/'controller/build/Release/plotter-controller.exe', root/'controller/build/plotter-controller.exe', root/'controller/build/plotter-controller']
+          binary = next(p for p in paths if p.is_file())
+          with open(os.environ['GITHUB_ENV'], 'a') as f:
+              f.write('PLOTTER_CONTROLLER_BINARY=' + str(binary) + '\n')
+      - run: python -m pip install -r requirements.txt
+      - run: python -X warn_default_encoding -W error::EncodingWarning -m unittest discover -v

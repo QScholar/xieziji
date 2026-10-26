@@ -1,0 +1,63 @@
+{
+    "Release":  "C:\\Users\\102\\plotter-web-20261014\\releases\\d799564-20261020-autostart",
+    "Tasks":  [
+                  {
+                      "Name":  "Xieziji-Web",
+                      "State":  "Running",
+                      "User":  "SYSTEM",
+                      "BootTrigger":  true,
+                      "RestartCount":  100,
+                      "RestartInterval":  "PT1M",
+                      "ExecutionTimeLimit":  "PT0S",
+                      "LastTaskResult":  267009,
+                      "Action":  "-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File \"C:\\Users\\102\\plotter-web-20261014\\releases\\d799564-20261020-autostart\\deploy\\run-campus-service.ps1\" -Service backend"
+                  },
+                  {
+                      "Name":  "Xieziji-Controller",
+                      "State":  "Running",
+                      "User":  "SYSTEM",
+                      "BootTrigger":  true,
+                      "RestartCount":  100,
+                      "RestartInterval":  "PT1M",
+                      "ExecutionTimeLimit":  "PT0S",
+                      "LastTaskResult":  267009,
+                      "Action":  "-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File \"C:\\Users\\102\\plotter-web-20261014\\releases\\d799564-20261020-autostart\\deploy\\run-campus-service.ps1\" -Service controller"
+                  }
+              ],
+    "Listeners":  [
+                      {
+                          "Address":  "127.0.0.1",
+                          "Port":  8090
+                      },
+                      {
+                          "Address":  "0.0.0.0",
+                          "Port":  8080
+                      }
+                  ],
+    "Controller":  {
+                       "acknowledged":  0,
+                       "connected":  false,
+                       "controller":  "cpp",
+                       "error":  null,
+                       "job_id":  null,
+                       "last_action":  "",
+                       "mode":  "serial",
+                       "motion_revision":  0,
+                       "operation_type":  null,
+                       "pen":  "unknown",
+                       "pen_top":  null,
+                       "phase":  "disconnected",
+                       "port":  "",
+                       "position":  null,
+                       "protocol_version":  1,
+                       "status":  "",
+                       "total":  0
+                   },
+    "Document":  {
+                     "pages":  2,
+                     "formulas":  1,
+                     "cell_width":  7.85,
+                     "cell_height":  7.995,
+                     "zip_bytes":  18625
+                 }
+}
