@@ -6,6 +6,8 @@
 #include <fstream>
 #include <functional>
 #include <mutex>
+#include <map>
+#include <vector>
 #include <thread>
 
 namespace plotter {
@@ -15,7 +17,7 @@ struct Cancelled {};
 class Controller {
 public:
     using Factory = std::function<std::unique_ptr<Serial>(const std::string&)>;
-    Controller(fs::path jobs, bool simulate = false, Factory factory = {}, std::string extra_port = "");
+    Controller(fs::path jobs, bool simulate = false, Factory factory = {}, std::string extra_port = "", bool contact_startup = false);
     ~Controller();
     Json state(bool refresh = false);
     Json ports();
@@ -24,6 +26,10 @@ public:
 private:
     fs::path root;
     bool simulate;
+    bool contact_startup;
+    std::atomic<bool> calibrated{false};
+    double top_z = 0;
+    bool expected_reset = false;
     Factory factory;
     std::string extra_port;
     std::unique_ptr<Serial> serial;
@@ -47,6 +53,9 @@ private:
     void run_job(fs::path folder, Json origin);
     void return_after_stop(const fs::path& folder, const Json& origin);
     void run_manual(std::vector<std::string> steps);
+    void prepare_contact();
+    double machine_z(double logical) const;
+    void verify_offsets(const std::map<std::string,std::vector<double>>& offsets);
     void failure(const std::string& message, bool manual);
     void save(const fs::path& folder);
     fs::path job_path(const std::string& id);

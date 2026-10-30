@@ -14,6 +14,7 @@ a token of at least 16 characters. Host must match the listener or an explicit
 | GET | `/v1/ports` | none |
 | POST | `/v1/control/connect` | `{"port":"COM5"}` or an enumerated Linux path |
 | POST | `/v1/control/disconnect` | `{}` |
+| POST | `/v1/control/prepare` | `{"power_cycled":true,"pen_on_paper":true,"bottom_confirmed":true}`; paper-contact startup only |
 | POST | `/v1/control/check` | `{"metadata":{"machine_paper":[210,297]}}` |
 | POST | `/v1/control/start` | `{"job_id":"32-lowercase-hex","origin_confirmed":true}` |
 | POST | `/v1/control/pause` | `{}` |
@@ -40,6 +41,21 @@ Z values must be finite within -300..300 mm, differ by at least 0.01 mm;
 manual feed is 100..3000 mm/min. Values require physical device calibration.
 Connection does not send motion. State includes the active `device_control`.
 Control type and Z settings change only on a new connection.
+
+With `PLOTTER_CONTACT_STARTUP=1`, use GRBL with logical pen-up Z0 and
+pen-down Z13.5. Connection never moves the machine. The explicit `prepare`
+action requires all three human confirmations, raises Z by 13.5 mm at
+100 mm/min, waits for Idle and establishes a fresh work origin. Until it
+finishes, jog/pen/check/start are rejected. Calibration is session-only and
+is invalidated by disconnect, faults or an unexpected firmware restart.
+State exposes `startup_mode`, `calibrated` and `logical_z`; `position` remains
+machine MPos. The logical Z frame is translated consistently for manual pen,
+writing, completion and controlled stop/recovery. See `multiple-controllers.md`.
+In this mode only, connection soft-resets a stationary `Door:0` or `Hold:0`
+to discard the previous queue, requires a fresh startup banner and unchanged
+machine XYZ, then rechecks Idle. It never sends cycle resume. Other suspension
+states and motion are rejected. `startup_reset:true` reports that recovery;
+the session remains uncalibrated until human-confirmed preparation.
 
 Phases include `disconnected`, `idle`, `manual`, `manual_stopping`, `running`,
 `paused`, `draining`, `complete`, `stopping`, `stopped`, `failed`. The serial

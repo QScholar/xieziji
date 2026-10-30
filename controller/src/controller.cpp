@@ -83,14 +83,29 @@ std::vector<double> values(const std::string& text) {
 }
 }
 
-Controller::Controller(fs::path jobs, bool simulation, Factory serial_factory, std::string additional_port)
-    : root(fs::absolute(jobs)), simulate(simulation), factory(std::move(serial_factory)), extra_port(std::move(additional_port)) {
+Controller::Controller(fs::path jobs, bool simulation, Factory serial_factory, std::string additional_port, bool contact)
+    : root(fs::absolute(jobs)), simulate(simulation), contact_startup(contact), factory(std::move(serial_factory)), extra_port(std::move(additional_port)) {
     fs::create_directories(root);
     current = {{"connected",false},{"mode",simulate ? "simulation" : "serial"},{"phase","disconnected"},
                {"status",""},{"port",""},{"job_id",nullptr},{"acknowledged",0},{"total",0},{"error",nullptr},
                {"operation_type",nullptr},{"position",nullptr},{"pen","unknown"},{"pen_top",nullptr},
                {"motion_revision",0},{"last_action",""},{"controller","cpp"},{"protocol_version",1},
-               {"feed_override",nullptr},{"feed_override_requested",100},{"speed_limit",MaxTaskFeed}};
+               {"feed_override",nullptr},{"feed_override_requested",100},{"speed_limit",MaxTaskFeed},
+               {"startup_mode",contact_startup?"paper-contact":"legacy"},{"calibrated",false},{"logical_z",nullptr}};
+}
+double Controller::machine_z(double logical) const { return logical + (contact_startup ? top_z : 0); }
+void Controller::verify_offsets(const std::map<std::string,std::vector<double>>& offsets) {
+    auto g54=offsets.at("G54"), g92=offsets.at("G92"), tlo=offsets.at("TLO");
+    auto axes=g54.size();
+    require((axes==3 || (device_control["controller_type"]=="grbl" && axes==4)) && g92.size()==axes && tlo.size()==1,"Missing coordinate offsets");
+    require(std::abs(tlo[0])<=.01,"Tool length offset must be zero");
+    if (contact_startup) {
+        require(calibrated,"Confirm paper contact and prepare the machine first");
+        require(std::abs(g54[2]+g92[2]-top_z)<=.01,"Z reference changed; prepare the machine again");
+    } else {
+        require(std::abs(g54[2])<=.01,"G54 Z offset must be zero");
+        require(std::abs(g92[2])<=.01,"Nonzero Z offset");
+    }
 }
 Controller::~Controller() {
     try { std::lock_guard<std::mutex> lock(tx_mutex); stopped = true; paused = false; if (serial && busy) serial->write("!"); } catch (...) {}
@@ -133,13 +148,20 @@ void Controller::write(const std::string& raw, bool realtime) {
 }
 std::string Controller::read() {
     cancelled(); auto line = serial->read_line(); record("rx", line); cancelled();
+    if (contact_startup && calibrated && !expected_reset && starts(line,"Grbl ")) {
+        calibrated=false;update({{"calibrated",false},{"logical_z",nullptr}});
+        throw SerialError("Controller restarted; repeat paper-contact startup");
+    }
     if (starts(line, "<")) {
         Json fields = {{"status",line},{"position",nullptr},{"pen","unknown"},{"pen_top",nullptr}};
         std::smatch match; const std::regex position("MPos:([-0-9.]+),([-0-9.]+),([-0-9.]+)");
         if (std::regex_search(line, match, position)) {
             auto p = values(match[1].str() + "," + match[2].str() + "," + match[3].str());
-            fields["position"] = p; fields["pen_top"] = std::abs(p[2]-device_control["pen_up"].get<double>()) <= .05;
-            fields["pen"] = std::abs(p[2]-device_control["pen_up"].get<double>()) <= .05 ? "up" : std::abs(p[2]-device_control["pen_down"].get<double>()) <= .05 ? "down" : "unknown";
+            fields["position"] = p;
+            bool known=!contact_startup || calibrated;
+            fields["logical_z"]=known?Json(p[2]-(contact_startup?top_z:0)):Json(nullptr);
+            fields["pen_top"]=known?Json(std::abs(p[2]-machine_z(device_control["pen_up"]))<=.05):Json(nullptr);
+            fields["pen"] = !known?"unknown":std::abs(p[2]-machine_z(device_control["pen_up"]))<=.05?"up":std::abs(p[2]-machine_z(device_control["pen_down"]))<=.05?"down":"unknown";
         }
         std::smatch overrides;
         if (std::regex_search(line, overrides, std::regex("\\|Ov:([0-9]+),[0-9]+,[0-9]+"))) {
@@ -180,7 +202,17 @@ std::vector<std::string> Controller::command(const std::string& line, bool runni
         {
             std::lock_guard<std::mutex> lock(tx_mutex); cancelled();
             if (manual && manual_cancel) return {};
-            if (!running || !paused) { record("tx", line + "\n"); serial->write(line + "\n"); break; }
+            if (!running || !paused) {
+                std::string sent=line;
+                // Jobs retain logical Z0/Z13.5; translate only Z moves to the
+                // session's physical machine frame. XY remains in G54/G92.
+                if (contact_startup && calibrated && starts(line,"G1 Z")) {
+                    std::smatch m;
+                    require(std::regex_match(line,m,std::regex("G1 Z(-?[0-9]+(?:\\.[0-9]+)?) F([0-9]+(?:\\.[0-9]+)?)")),"Invalid logical Z command");
+                    sent="G53 G1 Z"+decimal(machine_z(std::stod(m[1])))+" F"+m[2].str();
+                }
+                record("tx",sent+"\n"); serial->write(sent+"\n"); break;
+            }
         }
         status(); std::this_thread::sleep_for(20ms);
     }
@@ -197,18 +229,15 @@ std::vector<std::string> Controller::command(const std::string& line, bool runni
 Json Controller::check(const Json& metadata, bool pen_up) {
     auto report = status(); require(starts(report, "<Idle"), "Machine must be Idle");
     auto p = state()["position"]; require(p.is_array() && p.size() == 3, "Missing machine position");
-    double up=device_control["pen_up"], down=device_control["pen_down"];
+    double up=machine_z(device_control["pen_up"]), down=machine_z(device_control["pen_down"]);
     require(pen_up ? std::abs(p[2].get<double>()-up)<=.01 : p[2].get<double>()>=std::min(up,down)-.01 && p[2].get<double>()<=std::max(up,down)+.01, "Raise pen to configured up position first");
     auto modal = command("$G");
     require(std::any_of(modal.begin(), modal.end(), [](const auto& s){return std::regex_search(s, std::regex("\\bG54\\b"));}), "Expected G54 work coordinates");
     auto parameters = command("$#"); std::map<std::string,std::vector<double>> offsets;
     for (auto& line : parameters) { std::smatch m; if (std::regex_match(line,m,std::regex("\\[(G54|G92|TLO):([0-9.,-]+)\\]"))) offsets[m[1]] = values(m[2]); }
-    require(offsets["G54"].size() == 3 && offsets["TLO"].size() == 1 && offsets["G92"].size() == 3, "Missing coordinate offsets");
     // G92 X0 Y0 establishes the task origin relative to the existing G54 XY
     // offset. Keep that saved work origin; only Z/tool offsets affect pen height.
-    require(std::abs(offsets["G54"][2]) <= .01, "G54 Z offset must be zero");
-    require(std::abs(offsets["TLO"][0]) <= .01, "Tool length offset must be zero");
-    require(std::abs(offsets["G92"][2]) <= .01, "Nonzero Z offset");
+    verify_offsets(offsets);
     auto replies = command("$$"); std::map<int,double> settings;
     for (auto& line : replies) { std::smatch m; if (std::regex_match(line,m,std::regex("\\$([0-9]+)=([0-9.]+)"))) settings[std::stoi(m[1])] = std::stod(m[2]); }
     auto paper = metadata.value("machine_paper",metadata.value("paper",Json::array({210,297})));
@@ -300,21 +329,55 @@ Json Controller::call(const std::string& action, const Json& data) {
         auto available = ports();
         for (auto& entry : available["ports"]) if (entry["device"] == port) allowed = true;
         require(allowed, "Serial port is not in the allowed device list"); stopped = false; stop_requested = false; manual_cancel = false;
-        device_control=control_config(data.value("device_control",Json::object()));
+        auto requested=data.value("device_control",Json::object());
+        if (contact_startup && requested.empty()) requested={{"controller_type","grbl"},{"pen_up",0},{"pen_down",13.5},{"pen_feed",100}};
+        device_control=control_config(requested);
+        if (contact_startup) require(device_control["controller_type"]=="grbl" && device_control["pen_up"]==0 && device_control["pen_down"]==13.5,"Paper-contact startup requires GRBL, pen up Z0 and pen down Z13.5");
+        calibrated=false;expected_reset=false;
+        update({{"calibrated",false},{"logical_z",nullptr}});
         update({{"device_control",device_control}});
         serial = factory ? factory(port) : simulate ? simulated_serial() : open_serial(port);
         try {
             if (!simulate && !factory) { auto end = Clock::now()+2s; while (Clock::now()<end) read(); }
-            require(starts(status(),"<Idle"), "Machine must be Idle");
+            auto initial=status(); bool startup_reset=false;
+            if (contact_startup && (starts(initial,"<Door:0|") || starts(initial,"<Hold:0|"))) {
+                // The paper-contact workflow explicitly abandons the old task.
+                // Only a confirmed stationary suspension can be reset here;
+                // never resume (~), bypass an open door, or reset moving axes.
+                auto before=state()["position"];
+                write("\x18",true);auto deadline=Clock::now()+8s;bool banner=false;
+                while(Clock::now()<deadline){if(starts(read(),"Grbl ")){banner=true;break;}}
+                require(banner,"Startup reset confirmation missing");
+                initial=status();auto after=state()["position"];
+                require(before.is_array() && after.is_array(),"Missing startup position");
+                for(size_t i=0;i<3;++i)require(std::abs(before[i].get<double>()-after[i].get<double>())<=.01,"Position changed after startup reset; confirm paper contact again");
+                startup_reset=true;
+            }
+            require(starts(initial,"<Idle"), "Machine must be Idle");
             auto info = command("$I"); if (device_control["controller_type"]=="kenjoy-grbl") require(std::any_of(info.begin(),info.end(),[](const auto& s){return s.find("[VER:1.3a.20221114:") != std::string::npos;}), "Unverified firmware version");
-            update({{"connected",true},{"phase","idle"},{"port",port},{"error",nullptr}});
+            update({{"connected",true},{"phase","idle"},{"port",port},{"error",nullptr},
+                    {"startup_reset",startup_reset},{"last_action",startup_reset?"Previous suspended task discarded; confirm paper contact before preparation":""}});
         } catch (...) { serial.reset(); update({{"connected",false},{"position",nullptr},{"pen_top",nullptr},{"pen","unknown"}}); throw; }
         return state();
     }
     if (action == "disconnect") {
-        join_finished(); require(state()["phase"] != "failed", "Handle the machine fault and restart the controller service"); serial.reset();
+        join_finished(); require(contact_startup || state()["phase"] != "failed", "Handle the machine fault and restart the controller service"); serial.reset();
+        calibrated=false; update({{"calibrated",false},{"logical_z",nullptr}});
         update({{"connected",false},{"phase","disconnected"},{"port",""},{"status",""},{"position",nullptr},{"pen","unknown"},{"pen_top",nullptr}}); return state();
     }
+    if (action == "prepare") {
+        join_finished(); require(contact_startup,"This device does not use paper-contact startup");
+        require(state()["connected"]==true && state()["phase"]=="idle","Connect an idle machine first");
+        require(!calibrated,"Machine is already prepared; disconnect and repeat the power-cycle procedure");
+        for (const char* key : {"power_cycled","pen_on_paper","bottom_confirmed"}) require(data.contains(key) && data[key].is_boolean() && data[key]==true,"Confirm power cycle, paper contact and lowest position first");
+        require(starts(status(),"<Idle"),"Machine must be Idle");
+        manual_cancel=false; stopped=false; paused=false;
+        update({{"phase","preparing"},{"operation_type","manual"},{"error",nullptr},{"last_action","Raising Z by 13.5 mm to establish this session's zero"},{"motion_revision",state()["motion_revision"].get<int>()+1}});
+        busy=true;
+        try { worker=std::thread(&Controller::prepare_contact,this); } catch (...) { busy=false;update({{"phase","failed"},{"operation_type",nullptr}});throw; }
+        return state();
+    }
+    if (contact_startup && (action=="start" || action=="jog" || action=="pen" || action=="check")) require(calibrated,"Confirm paper contact and prepare the machine first");
     if (action == "start") {
         auto id = data.at("job_id").get<std::string>(); auto folder = job_path(id);
         std::lock_guard<std::mutex> jobs(jobs_mutex); auto meta = manifest(folder);
@@ -354,8 +417,8 @@ Json Controller::call(const std::string& action, const Json& data) {
         auto position = data.at("position").get<std::string>(); require(position=="up" || position=="down","Invalid pen position");
         require(starts(status(),"<Idle"),"Machine must be Idle"); auto p=state()["position"]; require(p.is_array(),"Missing pen position");
         if (position=="up" && state()["pen_top"]==true) return state();
-        auto up="$J=G21 G90 G53 Z"+decimal(device_control["pen_up"])+" F"+decimal(device_control["pen_feed"]);
-        auto down="$J=G21 G90 G53 Z"+decimal(device_control["pen_down"])+" F"+decimal(device_control["pen_feed"]);
+        auto up="$J=G21 G90 G53 Z"+decimal(machine_z(device_control["pen_up"]))+" F"+decimal(device_control["pen_feed"]);
+        auto down="$J=G21 G90 G53 Z"+decimal(machine_z(device_control["pen_down"]))+" F"+decimal(device_control["pen_feed"]);
         if (position=="down") { if (state()["pen_top"]!=true) steps.push_back(up); steps.push_back(down); }
         steps.push_back(up);
     } else throw std::runtime_error("Unknown control action");
@@ -368,6 +431,8 @@ Json Controller::call(const std::string& action, const Json& data) {
     } catch (const SerialError& e) { failure(e.what(),false); throw; }
 }
 void Controller::failure(const std::string& message, bool manual) {
+    expected_reset=false;
+    if (contact_startup) { calibrated=false;update({{"calibrated",false},{"logical_z",nullptr}}); }
     try { if (serial) write(manual ? "\x85" : "!",true); } catch (...) {}
     update({{"phase","failed"},{"operation_type",nullptr},{"position",nullptr},{"pen_top",nullptr},{"pen","unknown"},{"error",message}});
 }
@@ -380,8 +445,28 @@ void Controller::run_manual(std::vector<std::string> steps) {
     } catch (const Cancelled&) {} catch (const std::exception& e) { failure(e.what(),true); }
     busy=false;
 }
+void Controller::prepare_contact() {
+    try {
+        auto initial=state()["position"];
+        command("$J=G21 G91 Z-13.5 F100",false,true); wait_idle(false);
+        require(!manual_cancel,"Preparation cancelled; repeat power-cycle procedure");
+        auto p=state()["position"];
+        require(initial.is_array() && p.is_array() && std::abs(p[2].get<double>()-initial[2].get<double>()+13.5)<=.02 && std::abs(p[0].get<double>()-initial[0].get<double>())<=.02 && std::abs(p[1].get<double>()-initial[1].get<double>())<=.02,"Unexpected preparation position");
+        top_z=p[2];
+        // Re-establish a complete work origin; saved firmware offsets may be
+        // nonzero. G92 changes coordinates only, never physical position.
+        command("G54");command("G92 X0 Y0 Z0");
+        auto replies=command("$#");std::map<std::string,std::vector<double>> offsets;
+        for (const auto& line:replies) { std::smatch m;if(std::regex_match(line,m,std::regex("\\[(G54|G92|TLO):([0-9.,-]+)\\]")))offsets[m[1]]=values(m[2]); }
+        calibrated=true;verify_offsets(offsets);status();
+        require(!manual_cancel,"Preparation cancelled; repeat power-cycle procedure");
+        update({{"calibrated",true},{"phase","idle"},{"operation_type",nullptr},{"last_action","Prepared: top Z0, paper Z13.5; do not move by hand or adjust the spring"}});
+    } catch(const Cancelled&) { calibrated=false;update({{"calibrated",false}}); }
+      catch(const std::exception& e) { calibrated=false;failure(e.what(),true); }
+    busy=false;
+}
 void Controller::return_after_stop(const fs::path& folder, const Json& origin) {
-    require(origin.is_array() && origin.size()==3 && std::abs(origin[2].get<double>()-device_control["pen_up"].get<double>())<=.01,"Missing task origin");
+    require(origin.is_array() && origin.size()==3 && std::abs(origin[2].get<double>()-machine_z(device_control["pen_up"]))<=.01,"Missing task origin");
     auto deadline=Clock::now()+15s;
     Json held;
     for (;;) {
@@ -395,14 +480,16 @@ void Controller::return_after_stop(const fs::path& folder, const Json& origin) {
     require(held.is_array() && held.size()==3,"Missing stopped machine position");
     // Reset only after a complete feed hold. Wait for a fresh startup banner so
     // stale queued status/ack replies cannot authorize recovery motion.
-    write("\x18",true);
+    expected_reset=true;write("\x18",true);
     deadline=Clock::now()+8s; bool initialized=false;
     while (Clock::now()<deadline) { if (starts(read(),"Grbl ")) { initialized=true; break; } }
     require(initialized,"Controller reset confirmation missing; return cancelled");
+    expected_reset=false;
+    if (contact_startup) { command("G54");command("G92 Z"+decimal(held[2].get<double>()-top_z)); }
     auto probe=check(manifest(folder),false);
     for (size_t i=0;i<3;++i) require(std::abs(probe["position"][i].get<double>()-held[i].get<double>())<=.01,"Position changed after reset; return cancelled");
     update({{"phase","returning"},{"last_action","Raising pen before returning to task origin"}});
-    command("$J=G21 G90 G53 Z"+decimal(device_control["pen_up"])+" F"+decimal(device_control["pen_feed"])); wait_idle(false);
+    command("$J=G21 G90 G53 Z"+decimal(machine_z(device_control["pen_up"]))+" F"+decimal(device_control["pen_feed"])); wait_idle(false);
     require(state()["pen_top"]==true,"Pen did not reach configured up position; XY return cancelled");
     update({{"last_action","Returning XY to task origin"}});
     std::ostringstream target; target.imbue(std::locale::classic());
@@ -429,9 +516,8 @@ void Controller::run_job(fs::path folder, Json origin) {
         auto parameters=command("$#"); std::map<std::string,std::vector<double>> offsets;
         for (auto& item : parameters) { std::smatch m; if (std::regex_match(item,m,std::regex("\\[(G54|G92|TLO):([0-9.,-]+)\\]"))) offsets[m[1]]=values(m[2]); }
         auto p=state()["position"];
-        require(offsets["G54"].size()==3 && offsets["G92"].size()==3 && offsets["TLO"].size()==1 && p.is_array(),"Missing final origin coordinates");
-        require(std::abs(offsets["G54"][2])<=.01 && std::abs(offsets["G92"][2])<=.01 && std::abs(offsets["TLO"][0])<=.01,"Unexpected final Z/tool offset");
-        for (size_t i=0;i<3;++i) require(std::abs(p[i].get<double>()-(i==2?device_control["pen_up"].get<double>():offsets["G54"][i]+offsets["G92"][i]))<=.01,"Machine did not return to the task origin");
+        require(p.is_array(),"Missing final origin coordinates");verify_offsets(offsets);
+        for (size_t i=0;i<3;++i) require(std::abs(p[i].get<double>()-(i==2?machine_z(device_control["pen_up"]):offsets["G54"][i]+offsets["G92"][i]))<=.01,"Machine did not return to the task origin");
         { std::lock_guard<std::mutex> tx(tx_mutex); cancelled(); update({{"phase","complete"},{"operation_type",nullptr}}); }
     } catch (const Cancelled&) {} catch (const std::exception& e) {
         stop_requested=false; failure(e.what(),false);
@@ -443,6 +529,7 @@ void Controller::run_job(fs::path folder, Json origin) {
     }
     if (stopped) {
         std::lock_guard<std::mutex> tx(tx_mutex); serial.reset();
+        if(contact_startup){calibrated=false;update({{"calibrated",false},{"logical_z",nullptr}});}
         update({{"phase","stopped"},{"connected",false},{"operation_type",nullptr},{"position",nullptr},{"pen","unknown"},{"pen_top",nullptr},{"status",""},{"returned_to_origin",false},{"last_action","Return cancelled; reconnect and confirm position"}});
     }
     try { save(folder); } catch (const std::exception& e) { failure(e.what(),false); }

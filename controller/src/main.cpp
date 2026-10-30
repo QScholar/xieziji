@@ -55,7 +55,8 @@ int main(int argc, char** argv) {
         if (host!="127.0.0.1" && host!="localhost" && host!="::1" && token.size()<16)
             throw std::runtime_error("Network listening requires CONTROLLER_TOKEN of at least 16 characters");
         if (port<1 || port>65535) throw std::runtime_error("Invalid listen port");
-        plotter::Controller controller(jobs,simulate,{},extra_port);
+        const char* contact=std::getenv("PLOTTER_CONTACT_STARTUP");
+        plotter::Controller controller(jobs,simulate,{},extra_port,contact && std::string(contact)=="1");
         httplib::Server server;
         std::set<std::string> allowed_hosts;
         for (const auto& name : std::vector<std::string>{host,"127.0.0.1","localhost"}) allowed_hosts.insert(name+":"+std::to_string(port));
@@ -90,7 +91,7 @@ int main(int argc, char** argv) {
         };
         server.Get("/v1/state",handle([&](const auto&,const auto&) {return controller.state(true);}));
         server.Get("/v1/ports",handle([&](const auto&,const auto&) {return controller.ports();}));
-        server.Post(R"(/v1/control/(connect|disconnect|check|start|pause|resume|stop|speed|jog|pen|manual-pause|manual-stop))",
+        server.Post(R"(/v1/control/(connect|disconnect|prepare|check|start|pause|resume|stop|speed|jog|pen|manual-pause|manual-stop))",
                     handle([&](const auto& req,const auto& data) {return controller.call(req.matches[1].str(),data);}));
         server.Post(R"(/v1/jobs/([a-f0-9]{32})/(begin|chunk|seal))",
                     handle([&](const auto& req,const auto& data) {return controller.upload(req.matches[1].str(),req.matches[2].str(),data);}));

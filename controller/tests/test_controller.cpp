@@ -19,7 +19,10 @@ struct Trace {
     double tool_offset=0, temporary_z=0;
     std::atomic<bool> hold_alarm{false}, reset_alarm{false}, reset_moved{false}, return_z_wrong{false}, return_wait{false};
     std::atomic<bool> reset_seen{false}, hold_complete{false}, return_z_seen{false}, return_xy_seen{false};
+    std::atomic<bool> unsolicited_boot{false};
     int hold_deceleration=0;
+    bool contact_mode=false, four_axes=false, alternate_firmware=false;
+    std::string startup_state;
     size_t count() { std::lock_guard<std::mutex> lock(mutex); return sent.size(); }
     bool contains(const std::string& value) { std::lock_guard<std::mutex> lock(mutex); return std::find(sent.begin(),sent.end(),value)!=sent.end(); }
 };
@@ -31,7 +34,10 @@ public:
     explicit Fake(std::shared_ptr<Trace> t):trace(std::move(t)){}
     void write(const std::string& raw) override {
         { std::lock_guard<std::mutex> lock(trace->mutex); trace->sent.push_back(raw); }
-        if (raw=="\x18") { expect(trace->hold_complete,"Reset before physical hold completed"); trace->reset_seen=true; final=false; }
+        if (raw=="\x18") {
+            expect(trace->hold_complete || trace->startup_state=="Door:0" || trace->startup_state=="Hold:0","Reset before physical hold completed");
+            trace->startup_state.clear();trace->reset_seen=true;final=false;
+        }
         if (trace->reset_seen && raw=="$J=G21 G90 G53 Z0 F600\n") trace->return_z_seen=true;
         if (trace->reset_seen && raw.rfind("$J=G21 G90 G53 X",0)==0) trace->return_xy_seen=true;
         if (trace->alarm && raw=="G1 Z10 F3000\n") { pending_alarm=true; return; }
@@ -39,8 +45,14 @@ public:
         delegate->write(raw);
     }
     std::string read_line() override {
+        if(trace->unsolicited_boot.exchange(false))return "Grbl 1.3a ['$' for help]";
         if (pending_alarm) { pending_alarm=false; return "ALARM:1"; }
         auto line=delegate->read_line();
+        if(!trace->startup_state.empty() && line.rfind("<Idle|",0)==0)line.replace(1,4,trace->startup_state);
+        if(trace->alternate_firmware && line.rfind("[VER:",0)==0) return "[VER:1.3a.20211103:4axis dual Y]";
+        if(trace->four_axes && line.rfind("<",0)==0) {
+            auto at=line.find("|FS:");if(at!=std::string::npos)line.insert(at,",0.000");
+        }
         if (trace->reset_seen && trace->reset_alarm && line.rfind("Grbl ",0)==0) return "ALARM:1";
         if (line.rfind("<Hold:0|",0)==0) {
             if (trace->hold_alarm) return "ALARM:1";
@@ -50,13 +62,13 @@ public:
         if (trace->reset_seen && trace->reset_moved && line.rfind("<Idle|",0)==0) return "<Idle|MPos:99,99,0|FS:0,0>";
         if (trace->return_z_seen && trace->return_z_wrong && line.rfind("<Idle|",0)==0) return "<Idle|MPos:1,2,5|FS:0,0>";
         if (trace->return_xy_seen && trace->return_wait && line.rfind("<Idle|",0)==0) line.replace(1,4,"Run");
-        if (line.rfind("[G54:",0)==0) return "[G54:"+std::to_string(trace->work_offset[0])+","+std::to_string(trace->work_offset[1])+","+std::to_string(trace->work_offset[2])+"]";
+        if (line.rfind("[G54:",0)==0) return "[G54:"+std::to_string(trace->work_offset[0])+","+std::to_string(trace->work_offset[1])+","+std::to_string(trace->work_offset[2])+(trace->four_axes?",0.000]":"]");
         if (line.rfind("[G92:",0)==0) {
             double x=0,y=0,z=0;
             expect(std::sscanf(line.c_str(),"[G92:%lf,%lf,%lf]",&x,&y,&z)==3,"Invalid simulated offset");
             // The delegate stores the combined XY origin. GRBL reports G92
             // relative to G54, so expose the individual offsets separately.
-            return "[G92:"+std::to_string(x-trace->work_offset[0])+","+std::to_string(y-trace->work_offset[1])+","+std::to_string(trace->temporary_z)+"]";
+            return "[G92:"+std::to_string(x-trace->work_offset[0])+","+std::to_string(y-trace->work_offset[1])+","+std::to_string(trace->contact_mode?z-trace->work_offset[2]:trace->temporary_z)+(trace->four_axes?",0.000]":"]");
         }
         if (line.rfind("[TLO:",0)==0) return "[TLO:"+std::to_string(trace->tool_offset)+"]";
         if (trace->bad_config && line=="$3=7") return "$3=0";
@@ -293,9 +305,77 @@ void device_control_profiles() {
     f.c->call("connect",{{"port","SIMULATOR"}});
     expect(f.c->state()["device_control"]["pen_up"]==0,"Next machine inherited custom Z");
 }
+void paper_contact_startup() {
+    auto path=fs::current_path()/".controller-testdata"/"contact-startup";
+    fs::create_directories(path);
+    auto trace=std::make_shared<Trace>();trace->contact_mode=true;trace->four_axes=true;trace->alternate_firmware=true;
+    trace->work_offset={-251,-1,18};
+    Controller c(path,true,[trace](const auto&){return std::make_unique<Fake>(trace);},"",true);
+    auto wait=[&](const std::string& phase){auto end=std::chrono::steady_clock::now()+8s;while(std::chrono::steady_clock::now()<end){auto s=c.state();if(s["phase"]==phase)return s;if(s["phase"]=="failed")throw std::runtime_error(s.dump());std::this_thread::sleep_for(5ms);}throw std::runtime_error("Contact test timeout");};
+    c.call("connect",{{"port","SIMULATOR"}});
+    expect(c.state()["pen"]=="unknown" && c.state()["calibrated"]==false,"Contact machine must not inherit a reference");
+    auto count=trace->count();
+    rejects([&]{c.call("pen",{{"position","up"}});});
+    rejects([&]{c.call("jog",{{"axis","X"},{"distance",1},{"feed",100}});});
+    rejects([&]{c.call("prepare",{{"power_cycled",true},{"pen_on_paper",true}});});
+    expect(trace->count()==count,"Unconfirmed preparation sent a command");
+    Json confirmation={{"power_cycled",true},{"pen_on_paper",true},{"bottom_confirmed",true}};
+    c.call("prepare",confirmation);auto s=wait("idle");
+    expect(s["calibrated"]==true && s["logical_z"]==0 && s["pen_top"]==true,"Top reference not established");
+    expect(trace->contains("$J=G21 G91 Z-13.5 F100\n") && trace->contains("G92 X0 Y0 Z0\n"),"Preparation sequence missing");
+    rejects([&]{c.call("prepare",confirmation);});
+    c.call("pen",{{"position","down"}});wait("idle");
+    expect(trace->contains("$J=G21 G90 G53 Z0 F100\n") && trace->contains("$J=G21 G90 G53 Z-13.5 F100\n"),"Manual pen did not use session reference");
+    std::string text="G21\nG90\nG94\nG1 Z0 F3000\nG92 X0 Y0\nG1 Z13.5 F100\nG1 X1 Y2 F100\nG1 Z0 F3000\nG1 X0 Y0 F3000\n";
+    Json meta={{"sha256",picosha2::hash256_hex_string(text)},{"commands",std::count(text.begin(),text.end(),'\n')},{"machine_paper",{210,297}},{"machine_page_bounds",{0,0,210,297}},{"device_control",s["device_control"]}};
+    auto id=std::string(32,'c');
+    c.upload(id,"begin",meta);c.upload(id,"chunk",{{"offset",0},{"content",text}});c.upload(id,"seal",Json::object());
+    c.call("start",{{"job_id",id},{"origin_confirmed",true}});wait("complete");
+    expect(trace->contains("G53 G1 Z0 F100\n") && trace->contains("G53 G1 Z-13.5 F3000\n"),"Job Z was not translated into machine coordinates");
+    expect(c.state()["logical_z"]==0,"Job did not return to logical Z0");
+    // Stopping resets the firmware's G92; recovery must restore the session
+    // Z frame before raising and returning, rather than moving 13.5 mm too far.
+    std::string long_text="G21\nG90\nG94\nG1 Z0 F3000\nG92 X0 Y0\nG1 Z13.5 F100\n";
+    for(int i=0;i<300;++i)long_text+="G1 X1 Y2 F100\n";
+    long_text+="G1 Z0 F3000\nG1 X0 Y0 F3000\n";
+    meta["sha256"]=picosha2::hash256_hex_string(long_text);meta["commands"]=std::count(long_text.begin(),long_text.end(),'\n');
+    id=std::string(32,'d');c.upload(id,"begin",meta);c.upload(id,"chunk",{{"offset",0},{"content",long_text}});c.upload(id,"seal",Json::object());
+    c.call("start",{{"job_id",id},{"origin_confirmed",true}});c.call("pause",Json::object());c.call("stop",Json::object());s=wait("stopped");
+    expect(s["returned_to_origin"]==true && s["calibrated"]==true && s["logical_z"]==0,"Stop lost the paper-contact reference");
+    // A real power/reset event must instead invalidate the reference.
+    trace->unsolicited_boot=true;
+    rejects([&]{c.call("pen",{{"position","up"}});});
+    expect(c.state()["calibrated"]==false,"Unsolicited firmware restart kept calibration");
+    c.call("disconnect",Json::object());c.call("connect",{{"port","SIMULATOR"}});
+    expect(c.state()["calibrated"]==false && c.state()["logical_z"].is_null(),"Reconnect reused stale calibration");
+    rejects([&]{c.call("pen",{{"position","down"}});});
+    c.call("disconnect",Json::object());
+    std::error_code ec;fs::remove_all(path,ec);
+}
+void stationary_startup_reset() {
+    for(const auto& initial:{"Door:0","Hold:0","Door:1","Door:2","Hold:1","Run"}){
+        auto trace=std::make_shared<Trace>();trace->startup_state=initial;
+        auto path=fs::current_path()/".controller-testdata"/("startup-"+std::string(initial).substr(0,4));
+        {
+            Controller c(path,true,[trace](const auto&){return std::make_unique<Fake>(trace);},"",true);
+            bool stationary=std::string(initial)=="Door:0" || std::string(initial)=="Hold:0";
+            if(stationary){auto s=c.call("connect",{{"port","SIMULATOR"}});expect(s["connected"]==true && s["calibrated"]==false && s["startup_reset"]==true,"Stationary suspension did not reconnect uncalibrated");}
+            else rejects([&]{c.call("connect",{{"port","SIMULATOR"}});});
+            expect(trace->contains("\x18")==stationary,"Reset an unsafe startup state or missed stationary reset");
+            expect(!trace->contains("~"),"Startup resumed an old task");
+            for(auto& raw:trace->sent)expect(raw.rfind("$J=",0)!=0 && raw.rfind("G1 ",0)!=0,"Connection sent movement");
+        }
+        std::error_code ec;fs::remove_all(path,ec);
+    }
+    // The original machine keeps its strict Idle requirement.
+    auto trace=std::make_shared<Trace>();trace->startup_state="Door:0";
+    auto path=fs::current_path()/".controller-testdata"/"legacy-startup-door";
+    {Controller c(path,true,[trace](const auto&){return std::make_unique<Fake>(trace);});rejects([&]{c.call("connect",{{"port","SIMULATOR"}});});expect(!trace->contains("\x18"),"Legacy startup behavior changed");}
+    std::error_code ec;fs::remove_all(path,ec);
+}
 int main() {
     try {
-        realtime_speed(); upload_validation(); checksum_and_bounds(); pause_stop_and_lock(); alarm_and_configuration(); physical_idle_and_manual(); immediate_controls_after_completion(); work_coordinate_offsets(); stop_returns_xyz();device_control_profiles();
+        realtime_speed(); upload_validation(); checksum_and_bounds(); pause_stop_and_lock(); alarm_and_configuration(); physical_idle_and_manual(); immediate_controls_after_completion(); work_coordinate_offsets(); stop_returns_xyz();device_control_profiles();paper_contact_startup();stationary_startup_reset();
         std::cout<<"PASS: upload/hash/bounds, replay/restart, pause/stop/locks, alarm/config/final position, physical Idle/manual/relative origin\n";
     } catch (const std::exception& e) { std::cerr<<"FAIL: "<<e.what()<<'\n'; return 1; }
 }

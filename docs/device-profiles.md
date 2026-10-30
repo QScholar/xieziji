@@ -10,4 +10,6 @@
 
 Z 值是该设备校准后的机器坐标位置，可能是正值或负值；它们不代表自动寻零、限位或绝对位置传感器。手动抬落笔、任务 G-code、笔状态识别、结束校验和终止回原点均读取本设备配置。
 
+树莓派启用 `PLOTTER_CONTACT_STARTUP=1` 时例外：前端固定显示顶部逻辑 Z0／纸面 Z13.5，机器坐标与逻辑坐标之间的转换由本次人工确认后的上移校准建立，断开或故障即失效。不得将旧机器坐标或旧会话当作新会话的校准结果。此模式及多控制端配置见 [多台写字机与启动校准](multiple-controllers.md)。
+
 验证：`python -m unittest discover -q`，`./controller/build.ps1`，`node tests/test_device_profiles_ui.cjs`（需要 Playwright 与 Edge）。浏览器测试不连接真实设备。自定义 Z 与通用 GRBL 已通过模拟测试，实际设备仍需校准与试写。

@@ -18,13 +18,58 @@ $('latinSize').closest('.grid').after(balancePanel);
 const checkButton = document.createElement('button');
 checkButton.id='check';checkButton.className='text-button';checkButton.textContent='检查原点与配置（只读）';
 checkButton.style.marginTop='16px';document.querySelector('.connect-row').after(checkButton);
+const controllerPanel=document.createElement('div');controllerPanel.className='controller-panel';
+controllerPanel.innerHTML='<div id="controllerSwitch" class="controller-switch" role="group" aria-label="选择写字机"></div><p id="controllerTarget" class="hint" aria-live="polite"></p><section id="contactStartup" class="contact-startup" hidden><strong>使用前先断电换笔</strong><ol><li>无论上次如何结束，先断开写字机电源，再装笔，让笔尖接触纸面、笔架处于最低位。</li><li>重新通电，人工确认仍在最低位，再连接机器。</li><li>确认下方选项后，点击“上移 13.5 mm 并置零”；完成后顶部为 Z0、纸面为 Z13.5。</li></ol><p class="spring-warning">不要随意调整弹簧控制，也不要在校准后用手移动机构。换笔或调整后必须重新断电并重复以上流程。</p><label><input id="confirmPowerCycle" type="checkbox">已断电换笔并重新通电</label><label><input id="confirmPaperContact" type="checkbox">笔尖接触纸面，已人工确认笔架处于最低位</label><button id="prepareMachine" type="button" class="secondary" disabled>上移 13.5 mm 并置零</button><p id="preparationState" class="hint" aria-live="polite">尚未建立本次作业零点</p></section>';
+document.querySelector('.machine-title').after(controllerPanel);
+let controllerId='windows',controllerList=[],controllerGeneration=0;
+function currentController(){return controllerList.find(c=>c.id===controllerId);}
+function controllerName(){return currentController()?.name||'写字机';}
+function contactStartup(){return currentController()?.contact_startup===true;}
+function renderControllerSwitch(){
+  const buttons=[...$('controllerSwitch').querySelectorAll('[data-controller]')];
+  if(buttons.map(b=>b.dataset.controller).join(',')!==controllerList.map(c=>c.id).join(',')){
+    $('controllerSwitch').replaceChildren();
+    for(const item of controllerList){const button=document.createElement('button');button.type='button';button.className='secondary';button.textContent=item.name;button.dataset.controller=item.id;button.onclick=()=>switchController(item.id);$('controllerSwitch').append(button);}
+  }
+  for(const button of $('controllerSwitch').querySelectorAll('[data-controller]')){button.setAttribute('aria-pressed',String(button.dataset.controller===controllerId));button.disabled=busy||speedSending;}
+  $('controllerTarget').textContent='当前操作：'+controllerName()+'。切换查看不会停止另一台设备的任务。';
+  $('contactStartup').hidden=!contactStartup();
+}
+async function loadControllers(){
+  const result=await api('/api/controllers');controllerList=result.controllers;
+  let saved='';try{saved=localStorage.getItem('plotter.controller.v1')||'';}catch{}
+  controllerId=controllerList.some(c=>c.id===saved)?saved:result.default;
+  renderControllerSwitch();
+}
+async function switchController(next){
+  if(next===controllerId||busy||speedSending)return;
+  await action(async()=>{
+    await window.sharedWorkspace?.save();if(profilePort)await saveDeviceProfile();
+    window.sharedWorkspace?.detach();controllerGeneration++;actionRevision++;controllerId=next;
+    try{localStorage.setItem('plotter.controller.v1',next);}catch{}
+    clearTimeout(speedTimer);clearTimeout(axisTimer);clearTimeout(linePitchTimer);revision++;axisRevision++;speedPending=null;speedJob=null;observedMotionRevision=null;lastError='';
+    clearTimeout(noticeTimer);$('notice').hidden=true;
+    $('confirmPowerCycle').checked=false;$('confirmPaperContact').checked=false;$('origin').checked=false;
+    profilePort='';profileLoaded=false;deviceProfiles=Object.create(null);currentJob=null;downloadJob=null;documentResult=null;previewStale=false;
+    $('paperView').replaceChildren();$('metrics').replaceChildren();$('fontUsage').hidden=true;$('previewStatus').textContent='请选择设备配置并生成预览';
+    state={connected:false,phase:'disconnected',total:0,acknowledged:0};renderControllerSwitch();renderOutputNavigation();renderState();
+    try{state=await api('/api/state');}catch(error){notice(controllerName()+'：'+error.message,true);}
+    await loadPorts();await window.sharedWorkspace?.open(profilePort);renderState();
+  });
+}
+$('prepareMachine').onclick=()=>action(async()=>{
+  if(!$('confirmPowerCycle').checked||!$('confirmPaperContact').checked)throw new Error('请先完成人工断电换笔和最低位确认');
+  state=await api('/api/prepare',{power_cycled:true,pen_on_paper:true,bottom_confirmed:true});
+  $('confirmPowerCycle').checked=false;$('confirmPaperContact').checked=false;$('origin').checked=false;
+});
+for(const id of ['confirmPowerCycle','confirmPaperContact'])$(id).addEventListener('change',()=>renderState());
 let fonts = [], currentJob = null, downloadJob = null, state = {connected:false,phase:'disconnected',total:0,acknowledged:0}, busy = false;
 let lastError = '', noticeTimer, revision = 0, actionRevision = 0;
 let selectedFonts = [];
 let deviceProfiles=Object.create(null), profilePort='', profileLoaded=false;
 const defaultDeviceControl={controller_type:'kenjoy-grbl',pen_up:0,pen_down:10,pen_feed:600};
-function deviceControl(){return {controller_type:$('controllerType').value,pen_up:Number($('penUpZ').value),pen_down:Number($('penDownZ').value),pen_feed:Number($('penFeed').value)};}
-function deviceLabel(port){return deviceProfiles[port]?.name?deviceProfiles[port].name+' · '+port:port;}
+function deviceControl(){return contactStartup()?{controller_type:'grbl',pen_up:0,pen_down:13.5,pen_feed:100}:{controller_type:$('controllerType').value,pen_up:Number($('penUpZ').value),pen_down:Number($('penDownZ').value),pen_feed:Number($('penFeed').value)};}
+function deviceLabel(port){return controllerName()+' · '+(deviceProfiles[port]?.name?deviceProfiles[port].name+' · '+port:port);}
 function renderDeviceNames(){
   for(const option of $('port').options)option.textContent=deviceLabel(option.value)+(option.dataset.description?' · '+option.dataset.description:'');
   $('connection').textContent=state.connected?'已连接 · '+deviceLabel(state.port):'未连接机器';
@@ -41,7 +86,7 @@ async function saveDeviceProfile(){
 }
 function applyDeviceProfile(port){
   profilePort=port;
-  const profile=deviceProfiles[port], control=profile?.device_control||defaultDeviceControl;
+  const profile=deviceProfiles[port], control=contactStartup()?{controller_type:'grbl',pen_up:0,pen_down:13.5,pen_feed:100}:profile?.device_control||defaultDeviceControl;
   $('deviceName').value=profile?.name||'';
   $('controllerType').value=control.controller_type;
   $('penUpZ').value=control.pen_up;$('penDownZ').value=control.pen_down;$('penFeed').value=control.pen_feed;
@@ -67,7 +112,7 @@ let observedMotionRevision = null;
 let speedTimer, speedPending=null, speedSending=false, speedJob=null;
 const layoutFields=['width','height','marginTop','marginBottom','marginLeft','marginRight','rows','size','latinSize','spacing','feed','moveFeed','punctuationWidth','gridColumns','gridRowGap','gridColumnGap','gridSizePercent','gridPadding'];
 let presetStorage='plotter.layout-presets.v1';
-let layoutMode='', modeDrafts={}, sourcePages=[$('text').value], sourceIndex=0, documentResult=null, outputIndex=0;
+let layoutMode='', modeDrafts={}, sourcePages=[$('text').value], sourceIndex=0, documentResult=null, outputIndex=0, previewStale=false;
 const humanFields={vertical:'Vertical',scale:'Scale',rotation:'Rotation',spacing:'Spacing',baseline:'Baseline'};
 const humanDefault={enabled:false,vertical:.3,scale:5,rotation:2,spacing:.2,baseline:.4,
   vertical_enabled:true,scale_enabled:true,rotation_enabled:true,spacing_enabled:true,baseline_enabled:true};
@@ -86,21 +131,22 @@ function notice(message, error=false) {
   clearTimeout(noticeTimer); noticeTimer=setTimeout(()=>$('notice').hidden=true,error?10000:4500);
 }
 async function request(path, data) {
-  const headers = {};
+  const headers = {'X-Plotter-Controller':controllerId},generation=controllerGeneration;
   const token = $('token').value.trim(); if(token) headers.Authorization='Bearer '+token;
   if(data!==undefined) headers['Content-Type']='application/json';
   const base=(window.PLOTTER_API_BASE||'').replace(/\/$/,'');
   const response = await fetch(base+path,{method:data===undefined?'GET':'POST',headers,body:data===undefined?undefined:JSON.stringify(data)});
+  if(generation!==controllerGeneration)throw new Error('已切换设备，忽略旧设备响应');
   if(!response.ok) { const error=await response.json(); throw new Error(error.error || '请求失败'); }
   return response;
 }
-async function api(path,data) {return (await request(path,data)).json();}
+async function api(path,data) {const generation=controllerGeneration,result=await (await request(path,data)).json();if(generation!==controllerGeneration)throw new Error('已切换设备，忽略旧设备响应');return result;}
 let presetBrowserStorage;
 try{presetBrowserStorage=window.localStorage;}catch{presetBrowserStorage={getItem:()=>null,setItem:()=>{}};}
 const serverPresets=new window.PresetStore(api,presetBrowserStorage);
 let serverPresetUIReady=false;
 function writing(){return state.operation_type==='writing'||['running','paused','draining','stopping','returning'].includes(state.phase);}
-function active(){return writing()||['manual','manual_stopping'].includes(state.phase);}
+function active(){return writing()||['preparing','manual','manual_stopping'].includes(state.phase);}
 function formatEtaDuration(seconds){
   const minutes=Math.max(1,Math.ceil(seconds/60));
   if(seconds<60)return '不足 1 分钟';
@@ -160,6 +206,11 @@ function queueSpeed(percent){
 $('liveSpeed').addEventListener('input',()=>queueSpeed(Number($('liveSpeed').value)));
 $('resetSpeed').onclick=()=>queueSpeed(100);
 function renderState(){
+  renderControllerSwitch();
+  const prepared=!contactStartup()||state.calibrated===true;
+  if(contactStartup()){$('controllerType').value='grbl';$('penUpZ').value=0;$('penDownZ').value=13.5;$('penFeed').value=100;}
+  $('prepareMachine').disabled=!contactStartup()||!state.connected||prepared||active()||busy||!$('confirmPowerCycle').checked||!$('confirmPaperContact').checked||!(state.status||'').startsWith('<Idle');
+  $('preparationState').textContent=state.phase==='preparing'?'正在低速上移 13.5 mm 并建立零点…':state.calibrated?'本次零点已建立 · 顶部 Z0 / 纸面 Z13.5':'尚未建立本次作业零点';
   renderSpeed();
   renderEta();
   window.pageReminders?.observe(state,{device:deviceLabel(state.port),simulation:state.mode==='simulation'});
@@ -168,21 +219,23 @@ function renderState(){
     $('previewStatus').textContent='笔位置已调整，预览保留；请确认当前位置作为本次原点。';
   }
   if(state.motion_revision!==undefined)observedMotionRevision=state.motion_revision;
-  $('connection').textContent=state.connected?'已连接 · '+deviceLabel(state.port):'未连接机器';
+  $('connection').textContent=controllerName()+' · '+(state.connected?'已连接 · '+deviceLabel(state.port):'未连接');
   $('connection').classList.toggle('online',state.connected);
   $('mode').textContent=state.mode==='simulation'?'模拟模式 · 不落笔':'C++ 控制服务';
   $('port').disabled=state.connected||busy||active();
-  for(const key of ['controllerType','penUpZ','penDownZ','penFeed'])$(key).disabled=state.connected||busy;
+  for(const key of ['controllerType','penUpZ','penDownZ','penFeed'])$(key).disabled=contactStartup()||state.connected||busy;
   $('saveDeviceName').disabled=busy||!profilePort;
-  $('connect').disabled=state.connected||busy||state.speed_limit_update_pending===true; $('disconnect').disabled=!state.connected||active()||state.phase==='failed'||busy;
+  $('connect').disabled=state.connected||busy||state.speed_limit_update_pending===true; $('disconnect').disabled=!state.connected||active()||(!contactStartup()&&state.phase==='failed')||busy;
   $('check').disabled=!state.connected||active()||state.phase==='failed'||busy||state.speed_limit_update_pending===true;
+  if(!prepared)$('check').disabled=true;
   $('start').disabled=!state.connected||!currentJob||!$('origin').checked||active()||busy||state.phase==='failed'||state.speed_limit_update_pending===true;
+  if(!prepared)$('start').disabled=true;
   $('pause').disabled=!writing()||!['running','draining'].includes(state.phase);
   $('resume').disabled=state.phase!=='paused';
   $('stop').disabled=!writing()||state.phase==='stopping';
   $('stop').textContent=state.phase==='returning'?'停止回原点':'终止任务';
-  const manual=['manual','manual_stopping'].includes(state.phase), controllerIdle=state.mode==='simulation'||(state.status||'').startsWith('<Idle');
-  const writable=state.connected&&controllerIdle&&!active()&&!busy&&!state.speed_limit_update_pending&&['idle','complete','stopped'].includes(state.phase);
+  const manual=['preparing','manual','manual_stopping'].includes(state.phase), controllerIdle=state.mode==='simulation'||(state.status||'').startsWith('<Idle');
+  const writable=prepared&&state.connected&&controllerIdle&&!active()&&!busy&&!state.speed_limit_update_pending&&['idle','complete','stopped'].includes(state.phase);
   $('manualControls').disabled=writing();
   $('consoleLock').textContent=writing()?'写字任务中 · 已锁定':state.connected?'手动控制可用':'连接机器后可用';
   for(const key of ['penUp','penDown','jogDistance','jogFeed'])$(key).disabled=!writable;
@@ -192,10 +245,10 @@ function renderState(){
   for(const button of document.querySelectorAll('[data-jog-axis],[data-step]'))button.disabled=!writable;
   $('manualPause').disabled=!manual||state.phase==='manual_stopping';
   $('manualStop').disabled=!manual||state.phase==='manual_stopping';
-  $('consolePosition').textContent=state.position?`Z ${state.position[2].toFixed(3)} mm`:'Z —';
+  $('consolePosition').textContent=contactStartup()?(Number.isFinite(state.logical_z)?`Z ${state.logical_z.toFixed(3)} mm`:'Z 待校准'):state.position?`Z ${state.position[2].toFixed(3)} mm`:'Z —';
   $('penState').textContent=({up:'已抬笔',down:'已落笔',unknown:'笔位置待确认'})[state.pen||'unknown'];
   $('consoleLastAction').textContent=state.last_action||'';$('consoleLastAction').hidden=!state.last_action;
-  $('phase').textContent=state.phase==='stopped'&&state.returned_to_origin!==true?'回原点已取消 · 请重新连接并确认位置':phases[state.phase]||state.phase;
+  $('phase').textContent=state.phase==='preparing'?'正在建立本次零点':state.phase==='stopped'&&state.returned_to_origin!==true?'回原点已取消 · 请重新连接并确认位置':phases[state.phase]||state.phase;
   $('progressText').textContent=`${state.acknowledged} / ${state.total}`;
   $('progressFill').style.width=(state.total?100*state.acknowledged/state.total:0)+'%';
   const actualFeed=(state.status||'').match(/\|FS:([\d.]+),/);
@@ -204,7 +257,16 @@ function renderState(){
   $('downloadAll').disabled=!documentResult||busy;
   $('rerandomize').disabled=busy;
 }
-function invalidate(){sourcePages[sourceIndex]=$('text').value;revision++;scheduleLinePitch();$('origin').checked=false;currentJob=null;downloadJob=null;documentResult=null;renderOutputNavigation();$('fontUsage').hidden=true;$('previewStatus').textContent='参数已修改，请重新生成预览。';updateCount();renderState();if($('paperView').querySelector('svg'))$('phase').textContent=active()?(phases[state.phase]+' · 编辑内容未执行'):'内容已修改，请重新生成预览';}
+// Content edits (keepPreview) retain the last generated preview — SVG, page
+// navigation and metrics — until 生成全部页面预览 regenerates it; only the write
+// task is released so stale content can never be started. Parameter changes
+// still drop the preview because the paper geometry itself is no longer valid.
+function invalidate(keepPreview=false){
+  sourcePages[sourceIndex]=$('text').value;revision++;scheduleLinePitch();$('origin').checked=false;currentJob=null;
+  if(keepPreview&&documentResult){previewStale=true;$('previewStatus').textContent='内容已修改 · 旧预览已保留，点击“生成全部页面预览”后更新';}
+  else{previewStale=false;downloadJob=null;documentResult=null;renderOutputNavigation();$('fontUsage').hidden=true;$('previewStatus').textContent='参数已修改，请重新生成预览。';}
+  updateCount();renderState();if($('paperView').querySelector('svg'))$('phase').textContent=active()?(phases[state.phase]+' · 编辑内容未执行'):'内容已修改，请重新生成预览';
+}
 function coordinateSettings(){return {reverse_x:$('reverseX').checked,reverse_y:$('reverseY').checked,swap_xy:$('swapXY').checked,origin:$('originCorner').value};}
 function paperSettings(){syncNotebookSizing();return {line_placement:'ink',smart_balance:$('smartBalance').checked,letter_scale:Number($('letterScale').value),digit_scale:Number($('digitScale').value),line_sizing:$('lineSizing').value,line_looseness:Number($('lineLooseness').value),allow_overlap:allowOverlap(),layout_mode:layoutMode||'notebook',pagination:$('pagination').value,width:Number($('width').value),height:Number($('height').value),margin_top:Number($('marginTop').value),margin_bottom:Number($('marginBottom').value),margin_left:Number($('marginLeft').value),margin_right:Number($('marginRight').value),rows:Number($('rows').value),size:Number($('size').value),latin_size:Number($('latinSize').value),punctuation_width:Number($('punctuationWidth').value),grid:{columns:Number($('gridColumns').value),row_gap:Number($('gridRowGap').value),column_gap:Number($('gridColumnGap').value),size_percent:Number($('gridSizePercent').value),padding:Number($('gridPadding').value),draw_lines:$('gridDrawLines').checked},coordinate_system:coordinateSettings(),device_port:profilePort,device_control:deviceControl(),humanization:currentHumanization()};}
 function currentHumanization(){
@@ -250,10 +312,20 @@ function displayPaper(svg, metadata, preservePaths=false){
   $('zoomPreview').disabled=false;
   if($('previewZoom').open)zoomMount(true);
   $('paperView').style.aspectRatio=metadata.preview_size[0]+'/'+metadata.preview_size[1];
+  sizePaperView();
   $('paperLabel').textContent=`范围 / ${metadata.paper[0]} × ${metadata.paper[1]} mm`;
   renderCoordinateInfo(metadata);
   if(metadata.writable)$('layoutSummary').textContent=metadata.layout_mode==='grid'?`可写范围 ${metadata.writable[0].toFixed(1)} × ${metadata.writable[1].toFixed(1)} mm · 格宽 ${metadata.grid.cell_width.toFixed(3)} / 格高 ${metadata.grid.cell_height.toFixed(3)} mm · ${metadata.rows} 行 × ${metadata.grid.columns} 列`:`可写范围 ${metadata.writable[0].toFixed(1)} × ${metadata.writable[1].toFixed(1)} mm · ${metadata.rows} 基准行${metadata.line_layout?` · 本页 ${metadata.line_layout.length} 行`:''} · 基准行距 ${metadata.pitch.toFixed(2)} mm · 中文字高 ${metadata.size.toFixed(2)} / 英文 ${(metadata.latin_size??metadata.size).toFixed(2)} mm`;
 
+}
+// The paper grows with the window: bound by the column width in CSS, and by
+// the viewport height here via the paper's own aspect ratio, so an A4 page
+// stays fully visible while using as much of the screen as possible.
+function sizePaperView(){
+  const svg=$('paperView').querySelector('svg');if(!svg)return;
+  const box=svg.viewBox?.baseVal,ratio=box&&box.width&&box.height?box.width/box.height:210/297;
+  const height=Math.max(420,window.innerHeight-240);
+  $('paperView').style.setProperty('--paper-max',Math.round(height*ratio)+'px');
 }
 async function refreshCoordinatePreview(){
   if(!layoutMode)return;
@@ -382,7 +454,7 @@ $('zoomStage').addEventListener('keydown',event=>{
   else if(event.key==='+'||event.key==='='||event.key==='-'){const {stage}=zoomParts(),r=stage.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,event.key==='-'?1/1.35:1.35);event.preventDefault();}
   else if(event.key==='0'){zoomLayout(false);event.preventDefault();}
 });
-window.addEventListener('resize',()=>{if($('previewZoom').open)zoomLayout(true);});
+window.addEventListener('resize',()=>{if($('previewZoom').open)zoomLayout(true);sizePaperView();});
 $('paperView').addEventListener('click',()=>{if(zoomSvg())previewZoomOpen();});
 function allowOverlap(){return false;}
 function notebookSizing(){return {lineSizing:$('lineSizing').value,lineLooseness:Number($('lineLooseness').value),allowOverlap:$('allowOverlap').checked,smartBalance:$('smartBalance').checked,letterScale:Number($('letterScale').value),digitScale:Number($('digitScale').value)};}
@@ -691,7 +763,7 @@ function filterFonts(){
   window.FontBrowser?.refresh();
 }
 async function loadPorts(){
-  const [result,saved]=await Promise.all([api('/api/ports'),api('/api/device-profiles')]);
+  const [result,saved]=await Promise.all([api('/api/ports').catch(error=>{notice(controllerName()+'：'+error.message,true);return {ports:[]};}),api('/api/device-profiles')]);
   deviceProfiles=saved.profiles;const old=state.connected?state.port:$('port').value;$('port').replaceChildren();
   for(const port of result.ports){const option=document.createElement('option');option.value=port.device;option.dataset.description=port.description||'';$('port').append(option);}
   if(result.ports.some(p=>p.device===old))$('port').value=old;
@@ -783,9 +855,10 @@ function showOutputPage(index){
   if(!documentResult?.pages[index])return;
   outputIndex=index;const page=documentResult.pages[index],m=page.metadata;
   // Content stays writable: every start becomes a new execution of this page.
-  currentJob=m.empty?null:page.job_id;downloadJob=page.job_id;$('origin').checked=false;
+  // A stale preview stays browsable but never starts a write task.
+  currentJob=previewStale||m.empty?null:page.job_id;downloadJob=page.job_id;$('origin').checked=false;
   axisRevision++;clearTimeout(axisTimer);displayPaper(page.svg,m);renderOutputNavigation();
-  $('previewStatus').textContent=m.empty?'本页为空白页':`第 ${index+1} 页已生成`;
+  $('previewStatus').textContent=m.empty?'本页为空白页':previewStale?`旧预览 · 第 ${index+1} 页 · 内容已修改，生成后更新`:`第 ${index+1} 页已生成`;
   $('metrics').replaceChildren();
   for(const value of [`${m.lines.length} 行 · ${m.strokes} 笔画`,`${m.formula_count||0} 个公式 · ${m.commands} 条指令`,`${m.xy_mm} mm 路程`,`绘图 ${m.feed} / 移动 ${m.move_feed??10000} mm/min`]){const span=document.createElement('span');span.textContent=value;$('metrics').append(span);}
   renderFontUsage(m);renderState();
@@ -804,7 +877,7 @@ $('preview').onclick=()=>action(async()=>{
     const result=window.sharedWorkspace?await window.sharedWorkspace.generate(data):await api('/api/preview',data);
     if(capturedRevision!==revision){notice('生成期间内容发生了修改，请重新生成预览');return;}
     if(result.metadata.motion_revision!==undefined){state.motion_revision=result.metadata.motion_revision;observedMotionRevision=result.metadata.motion_revision;}
-    documentResult=result;showOutputPage(0);
+    previewStale=false;documentResult=result;showOutputPage(0);
     notice(`已生成 ${result.page_count} 页，可切换预览、逐页写字或下载全部页面`);
   }finally{$('preview').disabled=false;}
 });
@@ -817,14 +890,37 @@ $('previewPage').onchange=()=>showOutputPage(Number($('previewPage').value));
 $('previewPrev').onclick=()=>showOutputPage(outputIndex-1);$('previewNext').onclick=()=>showOutputPage(outputIndex+1);
 $('sourcePage').onchange=()=>selectSource(Number($('sourcePage').value));
 $('sourcePrev').onclick=()=>selectSource(sourceIndex-1);$('sourceNext').onclick=()=>selectSource(sourceIndex+1);
-$('addPage').onclick=()=>{sourcePages[sourceIndex]=$('text').value;sourcePages.splice(sourceIndex+1,0,'');sourceIndex++;renderSourcePages();invalidate();$('text').focus();};
-$('removePage').onclick=()=>{if(sourcePages.length<=1)return;sourcePages.splice(sourceIndex,1);sourceIndex=Math.min(sourceIndex,sourcePages.length-1);renderSourcePages();invalidate();};
+$('addPage').onclick=()=>{sourcePages[sourceIndex]=$('text').value;sourcePages.splice(sourceIndex+1,0,'');sourceIndex++;renderSourcePages();invalidate(true);$('text').focus();};
+$('removePage').onclick=()=>{if(sourcePages.length<=1)return;sourcePages.splice(sourceIndex,1);sourceIndex=Math.min(sourceIndex,sourcePages.length-1);renderSourcePages();invalidate(true);};
+const textZoomDialog=$('textZoom');
+function syncTextZoom(){
+  const markdown=$('inputFormat').value==='markdown'&&$('textZoomPreview').checked;
+  $('textZoomRender').hidden=!markdown;
+  if(markdown&&window.renderMarkdown)$('textZoomRender').innerHTML=window.renderMarkdown($('textZoomArea').value);
+  $('textZoomInfo').textContent=`预设第 ${sourceIndex+1} 页 · ${$('textZoomArea').value.length} 字 · 关闭时写回当前预设页`;
+}
+let textZoomTimer=0;
+$('expandText').onclick=()=>{
+  $('textZoomArea').value=$('text').value;
+  $('textZoomPreviewToggle').hidden=$('inputFormat').value!=='markdown';
+  syncTextZoom();
+  textZoomDialog.showModal();
+  $('textZoomArea').focus();
+};
+$('textZoomArea').addEventListener('input',()=>{clearTimeout(textZoomTimer);textZoomTimer=setTimeout(syncTextZoom,120);});
+$('textZoomPreview').onchange=syncTextZoom;
+$('closeTextZoom').onclick=()=>textZoomDialog.close();
+textZoomDialog.addEventListener('close',()=>{
+  const value=$('textZoomArea').value;
+  if(value!==$('text').value){$('text').value=value;invalidate(true);}
+  $('text').focus({preventScroll:true});
+});
 removeBlankLines.onclick=()=>{
   const text=$('text').value,lines=text.split(/\r\n?|\n/);
   const kept=lines.filter(line=>line.trim()!==''||line.includes('\f'));
   const removed=lines.length-kept.length;
   if(!text||!removed){notice('当前页没有可删除的空白行');return;}
-  $('text').value=kept.join('\n');invalidate();
+  $('text').value=kept.join('\n');invalidate(true);
   notice(`已删除当前页 ${removed} 个空白行，请重新生成预览。`);
 };
 $('layoutMode').onchange=()=>setMode($('layoutMode').value);
@@ -836,9 +932,9 @@ $('textFile').onchange=()=>action(async()=>{
   const text=(await file.text()).replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');
   if(sourcePages.reduce((n,p,i)=>n+(i===sourceIndex?0:p.length),0)+text.length>30000)throw new Error('导入后超过 30000 字，请拆分文档');
   sourcePages[sourceIndex]=text;$('inputFormat').value=/\.(md|markdown)$/i.test(file.name)?'markdown':'plain';
-  renderSourcePages();invalidate();notice(`已用 ${file.name} 替换预设第 ${sourceIndex+1} 页的内容`);
+  renderSourcePages();invalidate(true);notice(`已用 ${file.name} 替换预设第 ${sourceIndex+1} 页的内容`);
 });
-$('insertFormula').onclick=()=>{const input=$('text');input.setRangeText('$x^2 + \\frac{1}{2} = \\sqrt{4}$',input.selectionStart,input.selectionEnd,'end');invalidate();input.focus();};
+$('insertFormula').onclick=()=>{const input=$('text');input.setRangeText('$x^2 + \\frac{1}{2} = \\sqrt{4}$',input.selectionStart,input.selectionEnd,'end');invalidate(true);input.focus();};
 $('exportDocument').onclick=()=>{
   sourcePages[sourceIndex]=$('text').value;modeDrafts[layoutMode]=captureMode();
   const value={version:1,layout_mode:layoutMode,pages:sourcePages,modeDrafts,font_mix:selectedFonts,pagination:$('pagination').value,input_format:$('inputFormat').value,coordinate_system:coordinateSettings()};
@@ -865,8 +961,8 @@ $('documentFile').onchange=()=>action(async()=>{
 });
 $('refresh').onclick=()=>action(loadPorts);
 $('authenticate').onclick=()=>action(load);
-$('connect').onclick=()=>action(async()=>{await saveDeviceProfile();state=await api('/api/connect',{port:profilePort});$('origin').checked=false;notice('机器已连接，已载入对应设备控制配置');});
-$('disconnect').onclick=()=>action(async()=>{state=await api('/api/disconnect',{});});
+$('connect').onclick=()=>action(async()=>{await saveDeviceProfile();state=await api('/api/connect',{port:profilePort});$('origin').checked=false;$('confirmPowerCycle').checked=false;$('confirmPaperContact').checked=false;notice(contactStartup()?'机器已连接，请确认断电放笔流程后建立本次零点':'机器已连接，已载入对应设备控制配置');});
+$('disconnect').onclick=()=>action(async()=>{state=await api('/api/disconnect',{});$('confirmPowerCycle').checked=false;$('confirmPaperContact').checked=false;$('origin').checked=false;});
 $('check').onclick=()=>action(async()=>{state=await api('/api/check',{job_id:currentJob});notice('原点与机器配置检查通过');});
 $('start').onclick=()=>action(async()=>{const job=currentJob, page=documentResult?.pages.find(p=>p.job_id===job)?.metadata;state=await api('/api/start',{job_id:job,origin_confirmed:$('origin').checked});window.pageReminders?.remember(state,{device:deviceLabel(state.port),simulation:state.mode==='simulation',page:page?.page_number,pages:page?.page_count});$('origin').checked=false;notice(state.mode==='simulation'?'模拟单页任务开始':'当前页写字任务开始；完成后可换纸重新确认原点，再写同一页');});
 $('pause').onclick=()=>realtimeAction(async()=>{state=await api('/api/pause',{});});
@@ -917,7 +1013,8 @@ $('undoFontPreset').onclick=()=>action(async()=>{
   fontPresets=next;deletedFontPreset=null;
   if(usable)applyFontPreset(preset);else renderFontPresets();notice('字体预设已恢复');
 });
-for(const key of ['text','spacing','feed','moveFeed'])$(key).addEventListener('input',invalidate);
+for(const key of ['spacing','feed','moveFeed'])$(key).addEventListener('input',invalidate);
+$('text').addEventListener('input',()=>invalidate(true));
 $('smartBalance').onchange=()=>{coordinateChanged();updatePresetHint();};
 for(const key of ['letterScale','digitScale']){
   $(key).addEventListener('input',()=>{$(key+'Slider').value=$(key).value;coordinateChanged();updatePresetHint();});
@@ -963,8 +1060,10 @@ $('undoPreset').onclick=()=>action(async()=>{
   const preset=deletedPreset.preset;layoutPresets=next;deletedPreset=null;applyPreset(preset);notice('预设已恢复');
 });
 async function poll(){
+  const polledController=controllerId;
   try{if(!busy&&!speedSending){const capturedAction=actionRevision;const result=await api('/api/state');if(capturedAction===actionRevision&&!busy&&!speedSending){state=result;renderState();if(state.error&&state.error!==lastError){lastError=state.error;notice(state.error,true);}}}}
   catch(error){
+    if(polledController!==controllerId)return;
     state={...state,connected:false,phase:'控制端离线，任务状态待确认',operation_type:null,status:'',position:null,pen:'unknown',pen_top:null};
     renderState();
     if(error.message!==lastError){lastError=error.message;notice('服务连接异常：'+error.message,true);}
@@ -975,4 +1074,4 @@ window.pageReminders=new window.PageNotifications({hint:$('pageNotificationHint'
 renderSourcePages();renderOutputNavigation();
 restorePresets();
 try{const savedMode=localStorage.getItem('plotter.layout-mode.v1');if(['notebook','grid'].includes(savedMode))setMode(savedMode);}catch(error){/* First visit asks the user to select a mode. */}
-load().catch(error=>notice(error.message,true)).finally(poll);
+loadControllers().then(load).catch(error=>notice(error.message,true)).finally(poll);

@@ -18,7 +18,7 @@ window.sharedWorkspace=(()=>{
   function capture(){
     sourcePages[sourceIndex]=$('text').value;
     return JSON.parse(JSON.stringify({layoutMode,modeDrafts,selectedPreset,selectedFontPreset,pages:[...sourcePages],sourceIndex,outputIndex,
-      font_mix:selectedFonts.map(f=>({...f})),previewValid:!!documentResult,
+      font_mix:selectedFonts.map(f=>({...f})),previewValid:!!documentResult,previewStale:!!previewStale,
       fields:Object.fromEntries(fields.map(id=>[id,$(id).type==='checkbox'?$(id).checked:$(id).value]))}));
   }
   async function apply(workspace){
@@ -26,7 +26,7 @@ window.sharedWorkspace=(()=>{
     try{
       const draft=workspace.draft;
       revision++;axisRevision++;clearTimeout(axisTimer);clearTimeout(linePitchTimer);
-      currentJob=null;downloadJob=null;documentResult=null;$('origin').checked=false;
+      currentJob=null;downloadJob=null;documentResult=null;previewStale=false;$('origin').checked=false;
       layoutMode='';modeDrafts=draft.modeDrafts||{};
       if(draft.layoutMode)setMode(draft.layoutMode);
       else{
@@ -46,6 +46,7 @@ window.sharedWorkspace=(()=>{
       if(draft.layoutMode)await refreshLinePitch();
       if(workspace.document_id&&draft.previewValid){
         const result=await api('/api/documents/'+workspace.document_id+'/preview');
+        previewStale=!!draft.previewStale;
         documentResult=result;showOutputPage(Math.min(draft.outputIndex||0,result.pages.length-1));
       }else if(draft.layoutMode)await refreshCoordinatePreview();
       renderOutputNavigation();renderState();
@@ -87,7 +88,7 @@ window.sharedWorkspace=(()=>{
   async function generate(render){
     await save();
     if(!ready)throw new Error('共享界面尚未载入');
-    const draft=capture();draft.previewValid=true;draft.outputIndex=0;
+    const draft=capture();draft.previewValid=true;draft.previewStale=false;draft.outputIndex=0;
     pending=commit(draft,{render});
     try{
       const workspace=await pending;
@@ -96,7 +97,7 @@ window.sharedWorkspace=(()=>{
   }
   reset.onclick=()=>action(async()=>{
     await save();const draft=capture();
-    draft.pages=[''];draft.sourceIndex=0;draft.outputIndex=0;draft.layoutMode='';draft.modeDrafts={};draft.previewValid=false;
+    draft.pages=[''];draft.sourceIndex=0;draft.outputIndex=0;draft.layoutMode='';draft.modeDrafts={};draft.previewValid=false;draft.previewStale=false;
     const workspace=await commit(draft,{clear_preview:true});
     await apply(workspace);notice('当前设备的界面已重置，其他访问端将同步更新');
   });
@@ -121,11 +122,11 @@ window.sharedWorkspace=(()=>{
   window.addEventListener('pagehide',()=>{
     if(!ready||applying||pending||conflicted)return;
     const draft=capture();if(JSON.stringify(draft)===last)return;
-    const token=$('token').value.trim(),headers={'Content-Type':'application/json'};
+    const token=$('token').value.trim(),headers={'Content-Type':'application/json','X-Plotter-Controller':controllerId};
     if(token)headers.Authorization='Bearer '+token;
     fetch((window.PLOTTER_API_BASE||'').replace(/\/$/,'')+path(),{method:'POST',headers,keepalive:true,
       body:JSON.stringify({revision:version,draft,clear_preview:!draft.previewValid})}).catch(()=>{});
   });
   setTimeout(tick,400);
-  return {save,open,generate,get ready(){return ready;}};
+  return {save,open,generate,detach(){ready=false;device='';clearTimeout(timer);},get ready(){return ready;}};
 })();

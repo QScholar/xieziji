@@ -307,5 +307,49 @@ class SplitIntegrationTests(unittest.TestCase):
             with self.call('/api/disconnect',{}): pass
 
 
+@unittest.skipUnless(controller_binary(), 'Build C++ controller first')
+class ContactStartupIntegrationTests(unittest.TestCase):
+    def test_session_calibration_and_logical_z_job_over_real_http(self):
+        base=ROOT/'controller/.testdata';base.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=base) as folder:
+            with socket.socket() as sock:
+                sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
+            token='contact-test-token-123456'
+            with open(pathlib.Path(folder)/'process.log','wb') as log:
+                process=subprocess.Popen([str(controller_binary()),'--simulate','--port',str(port),'--jobs-dir',str(pathlib.Path(folder)/'device')],
+                    env={**os.environ,'CONTROLLER_TOKEN':token,'PLOTTER_CONTACT_STARTUP':'1'},stdout=log,stderr=log,cwd=ROOT)
+                try:
+                    client=ControllerClient(f'http://127.0.0.1:{port}',token)
+                    deadline=time.monotonic()+15
+                    while True:
+                        try:client.snapshot();break
+                        except OSError:
+                            if time.monotonic()>deadline:raise
+                            time.sleep(.05)
+                    def wait(phase):
+                        deadline=time.monotonic()+15
+                        while time.monotonic()<deadline:
+                            state=client.snapshot()
+                            if state['phase']==phase:return state
+                            self.assertNotEqual(state['phase'],'failed',state)
+                            time.sleep(.02)
+                        self.fail('Contact startup timeout')
+                    state=client.connect('SIMULATOR')
+                    self.assertFalse(state['calibrated']);self.assertEqual(state['position'][2],0)
+                    with self.assertRaises(ValueError):client.set_pen('down')
+                    with self.assertRaises(ValueError):client.control('prepare',dict(power_cycled=True))
+                    client.control('prepare',dict(power_cycled=True,pen_on_paper=True,bottom_confirmed=True))
+                    state=wait('idle');self.assertTrue(state['calibrated']);self.assertEqual(state['logical_z'],0)
+                    self.assertEqual(state['position'][2],-13.5)
+                    app=Application(FONT_DIR,pathlib.Path(folder)/'business',controller=client)
+                    preview=app.preview(dict(font_id=next(iter(app.fonts)),text='Hello',device_control=state['device_control']))
+                    app.api('/api/start',dict(job_id=preview['job_id'],origin_confirmed=True))
+                    final=wait('complete');self.assertEqual(final['logical_z'],0)
+                    client.disconnect();state=client.connect('SIMULATOR')
+                    self.assertFalse(state['calibrated']);self.assertIsNone(state['logical_z'])
+                finally:
+                    process.terminate();process.wait(10)
+
+
 if __name__ == '__main__':
     unittest.main()

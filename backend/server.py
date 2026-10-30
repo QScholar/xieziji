@@ -33,7 +33,7 @@ EXECUTING = frozenset({'running', 'paused', 'draining', 'stopping', 'returning'}
 
 
 class Application:
-    def __init__(self, fonts, jobs, token='', controller=None):
+    def __init__(self, fonts, jobs, token='', controller=None, shared_fonts=None):
         self.fonts_dir = pathlib.Path(fonts).resolve()
         self.jobs_dir = pathlib.Path(jobs).resolve()
         self.jobs_dir.mkdir(parents=True, exist_ok=True)
@@ -60,8 +60,10 @@ class Application:
         self.start_lock = threading.Lock()
         self.lock = threading.Lock()
         self.eta = TaskETA(self.jobs_dir, self.execution_path)
-        self.font_library = FontLibrary(self.fonts)
-        self.font_updates = FontUpdates(self.fonts_dir, self.jobs_dir / '.font-analysis', self._publish_fonts)
+        self.shared_fonts = shared_fonts
+        self.font_library = shared_fonts.font_library if shared_fonts else FontLibrary(self.fonts)
+        self.font_updates = shared_fonts.font_updates if shared_fonts else FontUpdates(self.fonts_dir, self.jobs_dir / '.font-analysis', self._publish_fonts)
+        self.default_control = None
         self.device_profiles = DeviceProfiles(self.jobs_dir)
         self.presets = Presets(self.jobs_dir)
         self.workspaces = Workspaces(self.jobs_dir)
@@ -192,6 +194,9 @@ class Application:
             return execution
 
     def api(self, path, data=None):
+        if self.shared_fonts:
+            self.font_library = self.shared_fonts.font_library
+            self.fonts = self.font_library.fonts
         if path.startswith('/api/workspaces/'):
             device = unquote(path[len('/api/workspaces/'):])
             if data is None:
@@ -229,7 +234,10 @@ class Application:
             return document_coordinate_preview(data) if 'layout_mode' in data else coordinate_preview(data)
         if path == '/api/connect':
             profile = self.device_profiles.all().get(data.get('port'))
-            return self.machine.connect(data.get('port'), profile['device_control']) if profile else self.machine.connect(data.get('port'))
+            control=profile['device_control'] if profile else self.default_control
+            return self.machine.connect(data.get('port'),control) if control else self.machine.connect(data.get('port'))
+        if path == '/api/prepare':
+            return self.machine.control('prepare', data)
         if path == '/api/disconnect': return self.machine.disconnect()
         if path == '/api/jog': return self.machine.jog(data.get('axis'), data.get('distance'), data.get('feed', 300))
         if path == '/api/pen': return self.machine.set_pen(data.get('position'))
@@ -258,6 +266,15 @@ class Application:
 
 class Handler(BaseHTTPRequestHandler):
     server_version = 'LocalPlotter/1.0'
+
+    def device_app(self, mutation=False):
+        key = self.headers.get('X-Plotter-Controller', '')
+        if mutation and len(self.server.controllers) > 1 and not key:
+            raise ValueError('请选择要操作的写字机')
+        key = key or self.server.default_controller
+        if key not in self.server.controllers:
+            raise ValueError('写字机不存在，请刷新设备列表')
+        return self.server.controllers[key]['app']
 
     def respond(self, status, content, kind='application/json; charset=utf-8', filename=None):
         if not isinstance(content, bytes):
@@ -300,7 +317,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', origin)
         self.send_header('Vary', 'Origin')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Authorization, Content-Type')
+        self.send_header('Access-Control-Allow-Headers', 'Authorization, Content-Type, X-Plotter-Controller')
         self.send_header('Content-Length', '0')
         self.end_headers()
 
@@ -309,27 +326,33 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if path.startswith('/api/'):
                 if not self.allowed(): return
+                if path == '/api/controllers':
+                    self.respond(200, dict(default=self.server.default_controller, controllers=[
+                        dict(id=k, name=v['name'], contact_startup=v.get('contact_startup', False))
+                        for k,v in self.server.controllers.items()])); return
+                app = self.device_app()
                 if path.startswith('/api/jobs/') and path.endswith('/gcode'):
                     job_id = path[len('/api/jobs/'):-len('/gcode')]
-                    folder, result = self.server.app.job(job_id)
+                    folder, result = app.job(job_id)
                     self.respond(200, result['gcode'], 'text/plain; charset=utf-8', 'writing.gcode'); return
                 if path.startswith('/api/documents/') and path.endswith('/archive'):
                     document_id = path[len('/api/documents/'):-len('/archive')]
-                    self.respond(200, self.server.app.archive(document_id), 'application/zip', 'writing-pages.zip'); return
+                    self.respond(200, app.archive(document_id), 'application/zip', 'writing-pages.zip'); return
                 if path.startswith('/api/documents/') and path.endswith('/preview'):
                     document_id = path[len('/api/documents/'):-len('/preview')]
-                    manifest = self.server.app.previews.group(document_id)
+                    manifest = app.previews.group(document_id)
                     pages = [dict(job_id=job, metadata=result['metadata'], svg=result['svg'])
-                             for job in manifest['job_ids'] for _, result in [self.server.app.job(job)]]
+                             for job in manifest['job_ids'] for _, result in [app.job(job)]]
                     self.respond(200, dict(pages[0], document_id=document_id, page_count=len(pages), pages=pages)); return
                 if path.startswith('/api/workspaces/'):
-                    self.respond(200, self.server.app.api(path)); return
+                    self.respond(200, app.api(path)); return
                 if path not in ('/api/fonts', '/api/font-status', '/api/font-recommendations', '/api/ports', '/api/state', '/api/device-profiles', '/api/presets'): raise KeyError(path)
-                self.respond(200, self.server.app.api(path)); return
+                self.respond(200, app.api(path)); return
             files = {'/': ('index.html', 'text/html'), '/app.js': ('app.js', 'text/javascript'), '/style.css': ('style.css', 'text/css'), '/workbench.css': ('workbench.css', 'text/css')}
             files['/config.js'] = ('config.js', 'text/javascript')
             files['/notebook-sizing.js'] = ('notebook-sizing.js', 'text/javascript')
             files['/preset-store.js'] = ('preset-store.js', 'text/javascript')
+            files['/markdown-preview.js'] = ('markdown-preview.js', 'text/javascript')
             files['/workspace-sync.js'] = ('workspace-sync.js', 'text/javascript')
             files['/font-library.js'] = ('font-library.js', 'text/javascript')
             files['/page-notifications.js'] = ('page-notifications.js', 'text/javascript')
@@ -352,11 +375,12 @@ class Handler(BaseHTTPRequestHandler):
             data = json.loads(self.rfile.read(length))
             if not isinstance(data, dict): raise ValueError('需要 JSON 对象')
             path = urlsplit(self.path).path
+            app = self.device_app(mutation=True)
             if path.startswith('/api/workspaces/'):
-                self.respond(200, self.server.app.api(path, data)); return
-            if path not in ('/api/presets', '/api/presets/migrate', '/api/preview', '/api/line-pitch', '/api/font-refresh', '/api/font-previews', '/api/coordinate-preview', '/api/device-profiles', '/api/connect', '/api/disconnect', '/api/check', '/api/start', '/api/pause', '/api/resume', '/api/speed', '/api/jog', '/api/pen', '/api/manual-pause', '/api/manual-stop', '/api/stop'):
+                self.respond(200, app.api(path, data)); return
+            if path not in ('/api/presets', '/api/presets/migrate', '/api/preview', '/api/line-pitch', '/api/font-refresh', '/api/font-previews', '/api/coordinate-preview', '/api/device-profiles', '/api/connect', '/api/disconnect', '/api/prepare', '/api/check', '/api/start', '/api/pause', '/api/resume', '/api/speed', '/api/jog', '/api/pen', '/api/manual-pause', '/api/manual-stop', '/api/stop'):
                 raise KeyError(path)
-            self.respond(200, self.server.app.api(path, data))
+            self.respond(200, app.api(path, data))
         except KeyError: self.respond(404, dict(error='接口不存在'))
         except ControllerUnavailable as error: self.respond(503, dict(error=str(error)))
         except (ValueError, TypeError, RuntimeError, TimeoutError, OSError) as error: self.respond(409, dict(error=str(error)))
@@ -368,9 +392,11 @@ class WebServer(ThreadingHTTPServer):
     request_queue_size = 64
 
 
-def create_server(app, host='127.0.0.1', port=8080, extra_hosts=(), extra_ports=(), frontend_origins=(), serve_frontend=True):
+def create_server(app, host='127.0.0.1', port=8080, extra_hosts=(), extra_ports=(), frontend_origins=(), serve_frontend=True, controllers=None):
     server = WebServer((host, port), Handler)
     server.app = app
+    server.controllers = controllers or {'windows': dict(name='Windows 写字机', app=app)}
+    server.default_controller = next(iter(server.controllers))
     server.allowed_origins = set(frontend_origins)
     server.serve_frontend = serve_frontend
     actual_port = server.server_port
@@ -386,6 +412,7 @@ def main():
     parser.add_argument('--font-dir', type=pathlib.Path, default=ROOT / 'gcodeFonts')
     parser.add_argument('--jobs-dir', type=pathlib.Path, default=ROOT / 'backend' / 'jobs')
     parser.add_argument('--controller-url', default=os.environ.get('PLOTTER_CONTROLLER_URL', 'http://127.0.0.1:8090'))
+    parser.add_argument('--controllers-file', type=pathlib.Path, default=os.environ.get('PLOTTER_CONTROLLERS_FILE'), help='Private server-side controller registry; never served to browsers')
     parser.add_argument('--frontend-origin', action='append', default=[], help='Explicit independent frontend origin, e.g. http://localhost:8081')
     parser.add_argument('--api-only', action='store_true', help='Disable bundled frontend hosting')
     parser.add_argument('--allow-unauthenticated', action='store_true', help='Explicitly allow network access without a token')
@@ -402,7 +429,23 @@ def main():
         if parsed.scheme not in ('http', 'https') or not parsed.netloc or parsed.path or parsed.query or parsed.fragment:
             parser.error('前端来源必须为完整 http(s)://主机:端口，不含路径')
     app = Application(args.font_dir, args.jobs_dir, token, ControllerClient(args.controller_url))
-    server = create_server(app, args.host, args.port, args.allow_host, args.allow_origin_port, args.frontend_origin, not args.api_only)
+    controllers = None
+    if args.controllers_file:
+        entries = json.loads(args.controllers_file.read_text(encoding='utf-8-sig'))
+        if not isinstance(entries, list) or not entries: parser.error('控制端注册表不能为空')
+        controllers = {}
+        for index, entry in enumerate(entries):
+            key=entry['id']
+            if not isinstance(key,str) or not re.fullmatch(r'[a-z][a-z0-9-]{0,39}',key) or key in controllers:
+                parser.error('控制端编号无效或重复')
+            client=ControllerClient(entry['url'],entry.get('token',''))
+            target=app if index==0 else Application(args.font_dir,args.jobs_dir / 'controllers' / key,token,client,shared_fonts=app)
+            target.machine=client
+            if index==0: target.watchdog.client=client
+            contact=entry.get('contact_startup',False)
+            if contact: target.default_control=dict(controller_type='grbl',pen_up=0,pen_down=13.5,pen_feed=100)
+            controllers[key]=dict(name=entry['name'],app=target,contact_startup=contact)
+    server = create_server(app, args.host, args.port, args.allow_host, args.allow_origin_port, args.frontend_origin, not args.api_only, controllers)
     app.font_updates.start()
     app.watchdog.start()
     print(f'Plotter backend: http://{args.host}:{server.server_port} | fonts={len(app.fonts)} | controller={args.controller_url}', flush=True)

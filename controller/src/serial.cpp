@@ -147,8 +147,13 @@ public:
             for (auto pair : std::map<int,int>{{3,7},{20,0},{21,0},{22,0},{100,80},{101,80},{102,100},
                                               {110,5000},{111,5000},{112,8000},{130,600},{131,600},{132,300}})
                 replies.push("$" + std::to_string(pair.first) + "=" + std::to_string(pair.second));
-        } else if (raw == "G92 X0 Y0\n") { offset[0] = position[0]; offset[1] = position[1]; }
-        else if (raw.rfind("G1 ", 0) == 0 || raw.rfind("$J=", 0) == 0) {
+        } else if (raw.rfind("G92 ",0)==0) {
+            std::regex word("([XYZ])(-?[0-9]+(?:\\.[0-9]+)?)");
+            for(std::sregex_iterator i(raw.begin(),raw.end(),word),e;i!=e;++i) {
+                auto axis=std::string("XYZ").find((*i)[1].str());offset[axis]=position[axis]-std::stod((*i)[2]);
+            }
+        }
+        else if (raw.rfind("G1 ", 0) == 0 || raw.rfind("G53 G1 ",0)==0 || raw.rfind("$J=", 0) == 0) {
             std::regex word("([XYZ])(-?[0-9]+(?:\\.[0-9]+)?)");
             for (std::sregex_iterator i(raw.begin(), raw.end(), word), e; i != e; ++i) {
                 auto axis = std::string("XYZ").find((*i)[1].str()); double value = std::stod((*i)[2]);
